@@ -1,4 +1,3 @@
-app/config/database.php
-bootstrap/compiled.php
+/bootstrap/compiled.php
 .env.*.php
 .env.php
