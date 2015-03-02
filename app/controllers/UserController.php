@@ -25,6 +25,7 @@ class UserController extends BaseController {
 	 */
 	public function showFavouritesPage($userId) 
 	{
-		return View::make('user.favourites')->with('user_id', $userId);
+		$hej = array('Patric är korv', 'Jacobi och hans ilska');
+		return View::make('user.favourites')->with('user_id', $userId)->with('favoriter', $hej);
 	}
 }

@@ -37,7 +37,7 @@ Route::get('/person/{id}/andra', ['as' => 'user-edit', 'uses' => 'UserController
 	->before('auth')
 	->where('id', '[0-9]+');
 Route::get('/person/{id}/favoriter', ['as' => 'user-favourites', 'uses' => 'UserController@showFavouritesPage'])
-	->before('auth')
+	//->before('auth')
 	->where('id', '[0-9]+');
 
 
