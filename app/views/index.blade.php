@@ -1,9 +1,6 @@
 @extends('master')
 
 @section('head-extra')
-    <link href="styles/style.css" rel="stylesheet">
-	<meta charset="utf-8"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
 @stop
 
 @section('body')
@@ -33,9 +30,5 @@
 		<!-- Content goes here-->
 		</div>
 	</div>
-	<div class="push"></div>
-	<div id="footer" class="clearfix">
-			<a href="#" class="pull-left" id="about">Om oss</a>
-			<a href="#" class="pull-right" id="contact">Kontakta oss</a>
-	</div>
+	
 @stop
