@@ -2,10 +2,6 @@
 
 class Favorite extends Eloquent {
 
-	// OBS syntax
- 	public $primarykey = {'user', 'pm'};
-
-
 	/**
 	 * The database table used by the model.
 	 *

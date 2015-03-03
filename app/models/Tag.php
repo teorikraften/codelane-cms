@@ -2,10 +2,6 @@
 
 class Tag extends Eloquent {
 
-	// OBS syntax
- 	public $primarykey = {'pm', 'tag'};
-
-
 	/**
 	 * The database table used by the model.
 	 *
