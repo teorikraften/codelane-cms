@@ -2,7 +2,9 @@
 
 class Tag extends Eloquent {
 
-	use;
+	// OBS syntax
+ 	public $primarykey = {'pm', 'tag'};
+
 
 	/**
 	 * The database table used by the model.
@@ -11,18 +13,8 @@ class Tag extends Eloquent {
 	 */
 	protected $table = 'tags';
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = array();
-
 	public function pm_tag() 
 	{
 		return $this->belongsToMany('App\Pm_tag');
 	}
-
-	
-
 }
