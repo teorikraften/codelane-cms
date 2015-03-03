@@ -19,6 +19,8 @@ Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
 */
 Route::get('/logga-in', ['as' => 'sign-in', 'uses' => 'GuestController@showSignInPage'])
 	->before('guest');
+Route::get('/logga-ut', ['as' => 'sign-out', 'uses' => 'GuestController@showSignOutPage'])
+	->before('auth');
 Route::get('/registrera', ['as' => 'sign-up', 'uses' => 'GuestController@showSignUpPage'])
 	->before('guest');
 Route::get('/glomt-losenord', ['as' => 'reset-password', 'uses' => 'GuestController@showResetPasswordPage'])
@@ -132,13 +134,6 @@ Route::get('/om', ['as' => 'about-index', function()
 {
 	return View::make('about.index');
 }]);
-
-
-
-
-
-
-
 
 
 

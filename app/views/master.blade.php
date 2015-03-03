@@ -21,16 +21,13 @@
 			</ul>
 			<button class="visible-xs" id="burger">Meny</button>
 			<ul class="menu clearfix">
-				<li><a href="#">Hem</a></li>
-				<li>
-					<a href="#">Användare</a>
-					<!--
-					<ul class="menu hidden">
-						<li><a href="#">Nurse</a></li>
-						<li><a href="#">Doctor</a></li>
-					</ul>-->
-				</li>
-				<li><a href="{{ URL::route('sign-in') }}">Logga in</a></li>
+				<li><a href="{{ URL::route('index') }}">Hem</a></li>
+				@if(Auth::guest())
+					<li><a href="{{ URL::route('sign-in') }}">Logga in</a></li>
+				@else
+					<li><a href="{{ URL::route('user', array(Auth::user())) }}">Min sida</a></li>
+					<li><a href="{{ URL::route('sign-out') }}">Logga ut</a></li>
+				@endif
 			</ul>
 	</nav>
 	<div id="container">
@@ -43,8 +40,8 @@
 	<div class="push"></div>
 	
 	<div id="footer" class="clearfix">
-			<a href="#" class="pull-left" id="about">Om oss</a>
-			<a href="#" class="pull-right" id="contact">Kontakta oss</a>
+			<a href="{{ URL::route('about-index') }}" class="pull-left" id="about">Om oss</a>
+			<a href="{{ URL::route('help-index') }}" class="pull-right" id="contact">Hjälp!</a>
 	</div>
 </body>
 </html>

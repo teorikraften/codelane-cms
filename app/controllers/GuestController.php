@@ -6,7 +6,15 @@ class GuestController extends BaseController {
 	 */
 	public function showSignInPage()
 	{
-		return View::make('sign-in.sign-in');
+		return View::make('sign-in.sign-in')->with('namn');
+	}
+	/**
+	 * Displays the sign in view.
+	 */
+	public function showSignOutPage()
+	{
+		Auth::logout();
+		return Redirect::route('index');
 	}
 
 	/**
