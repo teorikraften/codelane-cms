@@ -6,8 +6,21 @@ class GuestController extends BaseController {
 	 */
 	public function showSignInPage()
 	{
-		return View::make('sign-in.sign-in')->with('namn');
+		return View::make('sign-in.sign-in')->with('error', Session::get('error'));
 	}
+
+	/**
+	 * Handles user sign in.
+	 */
+	public function signIn()
+	{
+		if (Auth::attempt(array('email' => Input::get('email'), 'password' => Input::get('password'))))
+		{
+		    return Redirect::route('user', array(Auth::user()->id))->with('message', 'Du är inloggad!');
+		}
+		return Redirect::route('sign-in')->with('error', 'Fel användarnamn eller lösenord!');
+	}
+
 	/**
 	 * Displays the sign in view.
 	 */

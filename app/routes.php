@@ -19,6 +19,8 @@ Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
 */
 Route::get('/logga-in', ['as' => 'sign-in', 'uses' => 'GuestController@showSignInPage'])
 	->before('guest');
+Route::post('/logga-in', ['as' => 'post-sign-in', 'uses' => 'GuestController@signIn'])
+	->before('guest');
 Route::get('/logga-ut', ['as' => 'sign-out', 'uses' => 'GuestController@showSignOutPage'])
 	->before('auth');
 Route::get('/registrera', ['as' => 'sign-up', 'uses' => 'GuestController@showSignUpPage'])
