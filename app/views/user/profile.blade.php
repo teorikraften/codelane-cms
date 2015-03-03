@@ -1,6 +1,6 @@
 @extends('master')
 
-@section('head-extra')
+@section('head-title')
     Användare: {{ $user_id }}
 @stop
 
