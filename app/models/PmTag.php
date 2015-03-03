@@ -1,6 +1,6 @@
 <?php
 
-class Pm_tag extends Eloquent {
+class PmTag extends Eloquent {
 
 	/**
 	 * The database table used by the model.
@@ -26,9 +26,10 @@ class Pm_tag extends Eloquent {
 		return $this->hasOne('App\Pm');
 	}
 
-	Pm_tag:created(function($pm_tag, $user)
+	// TODO check if correct this->added_by
+	PmTag::created(function($pmTag)
 	{
-		// TODO this->added_by = $user->id
+		$this->added_by = Auth::$user()->id;
 		return true;
 	});
 }

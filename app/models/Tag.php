@@ -11,6 +11,6 @@ class Tag extends Eloquent {
 
 	public function pm_tag() 
 	{
-		return $this->belongsToMany('App\Pm_tag');
+		return $this->belongsToMany('App\PmTag');
 	}
 }
