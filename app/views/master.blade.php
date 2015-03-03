@@ -27,7 +27,7 @@
 						<li><a href="#">Doctor</a></li>
 					</ul>-->
 				</li>
-				<li><a href="#">Logga in</a></li>
+				<li><a href="{{ URL::route('sign-in') }}">Logga in</a></li>
 			</ul>
 	</nav>
 	<div id="container">
