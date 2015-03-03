@@ -9,7 +9,20 @@ class Role extends Eloquent {
 	 */
 	protected $table = 'roles';
 
-	public function userRole() {
-		return $this->BelongsToMany('App\Tag');
+	protected $fillable = array('name');
+
+	/**
+	 * All users with the role
+ 	 */
+	public function users() {
+		return $this->belongsToMany('App\User', 'user_roles', 'role', 'user');
+	}
+
+	/**
+	 * All pms with the role.
+	 */
+	public function pms() 
+	{
+		return $this->belongsToMany('App\PM', 'pm_roles', 'role', 'pm');
 	}
 }

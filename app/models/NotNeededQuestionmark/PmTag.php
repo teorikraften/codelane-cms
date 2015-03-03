@@ -2,6 +2,8 @@
 
 class PmTag extends Eloquent {
 
+	// NOTE REMOVE
+
 	/**
 	 * The database table used by the model.
 	 *
@@ -9,12 +11,10 @@ class PmTag extends Eloquent {
 	 */
 	protected $table = 'pm_tags';
 
-	/**
-	 * The attributes excluded from the model's JSON form.
-	 *
-	 * @var array
-	 */
-	protected $hidden = array();
+	protected $fillable = array('pm', 'tag'); // TODO 'added_by' maybe automatic to current user
+
+
+	// DEFINE RELATIONSHIPS
 
 	public function tag() 
 	{
@@ -25,6 +25,13 @@ class PmTag extends Eloquent {
 	{
 		return $this->hasOne('App\Pm');
 	}
+
+	public function addedBy() 
+	{
+		return $this->hasOne('App\User');
+	}
+
+
 
 	// TODO check if correct this->added_by
 	PmTag::created(function($pmTag)

@@ -9,8 +9,13 @@ class Tag extends Eloquent {
 	 */
 	protected $table = 'tags';
 
-	public function pm_tag() 
+	protected $fillable = array('name');
+
+	/**
+	 * All pms with the tag.
+	 */
+	public function pm() 
 	{
-		return $this->belongsToMany('App\PmTag');
+		return $this->belongsToMany('App\Pm', 'pm_tags', 'tag', 'pm');
 	}
 }
