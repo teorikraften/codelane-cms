@@ -10,13 +10,16 @@
 </head>
 <body>
 	<nav class="navbar clearfix">
-			<div class="logo">Logga</div>
+
+			<div class="logo hidden-xs">Logga</div>
+			<div class="logo visible-xs">L</div>
 			<ul class="searchbar clearfix">
 				<li><form class="search-form" role="search">
             		   <input type="text" class="text-area" placeholder="Söktext">
                    	   <button type="submit" class="btn grow">Sök</button>
          		</form></li>
 			</ul>
+			<button class="visible-xs" id="burger">Meny</button>
 			<ul class="menu clearfix">
 				<li><a href="#">Hem</a></li>
 				<li>

@@ -41,6 +41,10 @@ body > #container {
 .clearfix {  
     *zoom: 1;  
 }  
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
 /*-----  End of General  ------*/
 
 /*===============================
@@ -151,6 +155,50 @@ body > #container {
 	background: #03A89E;
     background: -moz-linear-gradient(0% 100% 90deg, #03A89E, #00F89E);
     background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#03A89E), to(#00F89E));
+}
+
+
+/*==========  =Responsive  ==========*/
+
+.visible-xs {
+	display: none !important;
+}
+
+@media (max-width: 767px){
+	.navbar .logo {
+		margin-left: 10px;
+	}
+	.searchbar {
+		margin-left: 10px !important;
+	}
+	.menu {
+		display: none;
+	}
+	.menu *{
+		display: none;
+	}
+	.visible-xs {
+		display: block !important;
+	}
+	.hidden-xs {
+		display: none !important;
+	}
+
+}
+
+/*==========  =Responsive components  ==========*/
+#burger {
+	background: #ffffff;
+	float: right;
+	/*background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#66FF66), to(#338033)); /* Top left to bottom left*/
+	height: 34px;
+	padding-top: 3px;
+	margin: 15px 10px 0 0;
+	width: 70px;
+	border-radius: 0;
+	-webkit-border-radius: 0;
+	-moz-border-radius: 0;
+	border: 1px solid #338033;
 }
 
 /*==========  =Dropdown  ==========*/
