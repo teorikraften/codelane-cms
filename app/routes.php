@@ -27,6 +27,8 @@ Route::get('/registrera', ['as' => 'sign-up', 'uses' => 'GuestController@showSig
 	->before('guest');
 Route::get('/glomt-losenord', ['as' => 'reset-password', 'uses' => 'GuestController@showResetPasswordPage'])
 	->before('guest');
+Route::post('/registrera', ['as' => 'post-sign-up', 'uses' => 'GuestController@signUp'])
+	->before('/guest');
 
 
 /*
