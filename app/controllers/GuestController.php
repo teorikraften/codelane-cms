@@ -63,7 +63,7 @@ class GuestController extends BaseController {
 		} else {
 
 			// Add user to database 
-			$user = User::create(['name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
+			$user = User::create(['real_name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
 
 		// TODO if succes redirect to role select
 			return Redirect::route('sign-in');
