@@ -26,7 +26,7 @@ class Pm extends Eloquent {
 	 */
 	public function tags() 
 	{
-		return $this->belongsToMany('App\Tag', 'pm_tags', 'pm', 'tag');
+		return $this->belongsToMany('Tag', 'pm_tags', 'pm', 'tag');
 	}
 
 	/**
