@@ -90,13 +90,21 @@ body > #container {
 
 /* Search text-area */
 .search-form .text-area {
+	border: 1px solid #ccc;
 	font-size: 16px;
 	height: 30px;
 	border-radius: 5px;
 	padding: 0 0 0 5px;
+	background: #eee;
+	float: left;
+	display: inline-block;
 }
 /* Searchbutton */
 .search-form .btn {
+	font-family: 'Open-Sans', sans-serif;
+	font-weight: bold;
+	padding: 8px;
+	font-size: 14px;
 	background: #66FF66;
 	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#66FF66), to(#338033)); /* Top left to bottom left*/
 	height: 32px;
@@ -105,7 +113,9 @@ body > #container {
 	-webkit-border-radius: 5px;
 	-moz-border-radius: 5px;
 	border: 1px solid #338033;
-
+	float: left;
+	display: inline-block;
+	margin: 0 0 0 5px;
 }
 
 .search-form .btn:hover {
@@ -195,7 +205,7 @@ body > #container {
 		margin-left: 10px !important;
 	}
 	.searchbar .search-form .text-area {
-		width: 120px;
+		width: 160px;
 	}
 	.searchbar .search-form .btn {
 		width: 60px;
@@ -216,17 +226,13 @@ body > #container {
 /*==========  =Responsive components  ==========*/
 #burger {
 	cursor: pointer;
-	background: #ffffff;
+	background: url(/images/burger.png) no-repeat;
 	float: right;
 	/*background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#66FF66), to(#338033)); /* Top left to bottom left*/
 	height: 34px;
-	padding-top: 3px;
-	margin: 15px 10px 0 0;
-	width: 70px;
-	border-radius: 0;
-	-webkit-border-radius: 0;
-	-moz-border-radius: 0;
-	border: 1px solid #338033;
+	margin: 12px;
+	width: 34px;
+	border: 0;
 }
 
 /*-----  End of Header  ------*/
@@ -244,6 +250,10 @@ body > #container {
 #content h1 {
 	margin: 0 0 10px 0;
 }
+
+ul {
+	margin: 0 0 0 20px;
+}
 /*-----  End of Container  ------*/
 
 
@@ -255,7 +265,7 @@ ul.error {
 	border: 1px solid #d88;
 	padding: 20px 20px 20px 40px;
 	border-radius: 5px; /* TODO Fix browser comp */
-
+	margin: 0;
 }
 
 
@@ -325,7 +335,6 @@ div.form .row.same .input {
  	height: 3em;
  	margin-top: -3em;
     font-size: 16px;
-    font-family: Tahoma, Geneva, sans-serif;
     font-weight: bold;
     /*background-color: #03A89E;*/
     background-color: #ccc;

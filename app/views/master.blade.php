@@ -18,17 +18,16 @@
 </head>
 <body>
 	<nav class="navbar clearfix">
-
-			<div class="logo hidden-xs">Logga</div>
-			<div class="logo visible-xs">L</div>
 			<ul class="searchbar clearfix">
-				<li><form class="search-form" role="search">
-            		   <input type="text" class="text-area" placeholder="Söktext">
-                   	   <button type="submit" class="btn grow">Sök</button>
-         		</form></li>
+				<li>
+					<form class="search-form" role="search">
+            			<input type="text" class="text-area" placeholder="Söktext">
+                   	   	<button type="submit" class="btn grow">Sök</button>
+         			</form>
+         		</li>
 			</ul>
 			<div class="menu-btn">
-				<button class="visible-xs" id="burger">Meny</button>
+				<button class="visible-xs" id="burger"></button> <!-- TODO -->
 			</div>
 			<div class="responsive-menu">
 				<ul class="menu clearfix">
