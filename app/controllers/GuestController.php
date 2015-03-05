@@ -26,48 +26,49 @@ class GuestController extends BaseController {
 	 */	
 	public function signUp()
 	{
+		// TODO Göra "upprepa lösenord"
 		$name = Input::get('name');
 		$email = Input::get('email');
 		$password = Input::get('password');
 
 		$validator = Validator::make(
-			['name' => $name,
+		[
+			'name' => $name,
 			'email' => $email,
-			'password' => $password
-			],
-			['name' => 'required',
+			'password' => $password,
+		],
+		[
+			'name' => 'required',
 			'email' => 'required|email|unique:users,email',
-			'password' => 'required|min:7'
-			]);
+			'password' => 'required|min:7',
+		],
+		[
+    		'name.required' => 'Fyll i ditt namn',
+    		'email.required' => 'Fyll i din e-postadress',
+    		'email.email' => 'Fyll i en korrekt e-postadress',
+    		'email.unique' => 'E-postadressen används redan, testa att logga in istället',
+    		'password.required' => 'Fyll i ditt önskade lösenord',
+    		'password.min' => 'Ditt lösenord är för kort, det måste vara minst 7 tecken',
+		]);
+
 		$error = array();
 		if ($validator->fails())
 		{
 			$messages = $validator->messages();
-			
-			if ($messages->has('password')) 
-			{
-				
-			}
-			if ($messages->has('email')) 
-			{
-				$email = null;
-			}
-			if ($messages->has('name'))
-			{
-				$name = null;
-			}
 			// If not succes set error and ask user to change input
 			return Redirect::route('sign-up')
-				->with('error', $messages)
-				->with('input', array( 'name' => $name , 'email' => $email));
-		} else {
+				->with('error', $messages->all())
+				->withInput();
+		} 
 
-			// Add user to database 
-			$user = User::create(['real_name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
+		// Add user to database 
+		$user = User::create(['real_name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
+
+		// Authenticate user
+		Auth::login($user);
 
 		// TODO if succes redirect to role select
-			return Redirect::route('sign-in');
-		}
+		return Redirect::route('user', array(Auth::user()->id));
 	}
 
 
