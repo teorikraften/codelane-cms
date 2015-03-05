@@ -238,6 +238,7 @@ body > #container {
 #content { 
 	/* Add padding to fit content below/on top of header and footer respectively */
 	padding: 80px 20px 3em;
+	line-height: 1.5;
 }
 
 #content h1 {
