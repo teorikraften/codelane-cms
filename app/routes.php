@@ -96,6 +96,9 @@ Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'use
 */
 Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@showAddPMPage'])
 	->before('auth.verified');
+Route::get('/pm/importera', ['as' => 'pm-import', 'uses' => 'PMController@showImportPage'])
+Route::post('/pm/importera', ['as' => 'post-pm-import', 'uses' => 'PMController@import'])
+	->before('auth.verified');
 Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@showPMPage']);
 Route::get('/pm/{token}/original', ['as' => 'pm-download', 'uses' => 'PMController@showDownloadPage']);
 Route::get('/pm/{token}/andra', ['as' => 'pm-edit', 'uses' => 'PMController@showEditPMPage'])
