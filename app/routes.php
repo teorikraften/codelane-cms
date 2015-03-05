@@ -82,7 +82,7 @@ Route::get('/person/{id}/taggar', ['as' => 'admin-tags', 'uses' => 'AdminControl
 |
 */
 Route::get('/sok', ['as' => 'search-form', 'uses' => 'SearchController@showSearchPage']);
-Route::get('/sok', ['as' => 'post-search', 'uses' => 'SearchController@search']);
+Route::post('/sok', ['as' => 'post-search', 'uses' => 'SearchController@search']);
 Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'uses' => 'SearchController@showSearchResultPage'])
 	->where('page', '[0-9]*');
 
