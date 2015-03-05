@@ -41,7 +41,7 @@ Route::filter('auth', function()
 		{
 			return Response::make('Unauthorized', 401);
 		}
-		return Redirect::guest('login');
+		return Redirect::guest(route('sign-in'));
 	}
 });
 
@@ -49,6 +49,32 @@ Route::filter('auth', function()
 Route::filter('auth.basic', function()
 {
 	return Auth::basic();
+});
+
+Route::filter('auth.verified', function ()
+{
+	// TODO
+	if (Auth::guest())
+	{
+		if (Request::ajax())
+		{
+			return Response::make('Unauthorized', 401);
+		}
+		return Redirect::guest(route('sign-in'));
+	}
+});
+
+Route::filter('auth.admin', function()
+{
+	// TODO
+	if (Auth::guest())
+	{
+		if (Request::ajax())
+		{
+			return Response::make('Unauthorized', 401);
+		}
+		return Redirect::guest(route('sign-in'));
+	}
 });
 
 /*
@@ -64,6 +90,7 @@ Route::filter('auth.basic', function()
 
 Route::filter('guest', function()
 {
+	// TODO
 	if (Auth::check()) return Redirect::to('/');
 });
 

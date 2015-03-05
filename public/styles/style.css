@@ -1,0 +1,381 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);
+
+/*================================
+=            =Reset   			 =
+================================*/
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td { 
+    margin:0;
+    padding:0;
+}
+/*-----  End of Reset  ------*/
+
+/*================================
+=            =General            =
+================================*/
+
+.clear {
+	clear: both;
+}
+
+th {
+	text-align: left;
+}
+
+p {
+	margin: 10px 0;
+}
+
+th, td {
+	padding: 0 5px 0 0;
+}
+
+html,body, #container {
+    margin:0;
+    padding:0;
+    height: 100%;
+    font-family: 'Open Sans', sans-serif;
+    font-size: 15px;
+}
+
+body > #container { 
+	height: auto; 
+	min-height: 100%; 
+}
+
+.pull-left {
+	float: left;
+}
+
+.pull-right {
+	float: right;
+}
+
+.clearfix:before,  
+.clearfix:after {  
+    content: " ";  
+    display: table;  
+}  
+.clearfix:after {  
+    clear: both;  
+}  
+.clearfix {  
+    *zoom: 1;  
+}  
+.hidden {
+  display: none !important;
+  visibility: hidden !important;
+}
+/*-----  End of General  ------*/
+
+/*===============================
+=            =Header            =
+===============================*/
+
+/* General styling */
+.navbar {
+	position: fixed;
+    width: 100%;
+    height: 60px;
+    font-size: 16px;
+    font-family: Tahoma, Geneva, sans-serif;
+    font-weight: bold;
+    /*background-color: #03A89E;*/
+    background-color: #333;
+    padding: 0;
+    margin: 0;
+}
+
+/*==========  =Logo  ==========*/
+
+.navbar .logo {
+	float: left;
+	margin: 20px 0 0 40px;
+}
+
+/*==========  =Searchbar  ==========*/
+
+.searchbar {
+	list-style-type: none;
+	float: left;
+	margin: 15px 0 0 30px;
+}
+
+/* Search text-area */
+.search-form .text-area {
+	border: 1px solid #ccc;
+	font-size: 16px;
+	height: 30px;
+	border-radius: 5px;
+	padding: 0 0 0 5px;
+	background: #eee;
+	float: left;
+	display: inline-block;
+}
+/* Searchbutton */
+.search-form .btn {
+	font-family: 'Open-Sans', sans-serif;
+	font-weight: bold;
+	padding: 8px;
+	font-size: 14px;
+	background: #66FF66;
+	background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#66FF66), to(#338033)); /* Top left to bottom left*/
+	height: 32px;
+	width: 70px;
+	border-radius: 5px;
+	-webkit-border-radius: 5px;
+	-moz-border-radius: 5px;
+	border: 1px solid #338033;
+	float: left;
+	display: inline-block;
+	margin: 0 0 0 5px;
+}
+
+.search-form .btn:hover {
+  background: #66FF66;
+  background: -moz-linear-gradient(0% 100% 90deg, #47B247, #007C29);
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#47B247), to(#007C29));
+  border-top: none;
+  border-right: 1px solid #398E39;
+  border-bottom: 1px solid #286328;
+  border-left: 1px solid #398E39;
+  cursor: pointer;
+}
+
+.search-form .btn:active {
+	background: #3282d3;
+  border: 1px solid #154c8c;
+  border-bottom: 1px solid #0e408e;
+}
+
+/*==========  =Menu  ==========*/
+
+.menu {
+	float: right;
+    margin: 0;
+    padding-right: 40px;
+    width: 300px;
+    height: 60px;
+    font-size: 0;
+}
+
+
+.menu li {
+	display: inline-block;
+	text-align: center;
+	margin: 0;
+	font-size: 16px;
+}
+
+.menu a {
+	margin: 0;
+	min-width:100px;
+	display: block;
+	text-decoration: none;
+	color: #000;
+	height: 60px;
+	width: 100%;
+  	line-height: 55px;
+}
+
+.menu a:hover {
+	background: #03A89E;
+    background: -moz-linear-gradient(0% 100% 90deg, #03A89E, #00F89E);
+    background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#03A89E), to(#00F89E));
+}
+
+
+/*==========  =Responsive  ==========*/
+
+.expand {
+	display: block !important; 
+}
+
+.visible-xs {
+	display: none !important;
+}
+
+@media (max-width: 767px){
+	.menu {
+		position: relative;
+		top: 12px; /* Adjust positioning to be placed right below header...an easier way to do this...?*/
+		display: block;
+		width: 100%;
+		height: 100%;
+		margin: 0;
+    	padding: 0;
+		border: 2px solid #000;
+		box-sizing: border-box; /* To make sure border fits at 100% width, not sure about compatibility */
+	}
+	.menu * {
+		background: #03A89E;
+		width: 100%;
+	}
+	.navbar .logo {
+		margin-left: 10px;
+	}
+	.searchbar {
+		margin-left: 10px !important;
+	}
+	.searchbar .search-form .text-area {
+		width: 160px;
+	}
+	.searchbar .search-form .btn {
+		width: 60px;
+	}
+	.visible-xs {
+		display: block !important;
+	}
+	.hidden-xs {
+		display: none !important;
+	}
+	/* Responsive menu is hidden by default */
+	.responsive-menu{
+		display: none;
+	}
+
+}
+
+/*==========  =Responsive components  ==========*/
+#burger {
+	cursor: pointer;
+	background: url(/images/burger.png) no-repeat;
+	float: right;
+	height: 34px;
+	margin: 12px;
+	width: 34px;
+	border: 0;
+}
+
+/*-----  End of Header  ------*/
+
+/*==================================
+=            =Container            =
+==================================*/
+
+#content { 
+	/* Add padding to fit content below/on top of header and footer respectively */
+	padding: 80px 20px 3em;
+	line-height: 1.5;
+}
+
+#content h1, #content h2 {
+	margin: 15px 0 0px 0;
+}
+
+ul {
+	margin: 0 0 0 20px;
+}
+/*-----  End of Container  ------*/
+
+
+/*==================================
+=            =Error	               =
+==================================*/
+.pop {
+	padding: 20px 20px 20px 20px;
+	border-radius: 5px; /* TODO Fix browser comp */
+	margin: 0;
+}
+ul.pop {
+	padding: 20px 20px 20px 40px;
+}
+.pop.error {
+	background: #fcc;
+	border: 1px solid #d88;
+}
+.pop.message {
+	background: #ffc;
+	border: 1px solid #dd8;
+}
+.pop.success {
+	background: #cfc;
+	border: 1px solid #8d8;
+}
+
+
+/*==================================
+=            =Form	               =
+==================================*/
+
+div.form {
+
+}
+div.form input.text {
+	background: #fff;
+	margin: 0 -1px;
+	border: 1px solid #ccc;
+	padding: 10px 2%;
+	width: 96%;
+	border-radius: 4px; /* TODO Fix browser comp */
+	font-size: 15px;
+	font-family: 'Open Sans', sans-serif; /* TODO Change if change font */
+}
+div.form input.submit {
+	border-radius: 20px; /* TODO Fix browser comp */
+	color: #000;
+	border: 0px solid #ccc;
+	padding: 9px 14px;
+	margin: 15px 0 10px;
+	background: #ac0;
+	font-size: 15px;
+	font-family: 'Open Sans', sans-serif; /* TODO Change if change font */
+}
+div.form input.checkbox {
+	margin: 18px 10px;
+	display: block;
+}
+div.form .row {
+	display: block;
+	clear: both;
+	width: 100%;
+}
+div.form .row.same {
+	padding: 1px;
+}
+div.form .row .description {
+	font-size: 15px;
+	padding: 10px 0 5px;
+}
+div.form .row.same .description {
+	width: 90%;
+	float: right;
+	height: 20px;
+	display: block;
+	padding: 15px 0;
+}
+div.form .row.same .input {
+	width: 10%;
+	text-align: right;
+	float: left;
+	display: block;
+}
+
+/*===============================
+=            =Footer            =
+===============================*/
+
+#footer {
+ 	position: relative;
+ 	z-index: 10;
+ 	height: 3em;
+ 	margin-top: -3em;
+    font-size: 16px;
+    font-weight: bold;
+    /*background-color: #03A89E;*/
+    background-color: #ccc;
+}
+
+#footer a {
+ 	color: #000;
+ 	text-decoration: none;
+}
+
+#footer #about {
+	padding: 15px 0 0 40px;
+}
+
+#footer #contact {
+	padding: 15px 40px 0 0;
+}
+
+/*-----  End of Footer  ------*/

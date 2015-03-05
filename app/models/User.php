@@ -23,4 +23,49 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
+	protected $fillable = array('email', 'password', 'real_name', 'priveleges');
+
+	// DEFINE RELATIONSHIPS
+
+	/**
+	 * favourite pms of the user.
+	 */
+	public function favorites() 
+	{
+		return $this->belongsToMany('App\Pms', 'favorite', 'user', 'pm');
+	}
+
+	/**
+	 * Roles of the user.
+	 */
+	public function roles() 
+	{
+		return $this->belongsToMany('App\Role', 'user_roles', 'user', 'role');
+	}
+
+	/**
+	 * Actions made by the user.
+	 */
+	public function actions() 
+	{
+		return $this->hasMany('App\Action');
+	}
+
+	/**
+	 * The users last read pms
+	 */
+	public function lastReadPms() 
+	{
+		return $this->belongsToMany('App\Pm', 'last_read', 'user', 'pm');
+	}
+
+	/**
+	 * Tags created by the user 
+	 */
+	public function createdTags() 
+	{
+		// TODO thinking if needed and 
+			//how to implement since I atm didn´t created a model for pm_tags
+	}
+
 }

@@ -1,7 +1,6 @@
 @extends('master')
 
-@section('head-title')
-    
+@section('head-extra')
 @stop
 
 @section('body')
