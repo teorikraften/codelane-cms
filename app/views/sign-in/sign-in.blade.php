@@ -11,13 +11,7 @@
 @section('body')
 	<h1>Logga in</h1>
 	{{ Form::open(array('url' => route('post-sign-in'), 'method' => 'post')) }}
-	@if (count($error) > 0)
-		<ul class="error">
-			@foreach ($error as $e)
-				<li>{{ $e }}</li>
-			@endforeach
-		</ul>
-	@endif
+	@include("includes.error")
 	<div class="form">
 		<div class="row">
 			<div class="description">{{ Form::label('email', 'E-postadress') }}</div>

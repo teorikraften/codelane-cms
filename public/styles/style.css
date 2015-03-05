@@ -290,6 +290,7 @@ div.form input.submit {
 	color: #000;
 	border: 0px solid #ccc;
 	padding: 9px 14px;
+	margin: 15px 0 10px;
 	background: #ac0;
 	font-size: 15px;
 	font-family: 'Open Sans', sans-serif; /* TODO Change if change font */
@@ -304,7 +305,7 @@ div.form .row {
 	width: 100%;
 }
 div.form .row.same {
-	padding: 10px;
+	padding: 1px;
 }
 div.form .row .description {
 	font-size: 15px;
