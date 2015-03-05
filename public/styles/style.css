@@ -228,7 +228,6 @@ body > #container {
 	cursor: pointer;
 	background: url(/images/burger.png) no-repeat;
 	float: right;
-	/*background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#66FF66), to(#338033)); /* Top left to bottom left*/
 	height: 34px;
 	margin: 12px;
 	width: 34px;
