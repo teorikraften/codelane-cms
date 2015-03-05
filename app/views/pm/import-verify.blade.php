@@ -11,14 +11,14 @@
 @section('body')
     <h1>Importera PM</h1>
     {{ Form::open(array('files' => true)) }}
-    <div class="form">
+    <div class="form" style="max-width: 100%">
 		<div class="row">
 			<div class="description">{{ Form::label('title', 'Rubrik') }}</div>
 			<div class="input">{{ Form::text('title', $file['title'], array('class' => 'text')) }}</div>
 		</div>
 		<div class="row">
-			<div class="description">{{ Form::label('content', 'Innehåll') }}</div>
-			<div class="input">{{ Form::textarea('content', $file['content'], array('class' => 'textarea')) }}</div>
+			<div class="description">{{ Form::label('contents', 'Innehåll') }}</div>
+			<div class="input">{{ Form::textarea('contents', $file['content'], array('class' => 'textarea')) }}</div>
 		</div>
 		<div class="row">
 			<div class="description">{{ Form::label('dnr_ds', 'Dnr DS') }}</div>

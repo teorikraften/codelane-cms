@@ -322,7 +322,7 @@ ul.pop {
 div.form {
 	max-width: 400px;
 }
-div.form input.text {
+div.form input.text, div.form textarea {
 	background: #fff;
 	margin: 0 -1px;
 	border: 1px solid #ccc;
@@ -331,6 +331,14 @@ div.form input.text {
 	border-radius: 4px; /* TODO Fix browser comp */
 	font-size: 15px;
 	font-family: 'Open Sans', sans-serif; /* TODO Change if change font */
+}
+div.form textarea {
+	height: 700px;
+	width: 96%;
+	padding: 10px 2%;
+	font-family: 'Lora';
+	line-height: 1.5;
+	font-size: 1.1em;
 }
 div.form input.submit {
 	border-radius: 20px; /* TODO Fix browser comp */
