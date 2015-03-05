@@ -28,6 +28,19 @@ class PMController extends BaseController {
 		return View::make('pm.edit')->with('token', $token);
 	}
 
+	public function showImportPage()
+	{
+		return View::make('pm.import');
+	}
+
+	public function import()
+	{
+		$filename = date('YmdHis') . '.pdf';
+		Input::file('file')->move('../public/uploadedPMs', $filename);
+		$info = PDFParser::parse('uploadedPMs', $filename);
+		return View::make('pm.import-verify')->with('file', $info);
+	}
+
 	/**
 	 * Displays the PM verify page view.
 	 * @param $token the PM token

@@ -11,6 +11,7 @@
 |
 */
 Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
+Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
 
 /*
 |
@@ -82,6 +83,7 @@ Route::get('/person/{id}/taggar', ['as' => 'admin-tags', 'uses' => 'AdminControl
 |
 */
 Route::get('/sok', ['as' => 'search-form', 'uses' => 'SearchController@showSearchPage']);
+Route::post('/sok', ['as' => 'post-search', 'uses' => 'SearchController@search']);
 Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'uses' => 'SearchController@showSearchResultPage'])
 	->where('page', '[0-9]*');
 
@@ -93,6 +95,10 @@ Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'use
 |
 */
 Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@showAddPMPage'])
+	->before('auth.verified');
+Route::get('/pm/importera', ['as' => 'pm-import', 'uses' => 'PMController@showImportPage'])
+	->before('auth.verified');
+Route::post('/pm/importera', ['as' => 'post-pm-import', 'uses' => 'PMController@import'])
 	->before('auth.verified');
 Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@showPMPage']);
 Route::get('/pm/{token}/original', ['as' => 'pm-download', 'uses' => 'PMController@showDownloadPage']);

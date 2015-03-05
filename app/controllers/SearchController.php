@@ -19,4 +19,12 @@ class SearchController extends BaseController {
 	{
 		return View::make('search.result')->with('searchQuery', $searchQuery);
 	}
+
+	/**
+	 * Performs search with search request in POST.
+	 * @return a redirect to search result view
+	 */
+	public function search() {
+		return Redirect::route('search-result', Input::get('search-query'));
+	}
 }
