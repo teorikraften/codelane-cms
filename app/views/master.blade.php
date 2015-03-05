@@ -8,8 +8,8 @@
     <script src="/js/jquery-1.11.2.js"></script>
 	<script type="text/javascript">
   		$(function() {
-      			$('.menu-btn').on('click', function(){
-              	$('.responsive-menu').toggleClass('expand');
+      		$('.menu-btn').on('click', function(){
+             	$('.responsive-menu').slideToggle(150);
       		});
     	});
   </script>
@@ -18,13 +18,14 @@
 </head>
 <body>
 	<nav class="navbar clearfix">
+		<div class="centrator">
 			<ul class="searchbar clearfix">
 				<li>
-					<form class="search-form" role="search">
-            			<input type="text" class="text-area" placeholder="Söktext">
-                   	   	<button type="submit" class="btn grow">Sök</button>
-         			</form>
-         		</li>
+					{{ Form::open(array('class' => 'search-form', 'role' => 'search', 'route' => 'post-search')) }}
+						{{ Form::text('search-query', NULL, array('class' => 'text-area', 'placeholder' => 'Söktext')) }}
+						{{ Form::submit('Sök', array('class' => 'btn grow')) }}
+	     			{{ Form::close(); }}
+	     		</li>
 			</ul>
 			<div class="menu-btn">
 				<button class="visible-xs" id="burger"></button> <!-- TODO -->
@@ -39,10 +40,13 @@
 						<li><a href="{{ URL::route('user', array(Auth::user()->id)) }}">Min sida</a></li>
 						<li><a href="{{ URL::route('sign-out') }}">Logga ut</a></li>
 					@endif
+					<li></li>
 				</ul>
 			</div>
+		</div>
 	</nav>
-	<div id="container">
+	<div class="clear"></div>
+	<div id="container" class="centrator">
 		<div id="content">
 		
 			@yield('body')

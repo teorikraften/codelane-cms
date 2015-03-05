@@ -4,5 +4,5 @@
 @stop
 
 @section('body')
-    
+    <h1>Startsidan</h1>
 @stop
