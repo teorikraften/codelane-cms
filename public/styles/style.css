@@ -400,3 +400,26 @@ div.form .row.same .input {
 }
 
 /*-----  End of Footer  ------*/
+
+/*===============================
+=            =Result            =
+===============================*/
+ul.result {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+ul.result li {
+	margin: 10px 0;
+}
+ul.result li a {
+	color: #9c0;
+}
+ul.result li h3 {
+	margin-bottom: 0;
+	padding-bottom: 0;
+}
+ul.result li p.description {
+	margin-top: 0;
+	padding-top: 0;
+}
