@@ -35,6 +35,7 @@
 					<li><a href="{{ URL::route('index') }}">Hem</a></li>
 					@if(Auth::guest())
 						<li><a href="{{ URL::route('sign-in') }}">Logga in</a></li>
+						<li><a href="{{ URL::route('sign-up') }}">Registrera dig</a></li>
 					@else
 						<li><a href="{{ URL::route('user', array(Auth::user())) }}">Min sida</a></li>
 						<li><a href="{{ URL::route('sign-out') }}">Logga ut</a></li>
