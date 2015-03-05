@@ -11,6 +11,7 @@
 |
 */
 Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
+Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
 
 /*
 |
