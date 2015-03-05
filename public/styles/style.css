@@ -1,3 +1,5 @@
+@import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);
+
 /*================================
 =            =Reset   			 =
 ================================*/
@@ -15,6 +17,7 @@ html,body, #container {
     margin:0;
     padding:0;
     height: 100%;
+    font-family: 'Open Sans', sans-serif;
 }
 
 body > #container { 
@@ -228,8 +231,7 @@ body > #container {
 
 #content { 
 	/* Add padding to fit content below/on top of header and footer respectively */
-	padding-top: 60px;
-	padding-bottom: 3em; 
+	padding: 70px 15px 3em;
 }
 /*-----  End of Container  ------*/
 
