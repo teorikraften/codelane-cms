@@ -258,8 +258,8 @@ body > #container {
 	line-height: 1.5;
 }
 
-#content h1 {
-	margin: 0 0 10px 0;
+#content h1, #content h2 {
+	margin: 15px 0 0px 0;
 }
 
 ul {
@@ -271,12 +271,25 @@ ul {
 /*==================================
 =            =Error	               =
 ==================================*/
-ul.error {
-	background: #fcc;
-	border: 1px solid #d88;
-	padding: 20px 20px 20px 40px;
+.pop {
+	padding: 20px 20px 20px 20px;
 	border-radius: 5px; /* TODO Fix browser comp */
 	margin: 0;
+}
+ul.pop {
+	padding: 20px 20px 20px 40px;
+}
+.pop.error {
+	background: #fcc;
+	border: 1px solid #d88;
+}
+.pop.message {
+	background: #ffc;
+	border: 1px solid #dd8;
+}
+.pop.success {
+	background: #cfc;
+	border: 1px solid #8d8;
 }
 
 

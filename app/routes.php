@@ -25,10 +25,10 @@ Route::get('/logga-ut', ['as' => 'sign-out', 'uses' => 'GuestController@showSign
 	->before('auth');
 Route::get('/registrera', ['as' => 'sign-up', 'uses' => 'GuestController@showSignUpPage'])
 	->before('guest');
-Route::get('/glomt-losenord', ['as' => 'reset-password', 'uses' => 'GuestController@showResetPasswordPage'])
-	->before('guest');
 Route::post('/registrera', ['as' => 'post-sign-up', 'uses' => 'GuestController@signUp'])
 	->before('/guest');
+Route::get('/glomt-losenord', ['as' => 'reset-password', 'uses' => 'GuestController@showResetPasswordPage'])
+	->before('guest');
 
 
 /*
@@ -39,9 +39,19 @@ Route::post('/registrera', ['as' => 'post-sign-up', 'uses' => 'GuestController@s
 Route::get('/person/{id}', ['as' => 'user', 'uses' => 'UserController@showProfilePage'])
 	->before('auth')
 	->where('id', '[0-9]+');
+
 Route::get('/person/{id}/andra', ['as' => 'user-edit', 'uses' => 'UserController@showEditProfilePage'])
 	->before('auth')
 	->where('id', '[0-9]+');
+
+Route::post('/person/{id}/andra', ['as' => 'post-user-edit', 'uses' => 'UserController@editProfile'])
+	->before('auth')
+	->where('id', '[0-9]+');
+
+Route::post('/person/{id}/andra-losenord', ['as' => 'post-change-password', 'uses' => 'UserController@changePassword'])
+	->before('auth')
+	->where('id', '[0-9]+');
+	
 Route::get('/person/{id}/favoriter', ['as' => 'user-favourites', 'uses' => 'UserController@showFavouritesPage'])
 	//->before('auth')
 	->where('id', '[0-9]+');
