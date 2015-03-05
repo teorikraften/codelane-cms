@@ -28,6 +28,16 @@ class PMController extends BaseController {
 		return View::make('pm.edit')->with('token', $token);
 	}
 
+	public function showImportPage()
+	{
+		return View::make('pm.import');
+	}
+
+	public function import()
+	{
+		return View::make('pm.import-verify');
+	}
+
 	/**
 	 * Displays the PM verify page view.
 	 * @param $token the PM token
