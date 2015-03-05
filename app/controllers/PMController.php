@@ -35,7 +35,10 @@ class PMController extends BaseController {
 
 	public function import()
 	{
-		return View::make('pm.import-verify');
+		$filename = date('YmdHis') . '.pdf';
+		Input::file('file')->move('../public/uploadedPMs', $filename);
+		$info = PDFParser::parse('uploadedPMs', $filename);
+		return View::make('pm.import-verify')->with('file', $info);
 	}
 
 	/**
