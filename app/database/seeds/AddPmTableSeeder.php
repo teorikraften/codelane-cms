@@ -10,7 +10,7 @@ class AddPmTableSeeder extends Seeder {
 		{
 			Pm::create(['title' => 'TestPM' . $index, 
 				'content' => 'Jag är ett test PM Nummer: ' . $index,
-				'created_by' => User::find(($index - 1) % 3 + 1),
+				'created_by' => User::find(($index - 1) % 3 + 1)->id,
 				'verified' => true
 				]);
 		}
@@ -27,7 +27,7 @@ class AddPmTableSeeder extends Seeder {
 		foreach (range(1, 25) as $value) {
 			$pm = PM::find((($value - 1 ) %  10) + 1);
 			$tag = Tag::find($value);
-			$pm->tags()->attach($tag);
+			$pm->tags()->attach([$value => ['added_by' => 1]]);
 			$pm->save();
 		}
 
