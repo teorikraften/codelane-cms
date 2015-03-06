@@ -19,7 +19,7 @@ class AddPmTableSeeder extends Seeder {
 		$this->command->info('10 PMs seeded');
 
 		foreach (range(1, 25) as $value) {
-			Tag::create( ['name' => $value]	);
+			Tag::create( ['name' => $value, 'token' => $value]	);
 		}
 
 		$this->command->info('25 Tags seeded');

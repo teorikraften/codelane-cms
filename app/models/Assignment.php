@@ -16,7 +16,7 @@ class Assignment extends Eloquent {
 	 */
 	public function pm() 
 	{
-		return $this->hasOne('App\Pm');
+		return $this->hasOne('Pm');
 	}
 
 	/**
@@ -24,6 +24,6 @@ class Assignment extends Eloquent {
 	 */
 	public function user() 
 	{
-		return $this->hasOne('App\User');
+		return $this->hasOne('User');
 	}
 }

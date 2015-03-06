@@ -16,7 +16,7 @@ class Review extends Eloquent {
 	 */
 	public function pm() 
 	{
-		return $this->hasOne('App\Pm', 'id', 'pm');
+		return $this->hasOne('Pm', 'id', 'pm');
 	}
 
 	/**
@@ -24,11 +24,11 @@ class Review extends Eloquent {
 	 */
 	public function user() 
 	{
-		return $this->hasOne('App\User', 'id' ,'user');
+		return $this->hasOne('User', 'id' ,'user');
 	}
 
 	public function comment() 
 	{
-		return $this->hasOne('App\Comment', 'id', 'comment');
+		return $this->hasOne('Comment', 'id', 'comment');
 	}
 }

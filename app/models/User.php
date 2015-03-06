@@ -32,7 +32,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function favorites() 
 	{
-		return $this->belongsToMany('App\Pms', 'favorites', 'user', 'pm');
+		return $this->belongsToMany('Pm', 'favorites', 'user', 'pm');
 	}
 
 	/**
@@ -40,7 +40,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function roles() 
 	{
-		return $this->belongsToMany('App\Role', 'user_roles', 'user', 'role');
+		return $this->belongsToMany('Role', 'user_roles', 'user', 'role');
 	}
 
 	/**
@@ -48,7 +48,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function assignment() 
 	{
-		return $this->hasMany('App\Assignemnt');
+		return $this->hasMany('Assignemnt');
 	}
 
 	/**
@@ -56,7 +56,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function lastReadPms() 
 	{
-		return $this->belongsToMany('App\Pm', 'last_read', 'user', 'pm');
+		return $this->belongsToMany('Pm', 'last_read', 'user', 'pm');
 	}
 
 	/**

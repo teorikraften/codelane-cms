@@ -16,12 +16,12 @@ class Comment extends Eloquent {
 	 */
 	public function pm() 
 	{
-		return $this->belongsTo('App\Review');
+		return $this->belongsTo('Review');
 	}
 
 	public function childComments() 
 	{
-		return $this->hasMany('App\Comment');
+		return $this->hasMany('Comment');
 	}
 
 
