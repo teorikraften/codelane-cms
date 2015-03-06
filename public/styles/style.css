@@ -189,6 +189,7 @@ body > #container {
 }
 
 
+
 /*==========  =Responsive  ==========*/
 
 .expand {
@@ -198,6 +199,14 @@ body > #container {
 .visible-xs {
 	display: none !important;
 }
+
+
+@media (min-width: 768px){
+	.responsive-menu{
+		display: block !important;
+	}
+}
+
 
 @media (max-width: 767px){
 	.menu {

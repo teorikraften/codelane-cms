@@ -16,11 +16,11 @@ class CreatePmTagsTable extends Migration {
 		{
 			$table->increments('id');
 			$table->integer('pm')->unsigned();
-			$table->foreign('pm')->references('pms')->on('id');
+			$table->foreign('pm')->references('id')->on('pms');
 			$table->integer('tag')->unsigned();
-			$table->foreign('tag')->references('tags')->on('id');
+			$table->foreign('tag')->references('id')->on('tags');
 			$table->integer('added_by')->unsigned();
-			$table->foreign('added_by')->references('user')->on('id');
+			$table->foreign('added_by')->references('id')->on('users');
 			$table->softDeletes();
 			$table->timestamps();
 		});

@@ -9,14 +9,17 @@ class AddPmTableSeeder extends Seeder {
 		foreach(range(1, 10) as $index)
 		{
 			Pm::create(['title' => 'TestPM' . $index, 
-				'content' => 'Jag är ett test PM Nummer: ' . $index
+				'content' => 'Jag är ett test. PM Nummer: ' . $index,
+				'created_by' => User::find(($index - 1) % 3 + 1)->id,
+				'verified' => true,
+				'token' => 'pm'.$index
 				]);
 		}
 
 		$this->command->info('10 PMs seeded');
 
 		foreach (range(1, 25) as $value) {
-			Tag::create( ['name' => $value]	);
+			Tag::create( ['name' => $value, 'token' => $value]	);
 		}
 
 		$this->command->info('25 Tags seeded');
@@ -25,7 +28,7 @@ class AddPmTableSeeder extends Seeder {
 		foreach (range(1, 25) as $value) {
 			$pm = PM::find((($value - 1 ) %  10) + 1);
 			$tag = Tag::find($value);
-			$pm->tags()->attach($tag);
+			$pm->tags()->attach([$value => ['added_by' => 1]]);
 			$pm->save();
 		}
 

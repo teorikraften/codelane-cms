@@ -17,7 +17,17 @@ class SearchController extends BaseController {
 	 */ 
 	public function showSearchResultPage($searchQuery, $order = '', $page = 1) 
 	{
-		return View::make('search.result')->with('searchQuery', $searchQuery);
+		$tagresult = array();
+		$tag = Tag::where('name', 'like', '%'.$searchQuery.'%')->get();
+		foreach ($tag as $key => $value) {
+			array_push($tagresult, $value->pm);
+		}
+
+		$result = Pm::where('content', 'like', '%'.$searchQuery.'%')->take(10)->get();
+		return View::make('search.result')
+		->with('searchQuery', $searchQuery)
+		->with('result', $result)
+		->with('tag', $tagresult);
 	}
 
 	/**

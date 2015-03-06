@@ -37,25 +37,20 @@ Route::get('/glomt-losenord', ['as' => 'reset-password', 'uses' => 'GuestControl
 | Signed in user related routes, like profile page.
 |
 */
-Route::get('/person/{id}', ['as' => 'user', 'uses' => 'UserController@showProfilePage'])
-	->before('auth')
-	->where('id', '[0-9]+');
+Route::get('/person', ['as' => 'user', 'uses' => 'UserController@showProfilePage'])
+	->before('auth');
 
-Route::get('/person/{id}/andra', ['as' => 'user-edit', 'uses' => 'UserController@showEditProfilePage'])
-	->before('auth')
-	->where('id', '[0-9]+');
+Route::get('/person/andra', ['as' => 'user-edit', 'uses' => 'UserController@showEditProfilePage'])
+	->before('auth');
 
-Route::post('/person/{id}/andra', ['as' => 'post-user-edit', 'uses' => 'UserController@editProfile'])
-	->before('auth')
-	->where('id', '[0-9]+');
+Route::post('/person/andra', ['as' => 'post-user-edit', 'uses' => 'UserController@editProfile'])
+	->before('auth');
 
-Route::post('/person/{id}/andra-losenord', ['as' => 'post-change-password', 'uses' => 'UserController@changePassword'])
-	->before('auth')
-	->where('id', '[0-9]+');
+Route::post('/person/andra-losenord', ['as' => 'post-change-password', 'uses' => 'UserController@changePassword'])
+	->before('auth');
 	
 Route::get('/person/{id}/favoriter', ['as' => 'user-favourites', 'uses' => 'UserController@showFavouritesPage'])
-	//->before('auth')
-	->where('id', '[0-9]+');
+	->before('auth');
 
 
 /*
@@ -63,18 +58,14 @@ Route::get('/person/{id}/favoriter', ['as' => 'user-favourites', 'uses' => 'User
 | Signed in admin functionality.
 |
 */
-Route::get('/person/{id}/personer', ['as' => 'admin-persons', 'uses' => 'AdminController@showPersonListPage'])
-	->before('auth.admin')
-	->where('id', '[0-9]+');
-Route::get('/person/{id}/pm', ['as' => 'admin-pms', 'uses' => 'AdminController@showPMListPage'])
-	->before('auth.admin')
-	->where('id', '[0-9]+');
-Route::get('/person/{id}/roller', ['as' => 'admin-roles', 'uses' => 'AdminController@showRolesListPage'])
-	->before('auth.admin')
-	->where('id', '[0-9]+');
-Route::get('/person/{id}/taggar', ['as' => 'admin-tags', 'uses' => 'AdminController@showTagsListPage'])
-	->before('auth.admin')
-	->where('id', '[0-9]+');
+Route::get('/person/personer', ['as' => 'admin-persons', 'uses' => 'AdminController@showPersonListPage'])
+	->before('auth.admin');
+Route::get('/person/pm', ['as' => 'admin-pms', 'uses' => 'AdminController@showPMListPage'])
+	->before('auth.admin');
+Route::get('/person/roller', ['as' => 'admin-roles', 'uses' => 'AdminController@showRolesListPage'])
+	->before('auth.admin');
+Route::get('/person/taggar', ['as' => 'admin-tags', 'uses' => 'AdminController@showTagsListPage'])
+	->before('auth.admin');
 
 
 /*
@@ -82,7 +73,9 @@ Route::get('/person/{id}/taggar', ['as' => 'admin-tags', 'uses' => 'AdminControl
 | Search functionality.
 |
 */
-Route::get('/sok', ['as' => 'search-form', 'uses' => 'SearchController@showSearchPage']);
+Route::get('/sok', ['as' => 'search-form', function() {
+	return Redirect::route('search-result', 'Easter Eggs');
+}]);
 Route::post('/sok', ['as' => 'post-search', 'uses' => 'SearchController@search']);
 Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'uses' => 'SearchController@showSearchResultPage'])
 	->where('page', '[0-9]*');
@@ -94,19 +87,33 @@ Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'use
 | TODO Check permissions
 |
 */
+Route::get('/pm', ['as' => 'pm', function() {
+	return Redirect::route('pm-add');
+}]);
 Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@showAddPMPage'])
 	->before('auth.verified');
+
 Route::get('/pm/importera', ['as' => 'pm-import', 'uses' => 'PMController@showImportPage'])
 	->before('auth.verified');
+
 Route::post('/pm/importera', ['as' => 'post-pm-import', 'uses' => 'PMController@import'])
 	->before('auth.verified');
-Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@showPMPage']);
-Route::get('/pm/{token}/original', ['as' => 'pm-download', 'uses' => 'PMController@showDownloadPage']);
+
+Route::any('/pm/importera/verifiera', ['as' => 'pm-import-verify', 'uses' => 'PMController@importVerify'])
+	->before('auth.verified');
+
+Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@showPMPage'])
+	->where('token', '.+');
+Route::get('/pm/{token}/original', ['as' => 'pm-download', 'uses' => 'PMController@showDownloadPage'])
+	->where('token', '.+');
 Route::get('/pm/{token}/andra', ['as' => 'pm-edit', 'uses' => 'PMController@showEditPMPage'])
+	->where('token', '.+')
 	->before('auth.verified');
 Route::get('/pm/{token}/ny-tagg', ['as' => 'pm-add-tag', 'uses' => 'PMController@showAddTagPage'])
+	->where('token', '.+')
 	->before('auth.verified');
 Route::get('/pm/{token}/verifiera', ['as' => 'pm-verify', 'uses' => 'PMController@showVerifyPage'])
+	->where('token', '.+')
 	->before('auth.verified'); // TODO
 
 

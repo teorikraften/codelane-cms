@@ -1,22 +1,27 @@
 @extends('master')
 
 @section('head-title')
-    Sökresultat av sökningen: "{{ $searchQuery }}"
+Sökresultat av sökningen: "{{ $searchQuery }}"
 @stop
 
 @section('body')
-    <h1>Sökresultat</h1>
-    <h2 class="search">Sökning: {{ $searchQuery }}</h2>
-    <ul class="result">
-    	<li>
-    		<h3><a href="{{ URL::route('pm-show', 'hjärtklinikens-papperskorgar') }}">Hjärtklinikens papperskorgar</a></h3>
-    		<p class="description">Alla Hjärtklinikens papperskorgar ska vara röda och tillverkade av 
-    			Johan Lantz ... om Jacobi har gjort papperskorgen ska detta utmärkas tydligt.</p>
-    	</li>
-    	<li>
-    		<h3><a href="{{ URL::route('pm-show', 'bokning-av-mötesrum') }}">Bokning av mötesrum</a></h3>
-    		<p class="description">... om ett mötesrum bokas av Andy kommer det förmodligen inte vara bokat länge till.
-    			Detta eftersom Andy ibland glömmer av boka. Eric brukar glömma att kvittera.</p>
-    	</li>
-    </ul>
+<h1>Sökresultat</h1>
+<h2 class="search">Sökning: {{ $searchQuery }}</h2>
+<ul class="result">
+    <h3>By content</h3>
+    @foreach($result as $pm)
+    <li>
+      <h3><a href="{{ URL::route('pm-show', $pm->token) }}">{{ $pm->title }}</a></h3>
+      <p class="description">{{ substr(trim(strip_tags($pm->content)), 0, 200) }}...</p>
+  </li>
+  @endforeach
+  <h3>By tag</h3>
+  @foreach($tag as $tlist)
+  <?php $t = $tlist[0]; ?>
+  <li>
+      <h3><a href="{{ URL::route('pm-show', $t->token) }}">{{ $t->title }}</a></h3>
+      <p class="description">{{ substr(trim(strip_tags($t->content)), 0, 200) }}...</p>
+  </li>
+  @endforeach
+</ul>
 @stop

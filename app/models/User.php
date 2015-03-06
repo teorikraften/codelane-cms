@@ -23,7 +23,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
-	protected $fillable = array('email', 'password', 'real_name', 'priveleges');
+	protected $fillable = array('email', 'password', 'real_name', 'priveleges','remember_token');
 
 	// DEFINE RELATIONSHIPS
 
@@ -32,7 +32,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function favorites() 
 	{
-		return $this->belongsToMany('App\Pms', 'favorite', 'user', 'pm');
+		return $this->belongsToMany('Pm', 'favorites', 'user', 'pm');
 	}
 
 	/**
@@ -40,15 +40,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function roles() 
 	{
-		return $this->belongsToMany('App\Role', 'user_roles', 'user', 'role');
+		return $this->belongsToMany('Role', 'user_roles', 'user', 'role');
 	}
 
 	/**
 	 * Actions made by the user.
 	 */
-	public function actions() 
+	public function assignment() 
 	{
-		return $this->hasMany('App\Action');
+		return $this->hasMany('Assignemnt');
 	}
 
 	/**
@@ -56,7 +56,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function lastReadPms() 
 	{
-		return $this->belongsToMany('App\Pm', 'last_read', 'user', 'pm');
+		return $this->belongsToMany('Pm', 'last_read', 'user', 'pm');
 	}
 
 	/**

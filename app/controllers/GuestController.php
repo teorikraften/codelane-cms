@@ -40,7 +40,7 @@ class GuestController extends BaseController {
 		[
 			'name' => 'required',
 			'email' => 'required|email|unique:users,email',
-			'password' => 'required|min:7',
+			'password' => 'required|min:7', 
 		],
 		[
     		'name.required' => 'Fyll i ditt namn',
