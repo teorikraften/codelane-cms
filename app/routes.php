@@ -37,25 +37,20 @@ Route::get('/glomt-losenord', ['as' => 'reset-password', 'uses' => 'GuestControl
 | Signed in user related routes, like profile page.
 |
 */
-Route::get('/person/{id}', ['as' => 'user', 'uses' => 'UserController@showProfilePage'])
-	->before('auth')
-	->where('id', '[0-9]+');
+Route::get('/person', ['as' => 'user', 'uses' => 'UserController@showProfilePage'])
+	->before('auth');
 
-Route::get('/person/{id}/andra', ['as' => 'user-edit', 'uses' => 'UserController@showEditProfilePage'])
-	->before('auth')
-	->where('id', '[0-9]+');
+Route::get('/person/andra', ['as' => 'user-edit', 'uses' => 'UserController@showEditProfilePage'])
+	->before('auth');
 
-Route::post('/person/{id}/andra', ['as' => 'post-user-edit', 'uses' => 'UserController@editProfile'])
-	->before('auth')
-	->where('id', '[0-9]+');
+Route::post('/person/andra', ['as' => 'post-user-edit', 'uses' => 'UserController@editProfile'])
+	->before('auth');
 
-Route::post('/person/{id}/andra-losenord', ['as' => 'post-change-password', 'uses' => 'UserController@changePassword'])
-	->before('auth')
-	->where('id', '[0-9]+');
+Route::post('/person/andra-losenord', ['as' => 'post-change-password', 'uses' => 'UserController@changePassword'])
+	->before('auth');
 	
 Route::get('/person/{id}/favoriter', ['as' => 'user-favourites', 'uses' => 'UserController@showFavouritesPage'])
-	//->before('auth')
-	->where('id', '[0-9]+');
+	->before('auth');
 
 
 /*
@@ -63,18 +58,14 @@ Route::get('/person/{id}/favoriter', ['as' => 'user-favourites', 'uses' => 'User
 | Signed in admin functionality.
 |
 */
-Route::get('/person/{id}/personer', ['as' => 'admin-persons', 'uses' => 'AdminController@showPersonListPage'])
-	->before('auth.admin')
-	->where('id', '[0-9]+');
-Route::get('/person/{id}/pm', ['as' => 'admin-pms', 'uses' => 'AdminController@showPMListPage'])
-	->before('auth.admin')
-	->where('id', '[0-9]+');
-Route::get('/person/{id}/roller', ['as' => 'admin-roles', 'uses' => 'AdminController@showRolesListPage'])
-	->before('auth.admin')
-	->where('id', '[0-9]+');
-Route::get('/person/{id}/taggar', ['as' => 'admin-tags', 'uses' => 'AdminController@showTagsListPage'])
-	->before('auth.admin')
-	->where('id', '[0-9]+');
+Route::get('/person/personer', ['as' => 'admin-persons', 'uses' => 'AdminController@showPersonListPage'])
+	->before('auth.admin');
+Route::get('/person/pm', ['as' => 'admin-pms', 'uses' => 'AdminController@showPMListPage'])
+	->before('auth.admin');
+Route::get('/person/roller', ['as' => 'admin-roles', 'uses' => 'AdminController@showRolesListPage'])
+	->before('auth.admin');
+Route::get('/person/taggar', ['as' => 'admin-tags', 'uses' => 'AdminController@showTagsListPage'])
+	->before('auth.admin');
 
 
 /*

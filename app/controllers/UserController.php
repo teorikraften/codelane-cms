@@ -5,28 +5,26 @@ class UserController extends BaseController {
 	 * Displays the profile page for the user.
 	 * @param $userId the user id for the user to be displayed
 	 */
-	public function showProfilePage($userId)
+	public function showProfilePage()
 	{
-		return View::make('user.profile')->with('user_id', $userId);
+		return View::make('user.profile');
 	}
 
 	/**
 	 * Displays the edit profile page view for the user.
 	 * @param $userId the user id for the user to be displayed
 	 */ 
-	public function showEditProfilePage($userId) 
+	public function showEditProfilePage() 
 	{
 		return View::make('user.edit-profile')
-			->with('user_id', $userId)
 			->with('error', Session::get('error'))
 			->with('success', Session::get('success'));
 	}
 
 	/**
 	 * Changes the password and redirects to profile edit page.
-	 * @param $userId the user id for the user to be displayed
 	 */ 
-	public function changePassword($userId) 
+	public function changePassword() 
 	{
 		// TODO Göra "upprepa lösenord"
 		$old_password = Input::get('old_password');
@@ -58,7 +56,7 @@ class UserController extends BaseController {
 		{
 			$messages = $validator->messages();
 			// If not succes set error and ask user to change input
-			return Redirect::route('user-edit', array(Auth::user()->id))
+			return Redirect::route('user-edit')
 				->with('errorType', 'profile')
 				->with('error', array_merge($messages->all(), $error))
 				->withInput();
@@ -69,14 +67,15 @@ class UserController extends BaseController {
 		$user->password = Hash::make($new_password);
 		$user->save();
 
-		return Redirect::route('user-edit', array(Auth::user()->id))->with('success', 'Lösenordet ändrades!');
+		return Redirect::route('user-edit')
+			->with('success', 'Lösenordet ändrades!');
 	}
 
 	/**
 	 * Changes the information of the user and redirects to profile edit page.
 	 * @param $userId the user id for the user to be displayed
 	 */ 
-	public function editProfile($userId) 
+	public function editProfile() 
 	{
 		// TODO Göra "upprepa lösenord"
 		$name = Input::get('real_name');
@@ -103,7 +102,7 @@ class UserController extends BaseController {
 		{
 			$messages = $validator->messages();
 			// If not succes set error and ask user to change input
-			return Redirect::route('user-edit', array(Auth::user()->id))
+			return Redirect::route('user-edit')
 				->with('errorType', 'profile')
 				->with('error', $messages->all())
 				->withInput();
@@ -115,16 +114,18 @@ class UserController extends BaseController {
 		$user->email = $email;
 		$user->save();
 
-		return Redirect::route('user-edit', array(Auth::user()->id))->with('success', 'Informationen uppdaterades!');
+		return Redirect::route('user-edit')
+			->with('success', 'Informationen uppdaterades!');
 	}
 
 	/**
 	 * Displays the user's favourites.	 
 	 * @param $userId the user id for the user to be displayed
 	 */
-	public function showFavouritesPage($userId) 
+	public function showFavouritesPage() 
 	{
 		$hej = array('Patric är korv', 'Jacobi och hans ilska');
-		return View::make('user.favourites')->with('user_id', $userId)->with('favoriter', $hej);
+		return View::make('user.favourites')
+			->with('favoriter', $hej);
 	}
 }
