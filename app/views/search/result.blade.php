@@ -12,7 +12,7 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
     @foreach($result as $pm)
     <li>
       <h3><a href="{{ URL::route('pm-show', $pm->token) }}">{{ $pm->title }}</a></h3>
-      <p class="description">{{ substr(trim($pm->content), 0, 200) }}...</p>
+      <p class="description">{{ substr(trim(strip_tags($pm->content)), 0, 200) }}...</p>
   </li>
   @endforeach
   <h3>By tag</h3>
@@ -20,7 +20,7 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
   <?php $t = $tlist[0]; ?>
   <li>
       <h3><a href="{{ URL::route('pm-show', $t->token) }}">{{ $t->title }}</a></h3>
-      <p class="description">{{ substr(trim($t->content), 0, 200) }}...</p>
+      <p class="description">{{ substr(trim(strip_tags($t->content)), 0, 200) }}...</p>
   </li>
   @endforeach
 </ul>
