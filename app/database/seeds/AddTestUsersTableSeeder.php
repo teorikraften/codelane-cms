@@ -8,6 +8,7 @@ class AddTestUsersTableSeeder extends Seeder {
 		User::create(['email' => 'testv@jdahl.se', 'real_name' => 'Verifierad Dahl', 'privileges' => 'verified', 'password' => Hash::make('v')]);
 		User::create(['email' => 'testa@jdahl.se', 'real_name' => 'Admin Jonasson', 'privileges' => 'admin', 'password' => Hash::make('a')]);
 
+		$this->command->info('3 användare skapade');
 	}
 
 }
