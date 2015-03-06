@@ -16,6 +16,7 @@ class CreateRolesTable extends Migration {
 		{
 			$table->increments('id');
 			$table->string('name', 100);
+			$table->enum('role_type', array('department', 'profession', 'clinic', 'hospital'));
 			$table->timestamps();
 			$table->softDeletes();
 		});

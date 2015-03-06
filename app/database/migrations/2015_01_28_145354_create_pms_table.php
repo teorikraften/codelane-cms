@@ -17,8 +17,12 @@ class CreatePmsTable extends Migration {
 			$table->increments('id');
 			$table->string('title', 150);
 			$table->text('content');
-			$table->string('original_filetype', 10);
 			$table->string('token', 150);
+			$table->boolean('verified');
+			$table->integer('created_by')->unsigned();
+			$table->foreign('created_by')->references('id')->on('users');
+			$table->date('expiration_date');
+			$table->date('first_published_date');
 			$table->timestamps();
 			$table->softDeletes();
 		});

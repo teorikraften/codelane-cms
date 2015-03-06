@@ -20,9 +20,9 @@ class CreateUsersTable extends Migration {
 			$table->string('real_name', 70);
 			$table->enum('privileges', array('unverified', 'verified', 'admin'))->default('unverified');
 			$table->timestamps();
-			$table->rememberToken();
 			$table->softDeletes();
-		});
+			$table->rememberToken();
+		});	
 	}
 
 
