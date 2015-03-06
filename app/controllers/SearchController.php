@@ -17,7 +17,10 @@ class SearchController extends BaseController {
 	 */ 
 	public function showSearchResultPage($searchQuery, $order = '', $page = 1) 
 	{
-		return View::make('search.result')->with('searchQuery', $searchQuery);
+		$result = Pm::where('content', 'like', '%'.$searchQuery.'%')->take(10)->get();
+		return View::make('search.result')
+			->with('searchQuery', $searchQuery)
+			->with('result', $result);
 	}
 
 	/**
