@@ -31,8 +31,15 @@ class AddPmTableSeeder extends Seeder {
 			$pm->tags()->attach([$value => ['added_by' => 1]]);
 			$pm->save();
 		}
-
 		$this->command->info('25 pm_tags seeded Example PM 1 has tag 1, 11, 21');
+
+		foreach (range(1, 25) as $value) {
+			$pm = PM::find((($value ) %  10) + 1);
+			$tag = Tag::find($value);
+			$pm->tags()->attach([$value => ['added_by' => 2]]);
+			$pm->save();
+		}
+
 
 	}
 
