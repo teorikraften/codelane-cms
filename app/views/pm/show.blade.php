@@ -24,18 +24,18 @@
 
 @section('body')
     <h1>{{ $pm->title }}</h1>
-    <a class="action" href="{{ URL::route('pm-download', $pm->token) }}">Ladda ner PM (.pdf)</a>
-    <a class="action" href="{{ URL::route('pm-download', $pm->token) }}">Skriv ut</a>
-    <span class="meter">
-    	<a href="javascript:void()" onclick="changeSize('pmc', -10, 'size')" class="first">Minska</a>
-    	<span class="middle">
-    		Textstorlek: 
-    		<span id="size">120</span>
-    		%
-    	</span>
-    	<a href="javascript:void()" onclick="changeSize('pmc', 10, 'size')" class="last">Öka</a>
-    </span>
     <div id="pmc" class="pm-content">
 	    {{ $pm->content }}
 	</div>
+    <a class="action" href="{{ URL::route('pm-download', $pm->token) }}">Ladda ner PM (.pdf)</a>
+    <a class="action" href="{{ URL::route('pm-download', $pm->token) }}">Skriv ut</a>
+    <span class="meter">
+        <a href="javascript:void()" onclick="changeSize('pmc', -10, 'size')" class="first">Minska</a>
+        <span class="middle">
+            Textstorlek: 
+            <span id="size">120</span>
+            %
+        </span>
+        <a href="javascript:void()" onclick="changeSize('pmc', 10, 'size')" class="last">Öka</a>
+    </span>
 @stop
