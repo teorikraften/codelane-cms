@@ -23,6 +23,8 @@ class SearchController extends BaseController {
 			array_push($tagresult, $value->pm);
 		}
 
+		$titleresult = PM::where('title', 'like', '%'.$searchQuery.'%')->get();
+
 		$result = Pm::where('content', 'like', '%'.$searchQuery.'%')->take(10)->get();
 		return View::make('search.result')
 		->with('searchQuery', $searchQuery)
