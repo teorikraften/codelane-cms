@@ -96,13 +96,18 @@ Route::get('/pm/importera', ['as' => 'pm-import', 'uses' => 'PMController@showIm
 	->before('auth.verified');
 Route::post('/pm/importera', ['as' => 'post-pm-import', 'uses' => 'PMController@import'])
 	->before('auth.verified');
-Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@showPMPage']);
-Route::get('/pm/{token}/original', ['as' => 'pm-download', 'uses' => 'PMController@showDownloadPage']);
+Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@showPMPage'])
+	->where('token', '.+');
+Route::get('/pm/{token}/original', ['as' => 'pm-download', 'uses' => 'PMController@showDownloadPage'])
+	->where('token', '.+');
 Route::get('/pm/{token}/andra', ['as' => 'pm-edit', 'uses' => 'PMController@showEditPMPage'])
+	->where('token', '.+')
 	->before('auth.verified');
 Route::get('/pm/{token}/ny-tagg', ['as' => 'pm-add-tag', 'uses' => 'PMController@showAddTagPage'])
+	->where('token', '.+')
 	->before('auth.verified');
 Route::get('/pm/{token}/verifiera', ['as' => 'pm-verify', 'uses' => 'PMController@showVerifyPage'])
+	->where('token', '.+')
 	->before('auth.verified'); // TODO
 
 
