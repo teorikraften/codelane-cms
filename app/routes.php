@@ -92,10 +92,16 @@ Route::get('/pm', ['as' => 'pm', function() {
 }]);
 Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@showAddPMPage'])
 	->before('auth.verified');
+
 Route::get('/pm/importera', ['as' => 'pm-import', 'uses' => 'PMController@showImportPage'])
 	->before('auth.verified');
+
 Route::post('/pm/importera', ['as' => 'post-pm-import', 'uses' => 'PMController@import'])
 	->before('auth.verified');
+
+Route::any('/pm/importera/verifiera', ['as' => 'pm-import-verify', 'uses' => 'PMController@importVerify'])
+	->before('auth.verified');
+
 Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@showPMPage'])
 	->where('token', '.+');
 Route::get('/pm/{token}/original', ['as' => 'pm-download', 'uses' => 'PMController@showDownloadPage'])

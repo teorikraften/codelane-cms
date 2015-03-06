@@ -18,4 +18,5 @@
         </tr>
     </table>
     <p>Du kan <a href="{{ URL::route('user-edit') }}">ändra informationen</a>.</p>
+    <p>Du kan <a href="{{ URL::route('pm-import') }}">importera PM</a>.</p>
 @stop
