@@ -73,7 +73,9 @@ Route::get('/person/taggar', ['as' => 'admin-tags', 'uses' => 'AdminController@s
 | Search functionality.
 |
 */
-Route::get('/sok', ['as' => 'search-form', 'uses' => 'SearchController@showSearchPage']);
+Route::get('/sok', ['as' => 'search-form', function() {
+	return Redirect::route('search-result', 'Easter Eggs');
+}]);
 Route::post('/sok', ['as' => 'post-search', 'uses' => 'SearchController@search']);
 Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'uses' => 'SearchController@showSearchResultPage'])
 	->where('page', '[0-9]*');
@@ -85,6 +87,9 @@ Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'use
 | TODO Check permissions
 |
 */
+Route::get('/pm/{token}', ['as' => 'pm', function() {
+	return Redirect::route('index');
+}]);
 Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@showAddPMPage'])
 	->before('auth.verified');
 Route::get('/pm/importera', ['as' => 'pm-import', 'uses' => 'PMController@showImportPage'])
