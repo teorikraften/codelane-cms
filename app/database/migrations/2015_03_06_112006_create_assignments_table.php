@@ -3,7 +3,7 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 
-class CreateStatisticsTable extends Migration {
+class CreateAssignmentsTable extends Migration {
 
 	/**
 	 * Run the migrations.
@@ -12,13 +12,16 @@ class CreateStatisticsTable extends Migration {
 	 */
 	public function up()
 	{
-		Schema::create('statistics', function(Blueprint $table)
+		Schema::create('assignments', function(Blueprint $table)
 		{
 			$table->increments('id');
+			$table->integer('user')->unsigned();
+			$table->foreign('user')->references('id')->on('users');
 			$table->integer('pm')->unsigned();
 			$table->foreign('pm')->references('id')->on('pms');
-			$table->string('referer', 255);
+			$table->enum('assignment', array('owner', 'member', 'reviewer'));
 			$table->timestamps();
+			$table->softDeletes();
 		});
 	}
 
@@ -30,7 +33,7 @@ class CreateStatisticsTable extends Migration {
 	 */
 	public function down()
 	{
-		Schema::drop('statistics');
+		Schema::drop('assignments');
 	}
 
 }
