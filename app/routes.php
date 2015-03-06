@@ -88,7 +88,7 @@ Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'use
 |
 */
 Route::get('/pm', ['as' => 'pm', function() {
-	return Redirect::route('index');
+	return Redirect::route('pm-add');
 }]);
 Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@showAddPMPage'])
 	->before('auth.verified');

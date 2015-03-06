@@ -17,5 +17,5 @@
             <td>{{ Auth::user()->email }}</td>
         </tr>
     </table>
-    <p>Du kan <a href="{{ URL::route('user-edit', array(Auth::user()->id)) }}">ändra informationen</a>.</p>
+    <p>Du kan <a href="{{ URL::route('user-edit') }}">ändra informationen</a>.</p>
 @stop
