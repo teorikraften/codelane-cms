@@ -87,7 +87,7 @@ Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'use
 | TODO Check permissions
 |
 */
-Route::get('/pm/{token}', ['as' => 'pm', function() {
+Route::get('/pm', ['as' => 'pm', function() {
 	return Redirect::route('index');
 }]);
 Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@showAddPMPage'])
