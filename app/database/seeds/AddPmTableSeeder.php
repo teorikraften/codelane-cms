@@ -9,7 +9,9 @@ class AddPmTableSeeder extends Seeder {
 		foreach(range(1, 10) as $index)
 		{
 			Pm::create(['title' => 'TestPM' . $index, 
-				'content' => 'Jag är ett test PM Nummer: ' . $index
+				'content' => 'Jag är ett test PM Nummer: ' . $index,
+				'created_by' => User::find(($index - 1) % 3 + 1),
+				'verified' => true
 				]);
 		}
 

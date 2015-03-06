@@ -37,5 +37,10 @@ class Pm extends Eloquent {
 		return $this->belongsToMany('App\Role', 'pm_roles', 'pm', 'role');
 	}
 
+	public function assignments() 
+	{
+		return $this->hasMany('App\Assignment');
+	}
+
 	
 }
