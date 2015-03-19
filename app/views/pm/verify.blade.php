@@ -7,3 +7,7 @@
 @section('body')
     
 @stop
+
+@section('submenu')
+	@include('includes.admin-menu')
+@stop
