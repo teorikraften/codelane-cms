@@ -12,52 +12,68 @@
              	$('.responsive-menu').slideToggle(150);
       		});
     	});
-  </script>
-
+  	</script>
 	@yield('head-extra')
 </head>
 <body>
-	<nav class="navbar clearfix">
-		<div class="centrator">
-			<ul class="searchbar clearfix">
-				<li>
-					{{ Form::open(array('class' => 'search-form', 'role' => 'search', 'route' => 'post-search')) }}
-						{{ Form::text('search-query', NULL, array('class' => 'text-area', 'placeholder' => 'Söktext')) }}
-						{{ Form::submit('Sök', array('class' => 'btn grow')) }}
-	     			{{ Form::close(); }}
-	     		</li>
-			</ul>
-			<div class="menu-btn">
-				<button class="visible-xs" id="burger"></button> <!-- TODO -->
+	<div class="page-wrap">
+		<nav class="navbar clearfix">
+			<div class="centrator">
+				@if(!Auth::guest() && !Request::is('/') && !Request::is('sok/*'))
+					<ul class="searchbar clearfix">
+						<li>
+							{{ Form::open(array('class' => 'search-form', 'role' => 'search', 'route' => 'post-search')) }}
+								{{ Form::text('search-query', NULL, array('class' => 'text-area', 'placeholder' => 'Söktext')) }}
+								{{ Form::submit('Sök', array('class' => 'btn grow')) }}
+			     			{{ Form::close(); }}
+			     		</li>
+					</ul>
+				@endif
+				<div class="menu-btn">
+					<button class="visible-xs" id="burger"></button> <!-- TODO -->
+				</div>
+				<div class="responsive-menu">
+					<ul class="menu clearfix">
+						<li><a href="{{ URL::route('index') }}">Hem</a></li>
+						@if(false)
+							<li><a href="{{ URL::route('sign-in') }}">Logga in</a></li>
+							<li><a href="{{ URL::route('sign-up') }}">Registrera dig</a></li>
+						@elseif(!Auth::guest())
+							<li><a href="{{ URL::route('user') }}">Min sida</a></li>
+							<li><a href="{{ URL::route('sign-out') }}">Logga ut</a></li>
+						@endif
+						<li></li>
+					</ul>
+				</div>
 			</div>
-			<div class="responsive-menu">
-				<ul class="menu clearfix">
-					<li><a href="{{ URL::route('index') }}">Hem</a></li>
-					@if(Auth::guest())
-						<li><a href="{{ URL::route('sign-in') }}">Logga in</a></li>
-						<li><a href="{{ URL::route('sign-up') }}">Registrera dig</a></li>
-					@else
-						<li><a href="{{ URL::route('user') }}">Min sida</a></li>
-						<li><a href="{{ URL::route('sign-out') }}">Logga ut</a></li>
-					@endif
-					<li></li>
+		</nav>
+		<div class="clear"></div>
+		@yield('submenu')
+		<div class="clear"></div>
+		<div id="container" class="centrator">
+			@yield('body')
+		</div>
+	</div>
+	<div id="footer" class="clearfix">
+		<div class="centrator">
+			<div class="col">
+				<h3>Sidinformation</h3>
+				<p>Sidan är gjord för Clinical Innovations Fellowship 2015. Läs mer <a href="{{ URL::route('about-index') }}">om oss som står bakom</a>.</p>
+			</div>
+			<div class="col">
+				<h3>Hjälp!</h3>
+				<p><a href="{{ URL::route('help-index') }}">Här hittar du all hjälp du kan behöva.</a></p>
+			</div>
+			<div class="col">
+				<h3>Senast lästa PM</h3>
+				<ul>
+					<li><a href="{{ URL::route('pm-show', 'void') }}">Blodcellsförgiftning hos patienter med låg BMI</a></li>
+					<li><a href="{{ URL::route('pm-show', 'void') }}">Hjärtklinikens papperskorgar</a></li>
+					<li><a href="{{ URL::route('pm-show', 'void') }}">Blankett för ansökan om skoavgift</a></li>
+					<li><a href="{{ URL::route('pm-show', 'void') }}">Tillvägagångssätt vid akut pengabrist</a></li>
 				</ul>
 			</div>
 		</div>
-	</nav>
-	<div class="clear"></div>
-	<div id="container" class="centrator">
-		<div id="content">
-		
-			@yield('body')
-
-		</div>
-	</div>
-	<div class="push"></div>
-	
-	<div id="footer" class="clearfix">
-			<a href="{{ URL::route('about-index') }}" class="pull-left" id="about">Om oss</a>
-			<a href="{{ URL::route('help-index') }}" class="pull-right" id="contact">Hjälp!</a>
 	</div>
 </body>
 </html>

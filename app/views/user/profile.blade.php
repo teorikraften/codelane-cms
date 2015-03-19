@@ -4,10 +4,18 @@
     Användare: {{ Auth::user()->real_name }}
 @stop
 
+@section('submenu')
+    @include('includes.admin-menu')
+@stop
+
 @section('body') 
     <h1>Ditt konto, {{ Auth::user()->real_name }}</h1>
     <p>Det här vet vi om dig:</p>
     <table>
+        <tr>
+            <th>Du är:</th>
+            <td>{{ Auth::user()->privileges }}</td>
+        </tr>
         <tr>
             <th>Namn:</th>
             <td>{{ Auth::user()->real_name }}</td>

@@ -1,4 +1,4 @@
-@import url(http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700);
+@import url(http://fonts.googleapis.com/css?family=Muli:400,700,400italic,700italic);
 @import url(http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic);
 
 /*================================
@@ -8,41 +8,30 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,
     margin:0;
     padding:0;
 }
-/*-----  End of Reset  ------*/
 
 /*================================
-=            =General            =
+=           htlm, body           =
 ================================*/
+html,body, #container {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: 'Muli', sans-serif;
+    font-size: 15px;
+}
+html {
+    min-height: 100%;
+}
+body {
+	background: #eee;
+}
 
+/*================================
+=             General            =
+================================*/
 .clear {
 	clear: both;
 }
-
-th {
-	text-align: left;
-}
-
-p {
-	margin: 10px 0;
-}
-
-th, td {
-	padding: 0 5px 0 0;
-}
-
-html,body, #container {
-    margin:0;
-    padding:0;
-    height: 100%;
-    font-family: 'Open Sans', sans-serif;
-    font-size: 15px;
-}
-
-body > #container { 
-	height: auto; 
-	min-height: 100%; 
-}
-
 .pull-left {
 	float: left;
 }
@@ -50,9 +39,65 @@ body > #container {
 .pull-right {
 	float: right;
 }
+p {
+	margin: 10px 0;
+}
+a {
+	color: #008247;
+}
 
-.clearfix:before,  
-.clearfix:after {  
+/*================================
+=             Tables             =
+================================*/
+th {
+	text-align: left;
+}
+th, td {
+	padding: 0 5px 0 0;
+}
+
+/*================================
+=             Footer             =
+================================*/
+.page-wrap {
+  	min-height: 100%;
+  	/* equal to footer height */
+  	margin-bottom: -300px; 
+}
+.page-wrap:after {
+  	content: "";
+  	display: block;
+}
+#footer, .page-wrap:after {
+  	height: 300px; 
+}
+#footer {
+	background: #ddd;
+	border-top: 2px solid #bbb;
+	margin-top: -2px;
+	line-height: 1.5;
+}
+#footer .centrator {
+	padding: 20px 0;
+	max-width: 900px;
+}
+/* TODO Make responsive */
+#footer .col {
+	width: 29.3%;
+	padding: 0 4% 0 0;
+	float: left;
+}
+#footer .col h3 {
+	border-bottom: 1px solid #aaa;
+}
+#footer .col ul {
+	margin: 10px 0 10px 15px;
+}
+
+/*================================
+=             Clearfix           =
+================================*/
+.clearfix:before, .clearfix:after {  
     content: " ";  
     display: table;  
 }  
@@ -66,93 +111,69 @@ body > #container {
   display: none !important;
   visibility: hidden !important;
 }
-/*-----  End of General  ------*/
 
 /*===============================
-=            =Header            =
+=             Header            =
 ===============================*/
-
-/* General styling */
+/* Navbar */
 .navbar {
     width: 100%;
     height: 60px;
-    font-size: 16px;
-    font-family: Tahoma, Geneva, sans-serif;
     font-weight: bold;
-    /*background-color: #03A89E;*/
-    background-color: #333;
-    padding: 0;
-    margin: 0;
+    background-color: #fff;
+    border-bottom: 2px solid #ccc;
 }
-
-/*==========  =Logo  ==========*/
-
 .navbar .logo {
 	float: left;
 	margin: 20px 0 0 40px;
 }
-
-/*==========  =Searchbar  ==========*/
-
 .centrator {
-	max-width: 900px;
+	max-width: 960px;
 	margin: 0 auto;
 }
 
+/* Searchbar */
 .searchbar {
 	list-style-type: none;
 	float: right;
 	margin: 9px 0 0 30px;
 }
 
-/* Search text-area */
+/* Searchbar text-area */
 .search-form .text-area {
 	border: 1px solid #ccc;
 	font-size: 16px;
 	height: 38px;
-	border-radius: 3px;
-	border-top-right-radius: 0px;
-	border-bottom-right-radius: 0px;
 	padding: 0 0 0 7px;
 	background: #eee;
 	width: 250px;
 	float: left;
 	display: inline-block;
-	font-family: 'Open Sans', sans-serif;
+	font-family: 'Muli', sans-serif;
 }
+
 /* Searchbutton */
 .search-form .btn {
-	font-family: 'Open-Sans', sans-serif;
-	font-weight: bold;
+	font-family: 'Muli', sans-serif;
+	font-weight: normal;
 	padding: 8px;
 	font-size: 14px;
-	background-color: #ac0;
+	background-color: #008472;
 	height: 40px;
 	width: 70px;
-	border-top-right-radius: 3px; /* TODO Fix */
-	border-bottom-right-radius: 3px;
 	border: 0;
 	float: left;
 	display: inline-block;
 	margin: 0 0 0 0px;
-	color: #000;
+	color: #fff;
 }
-
 .search-form .btn:hover {
-  background: #ce0;
-  border-top: none;
-  cursor: pointer;
+	background: #008472;
+	cursor: pointer;
 }
 
-.search-form .btn:active {
-	background: #3282d3;
-  border: 1px solid #154c8c;
-  border-bottom: 1px solid #0e408e;
-}
-
-/*==========  =Menu  ==========*/
-
-.menu {
+/* Menu */
+ul.menu {
 	float: left;
     margin: 0;
     padding-right: 40px;
@@ -160,8 +181,6 @@ body > #container {
     height: 60px;
     font-size: 0;
 }
-
-
 .menu li {
 	display: inline-block;
 	text-align: center;
@@ -170,44 +189,61 @@ body > #container {
 	float: left;
 	padding: 0 10px;
 }
-
 .menu a {
 	margin: 0;
 	display: block;
 	text-decoration: none;
-	color: #eee;
-	height: 60px;
+	color: #222;
+	height: 50px;
 	width: 100%;
   	line-height: 55px;
-  	background: #333;
-  	padding: 0 10px;
-  	transition: background .2s;
+  	background: #fff;
+  	padding: 5px 10px 5px;
+  	transition: background .1s;
+  	font-size: 18px;
+  	font-weight: normal;
 }
-
 .menu a:hover {
-	background: #444;
+	background: #ddd;
 }
 
+/* Sub menu */
+.submenu {
+	width: 100%;
+	background: #f5f5f5;
+	border-bottom: 1px solid #ccc;
+}
+.submenu ul {
+	list-style-type: none;
+	max-width: 920px;
+	margin: 0 auto;
+	display: block;
+}
+.submenu ul li {
+	float: left;
+}
+.submenu ul li a {
+	display: block;
+	padding: 10px 10px;
+	text-decoration: none;
+	color: #222;
+}
+.submenu ul li a:hover {
+	background: #ddd;
+}
 
-
-/*==========  =Responsive  ==========*/
-
+/* Responsive menu */
 .expand {
 	display: block !important; 
 }
-
 .visible-xs {
 	display: none !important;
 }
-
-
 @media (min-width: 768px){
 	.responsive-menu{
 		display: block !important;
 	}
 }
-
-
 @media (max-width: 767px){
 	.menu {
 		position: relative;
@@ -220,7 +256,7 @@ body > #container {
 		border-top: 5px solid #555;
 	}
 	.menu * {
-		background: #333;
+		background: #fff;
 		width: 100%;
 	}
 	.navbar .logo {
@@ -256,12 +292,11 @@ body > #container {
 		line-height: 40px;
 	}
 }
-
 .responsive-menu {
 	width: 100%;
 }
 
-/*==========  =Responsive components  ==========*/
+/* Responsive components */
 #burger {
 	cursor: pointer;
 	background: url(/images/burger.png) no-repeat;
@@ -272,35 +307,29 @@ body > #container {
 	border: 0;
 }
 
-/*-----  End of Header  ------*/
-
 /*==================================
-=            =Container            =
+=             Container            =
 ==================================*/
-
 #container {
 	max-width: 900px;
-	margin: 0 auto;
-}
-
-#content { 
-	/* Add padding to fit content below/on top of header and footer respectively */
-	padding: 0 20px 3em;
+	margin: 0 auto 50px;
 	line-height: 1.5;
 }
 
-#content h1, #content h2 {
+#container h1, #container h2 {
 	margin: 15px 0 10px 0;
 }
-
+.first-page h1 {
+	padding: 25px 0 30px;
+	text-align: center;
+	display: block;
+}
 ul {
 	margin: 0 0 0 20px;
 }
-/*-----  End of Container  ------*/
-
 
 /*==================================
-=            =Error	               =
+=             Error	               =
 ==================================*/
 .pop {
 	padding: 20px 20px 20px 20px;
@@ -325,7 +354,7 @@ ul.pop {
 
 
 /*==================================
-=            =Form	               =
+=             Form	               =
 ==================================*/
 
 div.form {
@@ -333,13 +362,12 @@ div.form {
 }
 div.form input.text, div.form textarea {
 	background: #fff;
-	margin: 0 -1px;
+	width: 100%;
 	border: 1px solid #ccc;
-	padding: 10px 2%;
-	width: 96%;
-	border-radius: 4px; /* TODO Fix browser comp */
+	padding: 10px 10px;
+	border-radius: 0px; /* TODO Fix browser comp */
 	font-size: 15px;
-	font-family: 'Open Sans', sans-serif; /* TODO Change if change font */
+	font-family: 'Muli', sans-serif; /* TODO Change if change font */
 }
 div.form textarea {
 	height: 700px;
@@ -350,14 +378,20 @@ div.form textarea {
 	font-size: 1.1em;
 }
 div.form input.submit {
-	border-radius: 20px; /* TODO Fix browser comp */
-	color: #000;
-	border: 0px solid #ccc;
+	border-radius: 0px; /* TODO Fix browser comp */
+	color: #fff;
+	border: 0px solid #ccc; /* TODO Fix */
 	padding: 9px 14px;
 	margin: 15px 0 10px;
-	background: #ac0;
+	background: #008472;
 	font-size: 15px;
-	font-family: 'Open Sans', sans-serif; /* TODO Change if change font */
+	font-family: 'Muli', sans-serif; /* TODO Change if change font */
+}
+div.form input.submit.no {
+	color: #008472;
+	padding: 8px 13px;
+	border: 1px solid #008472;
+	background: #fff;
 }
 div.form input.checkbox {
 	margin: 18px 10px;
@@ -373,7 +407,7 @@ div.form .row.same {
 }
 div.form .row .description {
 	font-size: 15px;
-	padding: 10px 0 5px;
+	padding: 10px 0 0px;
 }
 div.form .row.same .description {
 	width: 90%;
@@ -390,37 +424,7 @@ div.form .row.same .input {
 }
 
 /*===============================
-=            =Footer            =
-===============================*/
-
-#footer {
- 	position: relative;
- 	z-index: 10;
- 	height: 3em;
- 	margin-top: -3em;
-    font-size: 16px;
-    font-weight: bold;
-    /*background-color: #03A89E;*/
-    background-color: #ccc;
-}
-
-#footer a {
- 	color: #000;
- 	text-decoration: none;
-}
-
-#footer #about {
-	padding: 15px 0 0 40px;
-}
-
-#footer #contact {
-	padding: 15px 40px 0 0;
-}
-
-/*-----  End of Footer  ------*/
-
-/*===============================
-=            =Result            =
+=             Result            =
 ===============================*/
 ul.result {
 	list-style-type: none;
@@ -443,14 +447,13 @@ ul.result li p.description {
 }
 
 /*===============================
-=            =PM                =
+=             PM                =
 ===============================*/
 a.action {
-	background: #ac0;
-	display: block;
-	border-radius: 30px;
+	background: #008472;
+	float: left;
 	padding: 5px 15px;
-	color: #000;
+	color: #fff;
 	text-decoration: none;
 	max-width: 400px;
 	margin: 5px 0;
@@ -502,4 +505,73 @@ a.action {
 	float: right;
 }
 
+/*===============================
+=         First page login      =
+===============================*/
+.login.form {
+	margin: 0 auto;
+	width: 300px;
+	max-width: 300px;
+	background: #fff;
+}
+.login.form .content {
+	padding: 10px 40px 20px 20px;
+}
+.login.form .choose-type {
+	padding: 10px 15px;
+	font-size: 17px;
+	font-weight: normal;
+	width: 120px;
+	float: left;
+	display: block;
+	background: #ddd;
+	color: #000;
+	text-decoration: none;
+	text-align: center;
+}
+.login.form .choose-type.active {
+	background: #fff;
+	color: #000;
+}
+/* TODO: Style checkbox; */
+.login.form div.submit {
+	margin-right: -20px;
+}
+.login.form input.submit {
+	width: 100%;
+	display: block;
+	padding: 10px 30px;
+	font-size: 20px;
+}
 
+
+/*===============================
+=         Big search form       =
+===============================*/
+.form.big-search {
+	margin: 20px 0;
+	width: 100%;
+	max-width: 100%;
+}
+.form.big-search .search-field {
+	padding-right: 80px;
+}
+.form.big-search input.text {
+	font-size: 25px;
+	font-weight: normal;
+	margin: 0;
+	float: left;
+	width: 100%;
+	/* TODO FIX */
+}
+.form.big-search input.submit {
+	font-size: 25px;
+	font-weight: normal;
+	float: left;
+	display: inline;
+	margin: 0;
+	width: 80px;
+	height: 53px;
+	border-left: 0;
+	margin-left: -80px;
+}
