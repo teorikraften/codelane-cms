@@ -387,6 +387,12 @@ div.form input.submit {
 	font-size: 15px;
 	font-family: 'Muli', sans-serif; /* TODO Change if change font */
 }
+div.form input.submit.no {
+	color: #008472;
+	padding: 8px 13px;
+	border: 1px solid #008472;
+	background: #fff;
+}
 div.form input.checkbox {
 	margin: 18px 10px;
 	display: block;

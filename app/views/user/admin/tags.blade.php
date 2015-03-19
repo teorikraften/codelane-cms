@@ -21,7 +21,7 @@
     	@foreach($tags as $tag)
     		<tr>
     			<td><a href="">Ändra</a></td>
-    			<td><a href="">Ta bort</a></td>
+    			<td><a href="{{ URL::route('admin-tags-delete', $tag->token) }}">Ta bort</a></td>
     			<td>{{ $tag->name }}</td>
     		</tr>
     	@endforeach

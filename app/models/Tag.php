@@ -1,6 +1,10 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+
 class Tag extends Eloquent {
+
+	use SoftDeletingTrait;
 
 	/**
 	 * The database table used by the model.
@@ -10,6 +14,8 @@ class Tag extends Eloquent {
 	protected $table = 'tags';
 
 	protected $fillable = array('name', 'token');
+
+	protected $dates = ['deleted_at'];
 
 	/**
 	 * All pms with the tag.

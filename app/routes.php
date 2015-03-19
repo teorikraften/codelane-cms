@@ -70,6 +70,10 @@ Route::get('/person/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'AdminContr
 	->before('auth.admin');
 Route::post('/person/taggar/ny', ['as' => 'post-admin-tags-new', 'uses' => 'AdminController@addTag'])
 	->before('auth.admin');
+Route::get('/person/taggar/ta-bort/{token}', ['as' => 'admin-tags-delete', 'uses' => 'AdminController@showDeleteTagPage'])
+	->before('auth.admin');
+Route::post('/person/taggar/ta-bort', ['as' => 'post-admin-tags-delete', 'uses' => 'AdminController@deleteTag'])
+	->before('auth.admin');
 
 
 /*

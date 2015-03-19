@@ -57,4 +57,24 @@ class AdminController extends BaseController {
 		$tag->save();
 		return Redirect::route('admin-tags')->with('success', 'Taggen skapades.'); // TODO Show
 	}
+
+	/**
+	 * Displays a page to add tag for admin.
+	 */
+	public function showDeleteTagPage($token) 
+	{
+		$tag = Tag::where('token', '=', $token)->firstOrFail(); // TODO Make sure no fail...
+		return View::make('user.admin.tags-delete')->with('tag', $tag);
+	}
+
+	/**
+	 * Handles a post request of delete tag.
+	 */
+	public function deleteTag() 
+	{
+		// TODO Better
+		$token = Input::get('tag-token');
+		Tag::where('token', '=', $token)->delete();
+		return Redirect::route('admin-tags')->with('success', 'Taggen skapades.'); // TODO Show
+	}
 }
