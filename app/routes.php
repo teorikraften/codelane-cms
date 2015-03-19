@@ -74,6 +74,10 @@ Route::get('/person/taggar/ta-bort/{token}', ['as' => 'admin-tags-delete', 'uses
 	->before('auth.admin');
 Route::post('/person/taggar/ta-bort', ['as' => 'post-admin-tags-delete', 'uses' => 'AdminController@deleteTag'])
 	->before('auth.admin');
+Route::get('/person/taggar/andra/{token}', ['as' => 'admin-tags-edit', 'uses' => 'AdminController@showEditTagPage'])
+	->before('auth.admin');
+Route::post('/person/taggar/andra', ['as' => 'post-admin-tags-edit', 'uses' => 'AdminController@editTag'])
+	->before('auth.admin');
 
 
 /*
