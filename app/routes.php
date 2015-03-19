@@ -66,6 +66,10 @@ Route::get('/person/roller', ['as' => 'admin-roles', 'uses' => 'AdminController@
 	->before('auth.admin');
 Route::get('/person/taggar', ['as' => 'admin-tags', 'uses' => 'AdminController@showTagsListPage'])
 	->before('auth.admin');
+Route::get('/person/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'AdminController@showAddTagPage'])
+	->before('auth.admin');
+Route::post('/person/taggar/ny', ['as' => 'post-admin-tags-new', 'uses' => 'AdminController@addTag'])
+	->before('auth.admin');
 
 
 /*

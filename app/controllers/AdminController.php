@@ -34,6 +34,27 @@ class AdminController extends BaseController {
 	 */
 	public function showTagsListPage() 
 	{
-		return View::make('user.admin.tags')->with('tags', Tag::take(10)->get());
+		return View::make('user.admin.tags')->with('tags', Tag::take(100)->get());
+	}
+
+	/**
+	 * Displays a page to add tag for admin.
+	 */
+	public function showAddTagPage() 
+	{
+		return View::make('user.admin.tags-new');
+	}
+
+	/**
+	 * Handles a post request of add tag.
+	 */
+	public function addTag() 
+	{
+		// TODO Better
+		$name = Input::get('name');
+		$tag = new Tag;
+		$tag->name = $name;
+		$tag->save();
+		return Redirect::route('admin-tags')->with('success', 'Taggen skapades.'); // TODO Show
 	}
 }

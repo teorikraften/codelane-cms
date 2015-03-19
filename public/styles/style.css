@@ -444,11 +444,10 @@ ul.result li p.description {
 =             PM                =
 ===============================*/
 a.action {
-	background: #ac0;
-	display: block;
-	border-radius: 30px;
+	background: #008472;
+	float: left;
 	padding: 5px 15px;
-	color: #000;
+	color: #fff;
 	text-decoration: none;
 	max-width: 400px;
 	margin: 5px 0;
