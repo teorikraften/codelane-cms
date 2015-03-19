@@ -5,35 +5,35 @@ class AdminController extends BaseController {
 	 * Displays a list of all registered persons.
 	 * @param $userId the user id of the admin
 	 */
-	public function showPersonListPage($userId)
+	public function showPersonListPage()
 	{
-		return View::make('user.admin.persons')->with('user_id', $userId);
+		return View::make('user.admin.persons');
 	}
 
 	/**
 	 * Displays a list of PM for admin.
 	 * @param $userId the user id of the admin
 	 */ 
-	public function showPMListPage($userId) 
+	public function showPMListPage() 
 	{
-		return View::make('user.admin.pms')->with('user_id', $userId);
+		return View::make('user.admin.pms');
 	}
 
 	/**
 	 * Displays the roles for admin.	 
 	 * @param $userId the user id of the admin
 	 */
-	public function showRolesListPage($userId) 
+	public function showRolesListPage() 
 	{
-		return View::make('user.admin.roles')->with('user_id', $userId);
+		return View::make('user.admin.roles');
 	}
 
 	/**
 	 * Displays the tags for admin.	 
 	 * @param $userId the user id of the admin
 	 */
-	public function showTagsListPage($userId) 
+	public function showTagsListPage() 
 	{
-		return View::make('user.admin.tags')->with('user_id', $userId);
+		return View::make('user.admin.tags')->with('tags', Tag::take(10)->get());
 	}
 }
