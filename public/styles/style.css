@@ -432,10 +432,10 @@ ul.result {
 	padding: 0;
 }
 ul.result li {
-	margin: 10px 0;
+	margin: 15px 0;
 }
 ul.result li a {
-	color: #9c0;
+	color: #008472;
 }
 ul.result li h3 {
 	margin-bottom: 0;
@@ -509,7 +509,7 @@ a.action {
 =         First page login      =
 ===============================*/
 .login.form {
-	margin: 0 auto;
+	margin: 0 auto 50px;
 	width: 300px;
 	max-width: 300px;
 	background: #fff;

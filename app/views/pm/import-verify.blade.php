@@ -14,6 +14,10 @@
 	</script>
 @stop
 
+@section('submenu')
+	@include('includes.admin-menu')
+@stop
+
 @section('body')
     <h1>Importera PM</h1>
     {{ Form::open(array('files' => true)) }}

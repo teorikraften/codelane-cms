@@ -67,10 +67,10 @@
 			<div class="col">
 				<h3>Senast lästa PM</h3>
 				<ul>
-					<li><a href="{{ URL::route('pm-show', 'void') }}">Blodcellsförgiftning hos patienter med låg BMI</a></li>
-					<li><a href="{{ URL::route('pm-show', 'void') }}">Hjärtklinikens papperskorgar</a></li>
-					<li><a href="{{ URL::route('pm-show', 'void') }}">Blankett för ansökan om skoavgift</a></li>
-					<li><a href="{{ URL::route('pm-show', 'void') }}">Tillvägagångssätt vid akut pengabrist</a></li>
+					<?php $pms = PM::orderBy('id', 'desc')->take(6)->get(); // TODO ?>
+					@foreach($pms as $pm)
+						<li><a href="{{ URL::route('pm-show', $pm->token) }}">{{ $pm->title }}</a></li>
+					@endforeach
 				</ul>
 			</div>
 		</div>
