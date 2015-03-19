@@ -1,6 +1,7 @@
 <?php
 
-class TagController extends BaseController {
+class TagContoller extends BaseController {
+	
 	/**
 	 * Displays a list of all the PM for tag.
 	 * @param $tag the tag

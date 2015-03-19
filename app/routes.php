@@ -64,19 +64,39 @@ Route::get('/person/pm', ['as' => 'admin-pms', 'uses' => 'AdminController@showPM
 	->before('auth.admin');
 Route::get('/person/roller', ['as' => 'admin-roles', 'uses' => 'AdminController@showRolesListPage'])
 	->before('auth.admin');
-Route::get('/person/taggar', ['as' => 'admin-tags', 'uses' => 'AdminController@showTagsListPage'])
+
+
+Route::get('/person/taggar', ['as' => 'admin-tags', 'uses' => 'TagController@showTagsListPage'])
 	->before('auth.admin');
-Route::get('/person/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'AdminController@showAddTagPage'])
+Route::get('/person/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'TagController@showAddTagPage'])
 	->before('auth.admin');
-Route::post('/person/taggar/ny', ['as' => 'post-admin-tags-new', 'uses' => 'AdminController@addTag'])
+Route::post('/person/taggar/ny', ['as' => 'post-admin-tags-new', 'uses' => 'TagController@addTag'])
 	->before('auth.admin');
-Route::get('/person/taggar/ta-bort/{token}', ['as' => 'admin-tags-delete', 'uses' => 'AdminController@showDeleteTagPage'])
+Route::get('/person/taggar/ta-bort/{token}', ['as' => 'admin-tags-delete', 'uses' => 'TagController@showDeleteTagPage'])
 	->before('auth.admin');
-Route::post('/person/taggar/ta-bort', ['as' => 'post-admin-tags-delete', 'uses' => 'AdminController@deleteTag'])
+Route::post('/person/taggar/ta-bort', ['as' => 'post-admin-tags-delete', 'uses' => 'TagController@deleteTag'])
 	->before('auth.admin');
-Route::get('/person/taggar/andra/{token}', ['as' => 'admin-tags-edit', 'uses' => 'AdminController@showEditTagPage'])
+Route::get('/person/taggar/andra/{token}', ['as' => 'admin-tags-edit', 'uses' => 'TagController@showEditTagPage'])
 	->before('auth.admin');
-Route::post('/person/taggar/andra', ['as' => 'post-admin-tags-edit', 'uses' => 'AdminController@editTag'])
+Route::post('/person/taggar/andra', ['as' => 'post-admin-tags-edit', 'uses' => 'TagController@editTag'])
+	->before('auth.admin');
+
+
+Route::get('/person/roller', ['as' => 'admin-roles', 'uses' => 'RoleController@showRolesListPage'])
+	->before('auth.admin');
+Route::get('/person/roller/ny', ['as' => 'admin-roles-new', 'uses' => 'RoleController@showAddRolePage'])
+	->before('auth.admin');
+Route::post('/person/roller/ny', ['as' => 'post-admin-roles-new', 'uses' => 'RoleController@addRole'])
+	->before('auth.admin');
+Route::get('/person/roller/ta-bort/{id}', ['as' => 'admin-roles-delete', 'uses' => 'RoleController@showDeleteRolePage'])
+	->before('auth.admin')
+	->where('id', '[0-9]+');
+Route::post('/person/roller/ta-bort', ['as' => 'post-admin-roles-delete', 'uses' => 'RoleController@deleteRole'])
+	->before('auth.admin');
+Route::get('/person/roller/andra/{id}', ['as' => 'admin-roles-edit', 'uses' => 'RoleController@showEditRolePage'])
+	->before('auth.admin')
+	->where('id', '[0-9]+');
+Route::post('/person/roller/andra', ['as' => 'post-admin-roles-edit', 'uses' => 'RoleController@editRole'])
 	->before('auth.admin');
 
 
@@ -134,7 +154,7 @@ Route::get('/pm/{token}/verifiera', ['as' => 'pm-verify', 'uses' => 'PMControlle
 | Functionality directly connected to tags.
 |
 */
-Route::get('/tagg/{tag}/{page?}', ['as' => 'tag-show', 'uses' => 'showTagPMListPage'])
+Route::get('/tagg/{tag}/{page?}', ['as' => 'tag-show', 'uses' => 'TagController@showTagPMListPage'])
 	->where('page', '[0-9]+');
 
 
