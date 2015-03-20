@@ -4,10 +4,11 @@ use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
-	use UserTrait, RemindableTrait;
+	use UserTrait, RemindableTrait, SoftDeletingTrait;
 
 	/**
 	 * The database table used by the model.
@@ -24,6 +25,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	protected $hidden = array('password', 'remember_token');
 
 	protected $fillable = array('email', 'password', 'real_name', 'priveleges','remember_token');
+
+	protected $dates = ['deleted_at'];
 
 	// DEFINE RELATIONSHIPS
 
@@ -68,4 +71,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 			//how to implement since I atm didn´t created a model for pm_tags
 	}
 
+	/**
+	 * Returns user's privileges as a nice string word.
+	 */
+	public function privileges() {
+		if ($this->privileges == 'admin') 
+			return "administatör";
+		if ($this->privileges == 'verified') 
+			return "verifierad";
+		return "overifierad";
+	}
 }

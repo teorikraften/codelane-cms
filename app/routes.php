@@ -66,37 +66,66 @@ Route::get('/person/roller', ['as' => 'admin-roles', 'uses' => 'AdminController@
 	->before('auth.admin');
 
 
-Route::get('/person/taggar', ['as' => 'admin-tags', 'uses' => 'TagController@showTagsListPage'])
+Route::get('/admin/taggar', ['as' => 'admin-tags', 'uses' => 'TagController@showTagsListPage'])
 	->before('auth.admin');
-Route::get('/person/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'TagController@showAddTagPage'])
+Route::get('/admin/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'TagController@showAddTagPage'])
 	->before('auth.admin');
-Route::post('/person/taggar/ny', ['as' => 'post-admin-tags-new', 'uses' => 'TagController@addTag'])
+Route::post('/admin/taggar/ny', ['as' => 'post-admin-tags-new', 'uses' => 'TagController@addTag'])
 	->before('auth.admin');
-Route::get('/person/taggar/ta-bort/{token}', ['as' => 'admin-tags-delete', 'uses' => 'TagController@showDeleteTagPage'])
+Route::get('/admin/taggar/ta-bort/{token}', ['as' => 'admin-tags-delete', 'uses' => 'TagController@showDeleteTagPage'])
 	->before('auth.admin');
-Route::post('/person/taggar/ta-bort', ['as' => 'post-admin-tags-delete', 'uses' => 'TagController@deleteTag'])
+Route::post('/admin/taggar/ta-bort', ['as' => 'post-admin-tags-delete', 'uses' => 'TagController@deleteTag'])
 	->before('auth.admin');
-Route::get('/person/taggar/andra/{token}', ['as' => 'admin-tags-edit', 'uses' => 'TagController@showEditTagPage'])
+Route::get('/admin/taggar/andra/{token}', ['as' => 'admin-tags-edit', 'uses' => 'TagController@showEditTagPage'])
 	->before('auth.admin');
-Route::post('/person/taggar/andra', ['as' => 'post-admin-tags-edit', 'uses' => 'TagController@editTag'])
+Route::post('/admin/taggar/andra', ['as' => 'post-admin-tags-edit', 'uses' => 'TagController@editTag'])
 	->before('auth.admin');
 
 
-Route::get('/person/roller', ['as' => 'admin-roles', 'uses' => 'RoleController@showRolesListPage'])
+Route::get('/admin/roller', ['as' => 'admin-roles', 'uses' => 'RoleController@showRolesListPage'])
 	->before('auth.admin');
-Route::get('/person/roller/ny', ['as' => 'admin-roles-new', 'uses' => 'RoleController@showAddRolePage'])
+Route::get('/admin/roller/ny', ['as' => 'admin-roles-new', 'uses' => 'RoleController@showAddRolePage'])
 	->before('auth.admin');
-Route::post('/person/roller/ny', ['as' => 'post-admin-roles-new', 'uses' => 'RoleController@addRole'])
+Route::post('/admin/roller/ny', ['as' => 'post-admin-roles-new', 'uses' => 'RoleController@addRole'])
 	->before('auth.admin');
-Route::get('/person/roller/ta-bort/{id}', ['as' => 'admin-roles-delete', 'uses' => 'RoleController@showDeleteRolePage'])
+Route::get('/admin/roller/ta-bort/{id}', ['as' => 'admin-roles-delete', 'uses' => 'RoleController@showDeleteRolePage'])
 	->before('auth.admin')
 	->where('id', '[0-9]+');
-Route::post('/person/roller/ta-bort', ['as' => 'post-admin-roles-delete', 'uses' => 'RoleController@deleteRole'])
+Route::post('/admin/roller/ta-bort', ['as' => 'post-admin-roles-delete', 'uses' => 'RoleController@deleteRole'])
 	->before('auth.admin');
-Route::get('/person/roller/andra/{id}', ['as' => 'admin-roles-edit', 'uses' => 'RoleController@showEditRolePage'])
+Route::get('/admin/roller/andra/{id}', ['as' => 'admin-roles-edit', 'uses' => 'RoleController@showEditRolePage'])
 	->before('auth.admin')
 	->where('id', '[0-9]+');
-Route::post('/person/roller/andra', ['as' => 'post-admin-roles-edit', 'uses' => 'RoleController@editRole'])
+Route::post('/admin/roller/andra', ['as' => 'post-admin-roles-edit', 'uses' => 'RoleController@editRole'])
+	->before('auth.admin');
+
+
+Route::get('/admin/personer', ['as' => 'admin-users', 'uses' => 'UserAdminController@showUsersListPage'])
+	->before('auth.admin');
+Route::get('/admin/personer/ny', ['as' => 'admin-users-new', 'uses' => 'UserAdminController@showAddUserPage'])
+	->before('auth.admin');
+Route::post('/admin/personer/ny', ['as' => 'post-admin-users-new', 'uses' => 'UserAdminController@addUser'])
+	->before('auth.admin');
+Route::get('/admin/personer/ta-bort/{id}', ['as' => 'admin-users-delete', 'uses' => 'UserAdminController@showDeleteUserPage'])
+	->before('auth.admin')
+	->where('id', '[0-9]+');
+Route::post('/admin/personer/ta-bort', ['as' => 'post-admin-users-delete', 'uses' => 'UserAdminController@deleteUser'])
+	->before('auth.admin');
+Route::get('/admin/personer/andra/{id}', ['as' => 'admin-users-edit', 'uses' => 'UserAdminController@showEditUserPage'])
+	->before('auth.admin')
+	->where('id', '[0-9]+');
+Route::get('/admin/personer/verifiera/{id}', ['as' => 'admin-users-verify', 'uses' => 'UserAdminController@showVerifyUserPage'])
+	->before('auth.admin')
+	->where('id', '[0-9]+');
+Route::post('/admin/personer/verifiera', ['as' => 'post-admin-users-verify', 'uses' => 'UserAdminController@verifyUser'])
+	->before('auth.admin');
+Route::post('/admin/personer/andra', ['as' => 'post-admin-users-edit', 'uses' => 'UserAdminController@editUser'])
+	->before('auth.admin');
+
+
+Route::get('/admin/pm', ['as' => 'admin-pm', 'uses' => 'PMController@showPMListPage'])
+	->before('auth.admin');
+Route::get('/admin/pm/ta-bort', ['as' => 'admin-pm-delete', 'uses' => 'PMController@showDeletePMPage'])
 	->before('auth.admin');
 
 
@@ -125,13 +154,13 @@ Route::get('/pm', ['as' => 'pm', function() {
 Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@showAddPMPage'])
 	->before('auth.verified');
 
-Route::get('/pm/importera', ['as' => 'pm-import', 'uses' => 'PMController@showImportPage'])
+Route::get('/admin/importera', ['as' => 'pm-import', 'uses' => 'PMController@showImportPage'])
 	->before('auth.verified');
 
-Route::post('/pm/importera', ['as' => 'post-pm-import', 'uses' => 'PMController@import'])
+Route::post('/admin/importera', ['as' => 'post-pm-import', 'uses' => 'PMController@import'])
 	->before('auth.verified');
 
-Route::any('/pm/importera/verifiera', ['as' => 'pm-import-verify', 'uses' => 'PMController@importVerify'])
+Route::any('/admin/importera/verifiera', ['as' => 'pm-import-verify', 'uses' => 'PMController@importVerify'])
 	->before('auth.verified');
 
 Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@showPMPage'])

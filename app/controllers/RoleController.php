@@ -47,6 +47,10 @@ class RoleController extends BaseController {
 	public function deleteRole() 
 	{
 		// TODO Better
+		if (!Input::get('yes'))
+			return Redirect::route('admin-roles')->with('warning', 'Rollen togs inte bort.'); // TODO show
+
+
 		$id = Input::get('role-id');
 		Role::findOrFail($id)->delete();
 		return Redirect::route('admin-roles')->with('success', 'Rollen togs bort.'); // TODO Show

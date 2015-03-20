@@ -48,6 +48,9 @@ class TagController extends BaseController {
 	public function deleteTag() 
 	{
 		// TODO Better
+		if (!Input::get('yes'))
+			return Redirect::route('admin-tags')->with('warning', 'Taggen togs inte bort.'); // TODO show
+
 		$token = Input::get('tag-token');
 		Tag::where('token', '=', $token)->delete();
 		return Redirect::route('admin-tags')->with('success', 'Taggen togs bort.'); // TODO Show

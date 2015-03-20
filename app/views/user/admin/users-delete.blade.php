@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('head-title')
-    Alla taggar
+    Ta bort användare
 @stop
 
 @section('head-extra')
@@ -17,10 +17,10 @@
 @stop
 
 @section('body')
-    <h1>Bekräfta: ta bort roll</h1>
-    <p>Vill du verkligen ta bort rollen {{ $role->name }}?</p>
-    {{ Form::open(array('action' => 'post-admin-roles-delete', 'method' => 'post')) }}
-    {{ Form::hidden('role-id', $role->id) }}
+    <h1>Bekräfta: ta bort användare</h1>
+    <p>Vill du verkligen ta bort användaren {{ $user->real_name }} ({{ $user->email }})?</p>
+    {{ Form::open(array('action' => 'post-admin-users-delete', 'method' => 'post')) }}
+    {{ Form::hidden('user-id', $user->id) }}
     <div class="form">
 		<div class="submit">
 			{{ Form::submit('Ja', array('name' => 'yes', 'class' => 'submit', 'id' => 'yes-button')) }}

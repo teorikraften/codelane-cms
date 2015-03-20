@@ -23,7 +23,7 @@
     {{ Form::hidden('tag-token', $tag->token) }}
     <div class="form">
 		<div class="submit">
-			{{ Form::submit('Ja', array('class' => 'submit', 'id' => 'yes-button')) }}
+			{{ Form::submit('Ja', array('name' => 'yes', 'class' => 'submit', 'id' => 'yes-button')) }}
 			{{ Form::submit('Nej', array('class' => 'submit no')) }}
 		</div>
 	</div>

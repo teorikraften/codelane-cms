@@ -332,12 +332,11 @@ ul {
 =             Error	               =
 ==================================*/
 .pop {
-	padding: 20px 20px 20px 20px;
-	border-radius: 5px; /* TODO Fix browser comp */
+	padding: 10px 20px 10px 20px;
 	margin: 0;
 }
 ul.pop {
-	padding: 20px 20px 20px 40px;
+	padding: 10px 20px 10px 40px;
 }
 .pop.error {
 	background: #fcc;

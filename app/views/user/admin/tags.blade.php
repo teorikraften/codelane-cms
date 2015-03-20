@@ -10,6 +10,7 @@
 
 @section('body')
     <h1>Taggar</h1>
+    @include('includes.messages')
     <a href="{{ URL::route('admin-tags-new') }}" class="action">Lägg till ny</a>
     <div class="clear"></div>
     <table>

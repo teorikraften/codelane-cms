@@ -10,6 +10,7 @@
 
 @section('body')
     <h1>Roller</h1>
+    @include('includes.messages')
     <a href="{{ URL::route('admin-roles-new') }}" class="action">Lägg till ny</a>
     <div class="clear"></div>
     <table>
