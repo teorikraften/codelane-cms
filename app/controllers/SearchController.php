@@ -32,4 +32,14 @@ class SearchController extends BaseController {
 	public function search() {
 		return Redirect::route('search-result', Input::get('search-query'));
 	}
+
+	public function searchAutocomplete() {
+		$searchQuery = Input::get('term');
+		$tags = Tag::where('name', 'LIKE', '%' . $searchQuery . '%')->take(7)->get();
+		$result = array();
+		foreach($tags as $tag) {
+			$result[] = $tag->name;
+		}
+		return json_encode($result);
+	}
 }

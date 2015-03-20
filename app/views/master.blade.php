@@ -4,8 +4,11 @@
 	<meta charset="UTF-8">
 	<title>@yield('head-title')</title>
     <link href="/styles/style.css" rel="stylesheet">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+	<link rel="icon" href="/favicon.ico" type="image/x-icon">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <script src="/js/jquery-1.11.2.js"></script>
+    <script type="text/javascript" src="/js/jquery-1.11.2.js"></script>
+  	<script type="text/javascript" src="/js/jquery-ui.js"></script>
 	<script type="text/javascript">
   		$(function() {
       		$('.menu-btn').on('click', function(){
@@ -45,6 +48,7 @@
 						<li></li>
 					</ul>
 				</div>
+				<div class="clear"></div>
 			</div>
 		</nav>
 		<div class="clear"></div>
@@ -53,6 +57,7 @@
 		<div id="container" class="centrator">
 			@yield('body')
 		</div>
+		<div class="clear"></div>
 	</div>
 	<div id="footer" class="clearfix">
 		<div class="centrator">

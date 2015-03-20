@@ -1,6 +1,14 @@
 @extends('master')
 
 @section('head-extra')
+  	<script type="text/javascript">
+	  $(function() {
+	    $("#search-query").autocomplete({
+	      source: 'http://cms.local/keywords',
+	      appendTo: '#search-autocomplete-list'
+	    });
+	  });
+	</script>
 @stop
 
 @section('body')
@@ -42,12 +50,14 @@
 			@include("includes.error")
 			<div class="form big-search">
 				<div class="search-field">
-					{{ Form::text('search-query', NULL, array('class' => 'text', 'placeholder' => 'Sök efter PM...')) }}
+					{{ Form::text('search-query', NULL, array('id' => 'search-query', 'class' => 'text', 'placeholder' => 'Sök efter PM...')) }}
 				</div>
 				{{ Form::submit('Sök', array('class' => 'submit')) }}
-				</div>
 			</div>
 			{{ Form::close() }}
+			<div id="search-autocomplete-list"></div>
+
+			<div style="height: 150px;"></div>
 
 		@endif
 	</div>

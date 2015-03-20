@@ -78,7 +78,7 @@ th, td {
 	line-height: 1.5;
 }
 #footer .centrator {
-	padding: 20px 0;
+	padding: 20px 15px;
 	max-width: 900px;
 }
 /* TODO Make responsive */
@@ -92,6 +92,28 @@ th, td {
 }
 #footer .col ul {
 	margin: 10px 0 10px 15px;
+}
+
+@media (max-width: 500px){
+	.page-wrap {
+		min-height: 0;
+		margin-bottom: 0;
+	}
+	.page-wrap:after {
+		height: 0px;
+	}
+	#footer {
+		margin-top: 25px;
+		height: auto;
+	}
+	#footer .col {
+		width: 100%;
+		padding: 0 0 30px 0;
+		display: block;
+	}
+	#footer .col h3 {
+		display: block;
+	}
 }
 
 /*================================
@@ -245,17 +267,16 @@ ul.menu {
 	}
 }
 @media (max-width: 767px){
-	.menu {
+	ul.menu {
 		position: relative;
-		top: 12px; /* Adjust positioning to be placed right below header...an easier way to do this...?*/
 		display: block;
 		width: 100%;
-		height: 100%;
-		margin: -10px 0 10px 0; /* Fix somewhere else. */
     	padding: 0;
-		border-top: 5px solid #555;
+    	height: 100%;
+    	top: 4px;
+    	border-bottom: 2px solid #ccc;
 	}
-	.menu * {
+	ul.menu * {
 		background: #fff;
 		width: 100%;
 	}
@@ -282,14 +303,14 @@ ul.menu {
 	.responsive-menu{
 		display: none;
 	}
-
-	.menu li {
+	ul.menu li {
 		padding: 0;
+		clear: both;
 	}
-
-	.menu a {
+	ul.menu a {
 		height: 40px;
 		line-height: 40px;
+		padding: 2px 0;
 	}
 }
 .responsive-menu {
@@ -313,6 +334,7 @@ ul.menu {
 #container {
 	max-width: 900px;
 	margin: 0 auto 50px;
+	padding: 0 15px;
 	line-height: 1.5;
 }
 
@@ -553,7 +575,7 @@ a.action {
 	max-width: 100%;
 }
 .form.big-search .search-field {
-	padding-right: 80px;
+	margin-right: 102px;
 }
 .form.big-search input.text {
 	font-size: 25px;
@@ -572,5 +594,34 @@ a.action {
 	width: 80px;
 	height: 53px;
 	border-left: 0;
-	margin-left: -80px;
+	margin-left: 0px;
+}
+#search-autocomplete-list {
+	background: none;
+}
+ul.ui-autocomplete {
+	position: absolute;
+	top: -50px;
+}
+ul.ui-autocomplete li {
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	list-style-type: none;
+	font-size: 1.2em;
+	background: #fff;
+	padding: 5px 10px;
+}
+ul.ui-autocomplete li a {
+	padding: 0;
+	margin: 0;
+	height: 0;
+}
+ul.ui-autocomplete li.ui-state-focus {
+    color: #000;
+    background: #ccc;
+    outline:none;
+}
+.ui-helper-hidden-accessible {
+	display: none;
 }
