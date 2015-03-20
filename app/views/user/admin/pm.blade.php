@@ -13,20 +13,40 @@
     @include('includes.messages')
     <a href="{{ URL::route('admin-tags-new') }}" class="action">Skapa nytt</a>
     <div class="clear"></div>
-    <table>
-		<tr>
-            <th></th>
-            <th></th>
-			<th></th>
-			<th>Rubrik</th>
-		</tr>
-    	@foreach($pms as $pm)
+    @if(Auth::user()->privileges == 'admin')
+        <table>
     		<tr>
-                <td><a href="{{ URL::route('pm-show', $pm->token) }}">Visa</a></td>
-                <td><a href="{{ URL::route('pm-edit', $pm->token) }}">Ändra</a></td>
-    			<td><a href="{{ URL::route('admin-pm-delete', $pm->token) }}">Ta bort</a></td>
-    			<td>{{ $pm->title }}</td>
+                <th></th>
+                <th></th>
+    			<th></th>
+    			<th>Rubrik</th>
     		</tr>
-    	@endforeach
-    </table>
+        	@foreach($pms as $pm)
+        		<tr>
+                    <td><a href="{{ URL::route('pm-show', $pm->token) }}">Visa</a></td>
+                    <td><a href="{{ URL::route('pm-edit', $pm->token) }}">Ändra</a></td>
+        			<td><a href="{{ URL::route('admin-pm-delete', $pm->token) }}">Ta bort</a></td>
+        			<td>{{ $pm->title }}</td>
+        		</tr>
+        	@endforeach
+        </table>
+    @else
+        <h2>Dina PM</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th></th>
+                <th>Din uppgift</th>
+                <th>Rubrik</th>
+            </tr>
+            @foreach($userPms as $pm)
+                <tr>
+                    <td><a href="{{ URL::route('pm-show', $pm->token) }}">Visa</a></td>
+                    <td><a href="{{ URL::route('pm-edit', $pm->token) }}">Ändra</a></td>
+                    <td>{{ $pm->pivot->assignment }}</td>
+                    <td>{{ $pm->title }}</td>
+                </tr>
+            @endforeach
+        </table>
+    @endif
 @stop

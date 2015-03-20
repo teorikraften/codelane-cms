@@ -41,6 +41,4 @@ class Pm extends Eloquent {
 	{
 		return $this->hasMany('App\Assignment');
 	}
-
-	
 }

@@ -10,4 +10,12 @@
 	    </ul>
 	    <div class="clear"></div>
 	</div>
+@elseif(Auth::user()->privileges == 'verified')
+	<div class="submenu">
+	    <ul>
+	        <li><a href="{{ URL::route('user') }}">Dina uppgifter</a></li>
+	        <li><a href="{{ URL::route('admin-pm') }}">PM</a></li>
+	    </ul>
+	    <div class="clear"></div>
+	</div>
 @endif

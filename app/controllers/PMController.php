@@ -97,6 +97,9 @@ class PMController extends BaseController {
 	}
 
 	public function showPMListPage() {
-		return View::make('user.admin.pm')->with('pms', PM::orderBy('title', 'ASC')->take(100)->get()); // TODO Pagination
+		$userPms = Auth::user()->pms;
+		return View::make('user.admin.pm')
+			->with('pms', PM::orderBy('title', 'ASC')->take(100)->get())
+			->with('userPms', $userPms); // TODO Pagination
 	}
 }
