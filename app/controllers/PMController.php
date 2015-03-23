@@ -8,7 +8,9 @@ class PMController extends BaseController {
 	public function showPMPage($token)
 	{
 		$pm = Pm::where('token', '=', $token)->firstOrFail(); // TODO Fix
-		return View::make('pm.show')->with('pm', $pm);
+		return View::make('pm.show')
+			->with('pm', $pm)
+			->with('assignments', $pm->users);
 	}
 
 	/**

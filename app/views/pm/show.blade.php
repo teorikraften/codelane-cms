@@ -26,14 +26,32 @@
 	<div class="pm-info">
 	<table>
 		<tr>
-			<td>Titel</td>
+			<td>Ansvarig</td>
 			<td>Författare</td>
-			<td>Datum</td>
+			<td>Granskare</td>
 		</tr>
 		<tr>
-			<td>Something</td>
-			<td>Nedo</td>
-			<td>Cats</td>
+			<td>
+                @foreach ($assignments as $assignment)
+                    @if ($assignment->pivot->assignment == 'owner')
+                        {{ $assignment->real_name }}
+                    @endif
+                @endforeach
+            </td>
+			<td>
+                @foreach ($assignments as $assignment)
+                    @if ($assignment->pivot->assignment == 'author')
+                        {{ $assignment->real_name }}
+                    @endif
+                @endforeach
+            </td>
+			<td>
+                @foreach ($assignments as $assignment)
+                    @if ($assignment->pivot->assignment == 'reviewer')
+                        {{ $assignment->real_name }}
+                    @endif
+                @endforeach
+            </td>
 		</tr>
 	</table>
 	</div>

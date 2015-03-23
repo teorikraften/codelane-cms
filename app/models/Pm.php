@@ -47,6 +47,11 @@ class Pm extends Eloquent {
 
 	public function assignments() 
 	{
-		return $this->hasMany('Assignment');
+		return $this->hasMany('Assignment', 'pm');
+	}
+
+	public function users() 
+	{
+		return $this->belongsToMany('User', 'assignments', 'pm', 'user')->withPivot('assignment');
 	}
 }
