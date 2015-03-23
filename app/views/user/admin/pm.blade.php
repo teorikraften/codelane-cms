@@ -31,23 +31,22 @@
         		</tr>
         	@endforeach
         </table>
-    @else
-        <h2>Dina PM</h2>
-        <table>
-            <tr>
-                <th></th>
-                <th></th>
-                <th>Din uppgift</th>
-                <th>Rubrik</th>
-            </tr>
-            @foreach($userPms as $pm)
-                <tr>
-                    <td><a href="{{ URL::route('pm-show', $pm->token) }}">Visa</a></td>
-                    <td><a href="{{ URL::route('pm-edit', $pm->token) }}">Ändra</a></td>
-                    <td>{{ $pm->pivot->assignment }}</td>
-                    <td>{{ $pm->title }}</td>
-                </tr>
-            @endforeach
-        </table>
     @endif
+    <h2>Dina PM</h2>
+    <table>
+        <tr>
+            <th></th>
+            <th></th>
+            <th>Din uppgift</th>
+            <th>Rubrik</th>
+        </tr>
+        @foreach($userPms as $pm)
+            <tr>
+                <td><a href="{{ URL::route('pm-show', $pm->token) }}">Visa</a></td>
+                <td><a href="{{ URL::route('pm-edit', $pm->token) }}">Ändra</a></td>
+                <td>{{ ucfirst(User::assignmentString($pm->pivot->assignment)) }}</td>
+                <td>{{ $pm->title }}</td>
+            </tr>
+        @endforeach
+    </table>
 @stop

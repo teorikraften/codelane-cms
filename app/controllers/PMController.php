@@ -99,11 +99,56 @@ class PMController extends BaseController {
 	public function showPMListPage() {
 		$userPms = Auth::user()->pms;
 		return View::make('user.admin.pm')
-			->with('pms', PM::orderBy('title', 'ASC')->take(100)->get())
+			->with('pms', PM::orderBy('title', 'ASC')->take(200)->get())
 			->with('userPms', $userPms); // TODO Pagination
 	}
 
 	public function showAssignPMPage() {
 		return View::make('user.admin.pm-assign');
+	}
+
+	public function assignPM() {
+		// TODO Validering
+		$owner = explode(',', Input::get('responsible'));
+		$owner = $owner[0];
+		$authors = explode(',', Input::get('authors'));
+		$reviewers = explode(',', Input::get('reviewers'));
+
+		$user = Auth::user();
+
+		$pm = new PM;
+		$pm->title = Input::get('title');
+		$pm->created_by = $user->id;
+		$pm->token = $this->generateToken('pm-' . $pm->title);
+		$pm->save();
+
+		foreach ($authors as $author) {
+			User::findOrFail($author)->pms()->attach([$pm->id => ['assignment' => 'author']]);
+		}
+		foreach ($reviewers as $reviewer) {
+			User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'review']]);
+		}
+		User::findOrFail($owner)->pms()->attach([$pm->id => ['assignment' => 'owner']]);
+		$user->save();
+		
+		return Redirect::route('admin-pm');
+	}
+
+	/**
+     * Generates a valid token.
+	 */
+	private function generateToken($name, $delimiter = '-') {
+		setlocale(LC_ALL, 'en_US.UTF8');
+		$clean = iconv('UTF-8', 'ASCII//TRANSLIT', $name);
+		$clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
+		$clean = strtolower(trim($clean, '-'));
+		$clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
+
+		$n = Tag::where('token', '=', $clean)->count();
+		if ($n > 0) {
+			$clean = $this->generateToken($clean . '-' . rand(0, 9), $delimiter);
+		}
+
+		return $clean;
 	}
 }

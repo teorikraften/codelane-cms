@@ -91,4 +91,17 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 			return "verifierad";
 		return "overifierad";
 	}
+
+	/**
+	 * Returns user's privileges as a nice string word.
+	 */
+	public static function assignmentString($assignment) {
+		if ($assignment == 'author') 
+			return "författare";
+		if ($assignment == 'owner') 
+			return "ägare";
+		if ($assignment == 'reviewer') 
+			return "granskare";
+		return "medlem";
+	}
 }

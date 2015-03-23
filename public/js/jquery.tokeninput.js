@@ -15,22 +15,22 @@ var DEFAULT_SETTINGS = {
     method: "GET",
     contentType: "json",
     queryParam: "q",
-    searchDelay: 300,
+    searchDelay: 200,
     minChars: 1,
     propertyToSearch: "name",
     jsonContainer: null,
 
 	// Display settings
-    hintText: "Type in a search term",
-    noResultsText: "No results",
-    searchingText: "Searching...",
+    hintText: "Skriv in ett namn att söka efter",
+    noResultsText: "Det finns ingen person med det namnet",
+    searchingText: "Söker...",
     deleteText: "&times;",
     animateDropdown: true,
 
 	// Tokenization settings
     tokenLimit: null,
     tokenDelimiter: ",",
-    preventDuplicates: false,
+    preventDuplicates: true,
 
 	// Output settings
     tokenValue: "id",
