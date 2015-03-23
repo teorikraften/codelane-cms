@@ -4,15 +4,27 @@
 Sökresultat av sökningen: "{{ $searchQuery }}"
 @stop
 
+@section('head-extra')
+  	<script type="text/javascript">
+	  $(function() {
+	    $("#search-query").autocomplete({
+	      source: '/keywords',
+	      appendTo: '#search-autocomplete-list'
+	    });
+	  });
+	</script>
+@stop
+
 @section('body')
 	{{ Form::open(array('url' => route('post-search'), 'method' => 'post')) }}
 		<div class="form big-search">
 			<div class="search-field">
-				{{ Form::text('search-query', NULL, array('class' => 'text', 'placeholder' => 'Sök efter PM...')) }}
+				{{ Form::text('search-query', NULL, array('class' => 'text', 'placeholder' => 'Sök efter PM...', 'id' => 'search-query')) }}
 			</div>
 			{{ Form::submit('Sök', array('class' => 'submit')) }}
 		</div>
 	{{ Form::close() }}
+	<div id="search-autocomplete-list"></div>
 	<div class="clear"></div>
 
 	<h1>Sökresultat</h1>
