@@ -32,9 +32,10 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
 	<ul class="result">
 	    @foreach($result as $pm)
 		    <li>
-		    	<h3><a href="{{ URL::route('pm-show', $pm->token) }}">{{ $pm->title }}</a></h3>
-		      	<p class="description">{{ substr(trim(strip_tags($pm->content)), 0, 200) }}...</p>
-		  		{{ $pm->score }}
+		    	<h3><a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a></h3>
+		      	<p class="description">{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...</p>
+		  		{{ $pm['score'] }}
+		  		<?php  /*var_dump($pm['pm']);*/ ?>
 		  	</li>
 	  	@endforeach
 	</ul>

@@ -1,5 +1,15 @@
 <?php
 
+function cmp($res1, $res2) 
+	{
+		if ($res1['score'] == $res2['score']) 
+		{
+			return 0;
+		}
+
+		return ($res1['score'] > $res2['score']) ? -1 : 1;
+	}
+
 class Search {
 
 	function basicSearch($searchQuery) {
@@ -7,55 +17,64 @@ class Search {
 		// TODO keep improving
 		$searchQuery = htmlspecialchars($searchQuery);
 
-		$result = array();
+		// Put goodresult in result with score
+		
+		// TODO remove order by score
+		$goodResult = PM::whereRaw("MATCH(content, title) AGAINST(? IN BOOLEAN MODE)", array("'".$searchQuery."'"))
+		->addSelect(DB::raw("*, MATCH(content, title) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->orderBy('score', 'desc')->get();
+		// LINK http://dev.mysql.com/doc/refman/5.7/en/fulltext-search.html
+		// NATURAL LANGUAGE MODE vs BOOLEAN MODE
+		
+		foreach ($goodResult as $key => $pm) {
+			$id = $pm['id'];
+
+			$result[$id]['pm'] = $pm;
+			$result[$id]['score'] = $pm->score;
+		}
+
 		
 		$tagResult = array();
 		$tag = Tag::where('name', 'like', '%'.$searchQuery.'%')->get(); // TODO look into '%' for prestanda
 		foreach ($tag as $key => $value) {
 			$tagpms = $value->pm;
 			foreach ($tagpms as $key => $v) {
-				$result[$v['id']] = $v;
-				
+				//$result[$v['id']] = $v;
+				$result = $this->updatePMScore($result, $v, 100);
 			}
 		}
 
-		/*
 		$contentResult = Pm::where('content', 'like', '%'.$searchQuery.'%')->take(10)->get();
 		foreach ($contentResult as $key => $v) {
-			$result[$v['id']] = $v;
+			//$result[$v['id']] = $v;
+			$result = $this->updatePMScore($result, $v, 10);
 		}
-		*/
 
 		$titleResult = PM::where('title', 'like', '%'.$searchQuery.'%')->get();
 		foreach ($titleResult as $key => $v) {
-			$result[$v['id']] = $v;
+			//$result[$v['id']] = $v;
+			$result = $this->updatePMScore($result, $v, 15);
 		}
 
-		//$titleResult = PM::whereRaw("MATCH(title) AGAINST(? IN BOOLEAN MODE)", array("'".$searchQuery."'"))
-		//->addSelect(DB::raw("*, MATCH(title) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->orderBy('score', 'desc')->get();
 
-		// TODO Requires Full text index on content 
-		$goodResult = PM::whereRaw("MATCH(content, title) AGAINST(? IN BOOLEAN MODE)", array("'".$searchQuery."'"))
-		->addSelect(DB::raw("*, MATCH(content, title) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->orderBy('score', 'desc')->get();
-		
+		// SORT THE LIST DOES NOT WORK
+		usort($result, "cmp");
 
-		//return $goodResult;
-		// Problem?: Not taking short words into account when searching
+		return $result;
+	}
 
-		// TODO look into boolean mode (with + -) vs natural language LINK http://dev.mysql.com/doc/refman/5.7/en/fulltext-search.html
 
-		// NATURAL LANGUAGE MODE vs BOOLEAN MODE
+	private function updatePMScore($list, $pm, $score) {
+		$id = $pm['id'];
+		if (!isset($list[$id]['pm'])) {
+			$list[$id]['pm'] = $pm;
+			$list[$id]['score'] = $score;
+		} else {
+			$list[$id]['score'] += $score;
+		}
+		return $list;
+	}
 
-		/*
-		mysql> SELECT id, body, MATCH (title,body) AGAINST (?) AS score
-    	FROM articles WHERE MATCH (title,body) AGAINST (?);
-		*/
 
-		// Returns content search and only returns tags, title search if content search is empty
-    	if (sizeof($goodResult) == 0) {
-    		return $result;
-    	}
-    	return $goodResult;
-    }
+
 
 }
