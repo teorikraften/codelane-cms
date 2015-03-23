@@ -17,14 +17,18 @@ class Search {
 		// TODO keep improving
 		$searchQuery = htmlspecialchars($searchQuery);
 
-		// Put goodresult in result with score
+		$result = array();
+
+		// Put goodResult in result with score
 		
-		// TODO remove order by score
-		$goodResult = PM::whereRaw("MATCH(content, title) AGAINST(? IN BOOLEAN MODE)", array("'".$searchQuery."'"))
-		->addSelect(DB::raw("*, MATCH(content, title) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->orderBy('score', 'desc')->get();
+		// Remove order by score
+		//$goodResult = PM::whereRaw("MATCH(content, title) AGAINST(? IN BOOLEAN MODE)", array("'".$searchQuery."'"))
+		//->addSelect(DB::raw("*, MATCH(content, title) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->orderBy('score', 'desc')->get();
 		// LINK http://dev.mysql.com/doc/refman/5.7/en/fulltext-search.html
 		// NATURAL LANGUAGE MODE vs BOOLEAN MODE
 		
+		$goodResult = PM::selectRaw("*, MATCH(content, title) AGAINST('" . $searchQuery . "' IN BOOLEAN MODE) AS score")->get();
+
 		foreach ($goodResult as $key => $pm) {
 			$id = $pm['id'];
 
@@ -46,7 +50,7 @@ class Search {
 		$contentResult = Pm::where('content', 'like', '%'.$searchQuery.'%')->take(10)->get();
 		foreach ($contentResult as $key => $v) {
 			//$result[$v['id']] = $v;
-			$result = $this->updatePMScore($result, $v, 10);
+			$result = $this->updatePMScore($result, $v, 1);
 		}
 
 		$titleResult = PM::where('title', 'like', '%'.$searchQuery.'%')->get();
@@ -56,7 +60,7 @@ class Search {
 		}
 
 
-		// SORT THE LIST DOES NOT WORK
+		// Sort the list
 		usort($result, "cmp");
 
 		return $result;
