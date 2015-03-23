@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: localhost
--- Tid vid skapande: 23 mars 2015 kl 08:49
+-- Tid vid skapande: 23 mars 2015 kl 09:24
 -- Serverversion: 5.6.22
 -- PHP-version: 5.5.14
 
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS `assignments` (
   `id` int(10) unsigned NOT NULL,
   `user` int(10) unsigned NOT NULL,
   `pm` int(10) unsigned NOT NULL,
-  `assignment` enum('owner','member','reviewer') COLLATE utf8_unicode_ci NOT NULL,
+  `assignment` enum('owner','member','reviewer','author') COLLATE utf8_unicode_ci DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `deleted_at` timestamp NULL DEFAULT NULL
@@ -132,7 +132,9 @@ INSERT INTO `migrations` (`migration`, `batch`) VALUES
 ('2015_03_06_112358_create_reviews_table', 1),
 ('2015_03_06_114007_create_original_files_table', 1),
 ('2015_03_23_082415_create_categories_table', 2),
-('2015_03_23_082425_create_pm_categories_table', 2);
+('2015_03_23_082425_create_pm_categories_table', 2),
+('2015_03_23_090831_edit_assignments_table', 3),
+('2015_03_23_091528_add_index_to_pms', 4);
 
 -- --------------------------------------------------------
 
@@ -423,7 +425,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 INSERT INTO `users` (`id`, `email`, `password`, `real_name`, `privileges`, `created_at`, `updated_at`, `deleted_at`, `remember_token`) VALUES
 (1, 'testo@jdahl.se', '$2y$10$jfnGX/GfNuDMyrS5Fj6qTOgZRhZrsFpVDTyLeRrhhefS4R.vekNH.', 'Overifierad Lantz', 'verified', '2015-03-06 12:54:52', '2015-03-20 09:00:20', '2015-03-20 09:00:20', 'yIGkSnfroJGwCSs9QS5EXHxpnwTmoSeMQzC1eNcpGjvk3uFa29vddA9NqCQR'),
 (2, 'testv@jdahl.se', '$2y$10$3hvjkf/cQoBgigcjYP48N.HIRvdmZJW15BHkKxDFODAaVG6mW4L..', 'Verifierad Dahl', 'verified', '2015-03-06 12:54:53', '2015-03-20 12:07:57', NULL, '6q4znQcAbx3XiF4K5mVMxJwZML2yXMIBnVEhGWoJbNdhUKdlAcVxHMy4eHPi'),
-(3, 'testa@jdahl.se', '$2y$10$jlHY20HMZENpbJoEucSFvuBLB/uwNazIk8zN8e1.KRQRT9TZ9WPhi', 'Admin Jonasson', 'admin', '2015-03-06 12:54:53', '2015-03-20 10:04:12', NULL, 'P8OX4DeviizPXY4308hDsPZozPW0YhOGmEznlxdf4aO1ZyOg61rC7Ory8RSq'),
+(3, 'testa@jdahl.se', '$2y$10$jlHY20HMZENpbJoEucSFvuBLB/uwNazIk8zN8e1.KRQRT9TZ9WPhi', 'Admin Jonasson', 'admin', '2015-03-06 12:54:53', '2015-03-23 08:00:09', NULL, 'ZVQvNBdpxp3LxlCj5pYHLxO98AZzeRyT9DprFqOKaFz9aJ1FIgfNYmVGJmbR'),
 (4, 'jonas@jdahl.se', '$2y$10$W0weo02YIg1X3kqy1L8YFuy6zi.byQJ9Kj.4.Q6losB3.py4fzzDC', 'Jonas Dahl', 'unverified', '2015-03-19 18:44:31', '2015-03-20 08:52:36', '2015-03-20 08:52:36', 'NJa8zd2qOIxVPutpDUQaifr3DUj7i34Qs5byVhIAXA1sfvIQp0lphJ8VtbMn'),
 (6, 'jonas.dahl@jdahl.se', '$2y$10$zAfDAL8A.CAxrk0uY9sObOH9jF9HVHg75sw2z0uIgb89RrQaSiMqu', 'Jonas Dahl', 'verified', '2015-03-20 08:53:00', '2015-03-20 08:53:43', '2015-03-20 08:53:43', 'krCMd7oXOZoqMeBGIThofHWOXflkiq7qRYkZEiQhcngIHy2rawI5gog8jzBr'),
 (7, 'testo@jdahl.se', '$2y$10$yE/SMObDxWkDTwk0CfnjV.3xVbeN/wXBjY5ZiTWwnscTbpAUuPdJa', 'Overifierad Lantz', 'verified', '2015-03-20 12:09:37', '2015-03-23 07:38:55', NULL, NULL),
@@ -488,7 +490,7 @@ ALTER TABLE `original_files`
 -- Index för tabell `pms`
 --
 ALTER TABLE `pms`
-  ADD PRIMARY KEY (`id`), ADD KEY `pms_created_by_foreign` (`created_by`), ADD FULLTEXT KEY `content` (`content`);
+  ADD PRIMARY KEY (`id`), ADD KEY `pms_created_by_foreign` (`created_by`), ADD FULLTEXT KEY `search` (`title`,`content`);
 
 --
 -- Index för tabell `pm_categories`
