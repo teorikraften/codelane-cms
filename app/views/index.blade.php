@@ -13,7 +13,6 @@
 
 @section('body')
 	<div class="first-page">
-
 		@if(Auth::guest())
 
 		    <h1>Välkommen</h1>

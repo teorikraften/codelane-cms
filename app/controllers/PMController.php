@@ -102,4 +102,8 @@ class PMController extends BaseController {
 			->with('pms', PM::orderBy('title', 'ASC')->take(100)->get())
 			->with('userPms', $userPms); // TODO Pagination
 	}
+
+	public function showAssignPMPage() {
+		return View::make('user.admin.pm-assign');
+	}
 }

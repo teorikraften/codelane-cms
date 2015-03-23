@@ -18,10 +18,16 @@
 
 @section('body')
     <h1>Ändra användare</h1>
-    <p>Du håller på att ändra användaren {{ $user->name }}.</p>
+    <p>Du håller på att ändra användaren {{ $user->real_name }}.</p>
     {{ Form::model($user, array('action' => 'post-admin-users-edit', 'method' => 'post')) }}
         {{ Form::hidden('id') }}
         <div class="form">
+            <div class="row">
+                <div class="description">{{ Form::label('privileges', 'Användarens behörighetsnivå') }}</div>
+                <div class="input">
+                    {{ Form::select('privileges', array('admin' => 'Systemadministratör', 'pm-admin' => 'PM-ansvarig', 'verified' => 'Verifierad', 'unverified' => 'Overifierad'), $user->privileges) }}
+                </div>
+            </div>
             <div class="row">
                 <div class="description">{{ Form::label('real_name', 'Namn') }}</div>
                 <div class="input">{{ Form::text('real_name', NULL, array('class' => 'text')) }}</div>
