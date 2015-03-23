@@ -35,7 +35,7 @@ class Search {
 		//->addSelect(DB::raw("*, MATCH(title) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->orderBy('score', 'desc')->get();
 
 		// TODO Requires Full text index on content 
-		$goodResult = PM::whereRaw("MATCH(content) AGAINST(? IN BOOLEAN MODE)", array("'".$searchQuery."'"))
+		$goodResult = PM::whereRaw("MATCH(content, title) AGAINST(? IN BOOLEAN MODE)", array("'".$searchQuery."'"))
 		->addSelect(DB::raw("*, MATCH(content, title) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->orderBy('score', 'desc')->get();
 		
 
@@ -50,8 +50,6 @@ class Search {
 		mysql> SELECT id, body, MATCH (title,body) AGAINST (?) AS score
     	FROM articles WHERE MATCH (title,body) AGAINST (?);
 		*/
-
-    	return $titleResult;
 
 		// Returns content search and only returns tags, title search if content search is empty
     	if (sizeof($goodResult) == 0) {
