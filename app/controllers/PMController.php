@@ -28,7 +28,71 @@ class PMController extends BaseController {
 	 */
 	public function showEditPMPage($token)
 	{
-		return View::make('pm.edit')->with('token', $token);
+		return View::make('pm.edit')->with('pm', PM::where('token', '=', $token)->first());
+	}
+
+	public function editPM()
+	{
+		$pm = PM::findOrFail(Input::get('id'));
+		$pm->title = Input::get('title');
+		$pm->content = Input::get('content');
+		$pm->save();
+		return Redirect::route('pm-edit', $pm->token);
+	}
+
+	/**
+	 * Displays the PM edit page view.
+	 * @param $token the PM token
+	 */
+	public function showEditPMAssignmentsPage($token)
+	{
+		$pm = PM::where('token', '=', $token)->firstOrFail();
+		$owners = array(); 
+		$reviewers = array(); 
+		$authors = array(); 
+		$members = array();
+
+		foreach($pm->users as $user) {
+			if ($user->pivot->assignment == 'author')
+				$authors[] = $user;
+			elseif ($user->pivot->assignment == 'reviewer')
+				$reviewers[] = $user;
+			elseif ($user->pivot->assignment == 'owner')
+				$owners[] = $user;
+			elseif ($user->pivot->assignment == 'member')
+				$members[] = $user;
+		}
+		return View::make('user.admin.edit-assignments')
+			->with('pm', $pm)
+			->with('owners', $owners)
+			->with('reviewers', $reviewers)
+			->with('members', $members)
+			->with('authors', $authors);
+	}
+
+	public function editPMAssignments()
+	{
+		// TODO Validering
+		$owner = explode(',', Input::get('responsible'));
+		$owner = $owner[0];
+		$authors = explode(',', Input::get('authors'));
+		$reviewers = explode(',', Input::get('reviewers'));
+
+		$user = Auth::user();
+
+		$pm = PM::findOrFail(Input::get('id'));
+		$pm->users()->detach();
+
+		foreach ($authors as $author) {
+			User::findOrFail($author)->pms()->attach([$pm->id => ['assignment' => 'author']]);
+		}
+		foreach ($reviewers as $reviewer) {
+			User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
+		}
+		User::findOrFail($owner)->pms()->attach([$pm->id => ['assignment' => 'owner']]);
+		$user->save();
+		
+		return Redirect::route('admin-pm');
 	}
 
 	public function showImportPage()
@@ -100,6 +164,15 @@ class PMController extends BaseController {
 
 	public function showPMListPage() {
 		$userPms = Auth::user()->pms;
+		foreach ($userPms as $pm) {
+			if (strtotime($pm->expiration_date) < time() && $pm->verified) {
+				$pm->status = 'utgånget';
+			} elseif (strtotime($pm->first_published_date) < time() && $pm->verified) {
+				$pm->status = 'publicerat';
+			} else {
+				$pm->status = 'ej veriferat';
+			}
+		}
 		return View::make('user.admin.pm')
 			->with('pms', PM::orderBy('title', 'ASC')->take(200)->get())
 			->with('userPms', $userPms); // TODO Pagination

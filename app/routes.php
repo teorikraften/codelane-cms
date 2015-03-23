@@ -169,19 +169,28 @@ Route::post('/admin/importera', ['as' => 'post-pm-import', 'uses' => 'PMControll
 Route::any('/admin/importera/verifiera', ['as' => 'pm-import-verify', 'uses' => 'PMController@importVerify'])
 	->before('auth.verified');
 
-Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@showPMPage'])
-	->where('token', '.+');
 Route::get('/pm/{token}/original', ['as' => 'pm-download', 'uses' => 'PMController@showDownloadPage'])
 	->where('token', '.+');
 Route::get('/pm/{token}/andra', ['as' => 'pm-edit', 'uses' => 'PMController@showEditPMPage'])
 	->where('token', '.+')
 	->before('auth.verified');
+Route::post('/pm/andra', ['as' => 'post-pm-edit', 'uses' => 'PMController@editPM'])
+	->before('auth.verified');
+
+Route::get('/pm/{token}/andra-personer', ['as' => 'pm-edit-assignments', 'uses' => 'PMController@showEditPMAssignmentsPage'])
+	->where('token', '.+')
+	->before('auth.verified');
+Route::post('/pm/andra-personer', ['as' => 'post-pm-edit-assignments', 'uses' => 'PMController@editPMAssignments'])
+	->before('auth.verified');
+
 Route::get('/pm/{token}/ny-tagg', ['as' => 'pm-add-tag', 'uses' => 'PMController@showAddTagPage'])
 	->where('token', '.+')
 	->before('auth.verified');
 Route::get('/pm/{token}/verifiera', ['as' => 'pm-verify', 'uses' => 'PMController@showVerifyPage'])
 	->where('token', '.+')
 	->before('auth.verified'); // TODO
+Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@showPMPage'])
+	->where('token', '.+');
 
 
 /*
