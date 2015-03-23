@@ -128,7 +128,7 @@ class PMController extends BaseController {
 			User::findOrFail($author)->pms()->attach([$pm->id => ['assignment' => 'author']]);
 		}
 		foreach ($reviewers as $reviewer) {
-			User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'review']]);
+			User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
 		}
 		User::findOrFail($owner)->pms()->attach([$pm->id => ['assignment' => 'owner']]);
 		$user->save();
