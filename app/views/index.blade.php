@@ -4,7 +4,7 @@
   	<script type="text/javascript">
 	  $(function() {
 	    $("#search-query").autocomplete({
-	      source: 'http://cms.local/keywords',
+	      source: '/keywords',
 	      appendTo: '#search-autocomplete-list'
 	    });
 	  });
