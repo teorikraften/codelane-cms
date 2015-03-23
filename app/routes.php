@@ -13,6 +13,7 @@
 Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
 Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
 Route::get('/keywords/', ['as' => 'search-autocomplete', 'uses' => 'SearchController@searchAutocomplete']);
+Route::get('/personer/', ['as' => 'persons-autocomplete', 'uses' => 'UserController@personsAutocomplete']);
 
 /*
 |
@@ -128,6 +129,10 @@ Route::get('/admin/pm', ['as' => 'admin-pm', 'uses' => 'PMController@showPMListP
 	->before('auth.admin');
 Route::get('/admin/pm/ta-bort', ['as' => 'admin-pm-delete', 'uses' => 'PMController@showDeletePMPage'])
 	->before('auth.admin');
+Route::get('/admin/pm/tilldela', ['as' => 'pm-add-assign', 'uses' => 'PMController@showAssignPMPage'])
+	->before('auth.verified');
+Route::post('/admin/pm/tilldela', ['as' => 'post-pm-add-assign', 'uses' => 'PMController@assignPM'])
+	->before('auth.verified');
 
 
 /*

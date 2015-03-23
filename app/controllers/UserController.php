@@ -128,4 +128,21 @@ class UserController extends BaseController {
 		return View::make('user.favourites')
 			->with('favoriter', $hej);
 	}
+
+	public function personsAutocomplete() {
+		$users = User::where('real_name', 'LIKE', '%' . Input::get('q') . '%')
+				->orWhere('email', 'LIKE', '%' . Input::get('q') . '%')
+				->where('deleted_at', '=', 'NULL')
+				->take(10)
+				->get();
+		$userNames = array();
+		foreach ($users as $user) {
+			$var = new stdClass();
+			$var->id = $user->id;
+			$var->name = $user->real_name . ' (' . $user->email . ')';
+			$userNames[] = $var;
+		}
+		return json_encode($userNames
+			);
+	}
 }

@@ -48,9 +48,11 @@ class UserAdminController extends BaseController {
 	public function addUser() 
 	{
 		// TODO Better
-		$name = Input::get('name');
 		$user = new User;
-		$user->name = $name;
+		$user->real_name = Input::get('real_name');
+		$user->email = Input::get('email');
+		$user->privileges = Input::get('privileges');
+		$user->password = Hash::make('abc');
 		$user->save();
 		return Redirect::route('admin-users')->with('success', 'Användaren skapades.'); // TODO Show
 	}
@@ -97,6 +99,7 @@ class UserAdminController extends BaseController {
 		$user = User::findOrFail($id);
 		$user->real_name = Input::get('real_name');
 		$user->email = Input::get('email');
+		$user->privileges = Input::get('privileges');
 		// TODO Send mail to user
 		$user->save();
 		return Redirect::route('admin-users')->with('success', 'Användaren uppdaterades.'); // TODO Show

@@ -84,7 +84,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function privileges() {
 		if ($this->privileges == 'admin') 
-			return "administatör";
+			return "systemadministatör";
+		if ($this->privileges == 'pm-admin') 
+			return "PM-ansvarig";
 		if ($this->privileges == 'verified') 
 			return "verifierad";
 		return "overifierad";
