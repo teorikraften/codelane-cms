@@ -1,14 +1,14 @@
 <?php
 
 function cmp($res1, $res2) 
+{
+	if ($res1['score'] == $res2['score']) 
 	{
-		if ($res1['score'] == $res2['score']) 
-		{
-			return 0;
-		}
-
-		return ($res1['score'] > $res2['score']) ? -1 : 1;
+		return 0;
 	}
+
+	return ($res1['score'] > $res2['score']) ? -1 : 1;
+}
 
 class Search {
 
@@ -36,8 +36,17 @@ class Search {
 			$result[$id]['score'] = $pm->score;
 		}
 
-		
-		$tagResult = array();
+		$splitQuery = explode(' ', $searchQuery);
+		foreach ($splitQuery as $key => $query) {
+			$tag = Tag::where('name', 'like', '%'.$query.'%')->get(); // TODO look into '%' for prestanda
+			foreach ($tag as $key => $value) {
+				$tagpms = $value->pm;
+				foreach ($tagpms as $key => $v) {
+					$result = $this->updatePMScore($result, $v, 100);
+				}
+			}
+		} 
+
 		$tag = Tag::where('name', 'like', '%'.$searchQuery.'%')->get(); // TODO look into '%' for prestanda
 		foreach ($tag as $key => $value) {
 			$tagpms = $value->pm;
@@ -62,6 +71,10 @@ class Search {
 
 		// Sort the list
 		usort($result, "cmp");
+
+		$start = 0;
+		$lenght = 10;
+		$result = array_slice($result, $start, $lenght);
 
 		return $result;
 	}
