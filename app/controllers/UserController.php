@@ -43,7 +43,7 @@ class UserController extends BaseController {
 		[
     		'new_password.required' => 'Fyll i ditt nya lösenord',
     		'new_password_again.required' => 'Du måste skriva ditt lösenord två gånger så att vi vet att du skrev rätt',
-    		'new_password.min' => 'Det önskade lösenordet är för kort',
+    		'new_password.min' => 'Det önskade lösenordet är för kort, lösenordet måste vara större än eller lika med 7 tecken långt.',
 		]);
 
 		$error = array();
