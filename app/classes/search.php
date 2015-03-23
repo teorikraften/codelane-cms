@@ -19,19 +19,26 @@ class Search {
 			}
 		}
 
+		/*
 		$contentResult = Pm::where('content', 'like', '%'.$searchQuery.'%')->take(10)->get();
 		foreach ($contentResult as $key => $v) {
 			$result[$v['id']] = $v;
 		}
+		*/
 
 		$titleResult = PM::where('title', 'like', '%'.$searchQuery.'%')->get();
 		foreach ($titleResult as $key => $v) {
 			$result[$v['id']] = $v;
 		}
 
+		//$titleResult = PM::whereRaw("MATCH(title) AGAINST(? IN BOOLEAN MODE)", array("'".$searchQuery."'"))
+		//->addSelect(DB::raw("*, MATCH(title) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->orderBy('score', 'desc')->get();
+
 		// TODO Requires Full text index on content 
 		$goodResult = PM::whereRaw("MATCH(content) AGAINST(? IN BOOLEAN MODE)", array("'".$searchQuery."'"))
-		->addSelect(DB::raw("*, MATCH(content) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->orderBy('score', 'desc')->get();
+		->addSelect(DB::raw("*, MATCH(content, title) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->orderBy('score', 'desc')->get();
+		
+
 		//return $goodResult;
 		// Problem?: Not taking short words into account when searching
 
@@ -43,6 +50,8 @@ class Search {
 		mysql> SELECT id, body, MATCH (title,body) AGAINST (?) AS score
     	FROM articles WHERE MATCH (title,body) AGAINST (?);
 		*/
+
+    	return $titleResult;
 
 		// Returns content search and only returns tags, title search if content search is empty
     	if (sizeof($goodResult) == 0) {
