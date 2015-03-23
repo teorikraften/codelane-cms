@@ -5,11 +5,12 @@ class Search {
 	function basicSearch($searchQuery) {
 
 		// TODO keep improving
+		$searchQuery = htmlspecialchars($searchQuery);
 
 		$result = array();
 		
 		$tagResult = array();
-		$tag = Tag::where('name', 'like', '%'.$searchQuery.'%')->get();
+		$tag = Tag::where('name', 'like', '%'.$searchQuery.'%')->get(); // TODO look into '%' for prestanda
 		foreach ($tag as $key => $value) {
 			$tagpms = $value->pm;
 			foreach ($tagpms as $key => $v) {
@@ -22,18 +23,21 @@ class Search {
 		foreach ($contentResult as $key => $v) {
 			$result[$v['id']] = $v;
 		}
+
 		$titleResult = PM::where('title', 'like', '%'.$searchQuery.'%')->get();
 		foreach ($titleResult as $key => $v) {
 			$result[$v['id']] = $v;
 		}
 
 		// TODO Requires Full text index on content 
-		$goodResult = PM::whereRaw("MATCH(content) AGAINST(? IN NATURAL LANGUAGE MODE)", array("'".$searchQuery."'"))
-		->addSelect(DB::raw("*, MATCH(content) AGAINST('".$searchQuery."' IN NATURAL LANGUAGE MODE) AS score"))->orderBy('score', 'desc')->get();
+		$goodResult = PM::whereRaw("MATCH(content) AGAINST(? IN BOOLEAN MODE)", array("'".$searchQuery."'"))
+		->addSelect(DB::raw("*, MATCH(content) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->orderBy('score', 'desc')->get();
 		//return $goodResult;
 		// Problem?: Not taking short words into account when searching
 
-		// TODO look inte boolean mode (with + -) vs natural language LINK http://dev.mysql.com/doc/refman/5.7/en/fulltext-search.html
+		// TODO look into boolean mode (with + -) vs natural language LINK http://dev.mysql.com/doc/refman/5.7/en/fulltext-search.html
+
+		// NATURAL LANGUAGE MODE vs BOOLEAN MODE
 
 		/*
 		mysql> SELECT id, body, MATCH (title,body) AGAINST (?) AS score

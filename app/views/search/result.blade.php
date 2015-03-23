@@ -22,6 +22,7 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
 		    <li>
 		    	<h3><a href="{{ URL::route('pm-show', $pm->token) }}">{{ $pm->title }}</a></h3>
 		      	<p class="description">{{ substr(trim(strip_tags($pm->content)), 0, 200) }}...</p>
+		  		{{ $pm->score }}
 		  	</li>
 	  	@endforeach
 	</ul>

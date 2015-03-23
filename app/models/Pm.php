@@ -30,15 +30,23 @@ class Pm extends Eloquent {
 	}
 
 	/**
+	 *
+	 */
+	public function categories() 
+	{
+		return $this->belongsToMany('Category', 'pm_categories', 'pm', 'category');
+	}
+
+	/**
 	 * Roles conntected to the PM.
 	 */
 	public function roles() 
 	{
-		return $this->belongsToMany('App\Role', 'pm_roles', 'pm', 'role');
+		return $this->belongsToMany('Role', 'pm_roles', 'pm', 'role');
 	}
 
 	public function assignments() 
 	{
-		return $this->hasMany('App\Assignment');
+		return $this->hasMany('Assignment');
 	}
 }
