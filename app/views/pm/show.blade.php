@@ -23,6 +23,20 @@
 @stop
 
 @section('body')
+	<div class="pm-info">
+	<table>
+		<tr>
+			<td>Titel</td>
+			<td>Författare</td>
+			<td>Datum</td>
+		</tr>
+		<tr>
+			<td>Something</td>
+			<td>Nedo</td>
+			<td>Cats</td>
+		</tr>
+	</table>
+	</div>
     <h1>{{ $pm->title }}</h1>
     <div id="pmc" class="pm-content">
 	    {{ $pm->content }}
