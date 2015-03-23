@@ -478,7 +478,7 @@ ul.result li p.description {
 	padding: 10px 0px 0px 0px;
 }
 
-.pm-info table, td {
+.pm-info table, .pm-info td {
 	border: 1px solid #454545;
 	width: 300px;
 }
