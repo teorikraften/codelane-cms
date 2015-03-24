@@ -19,6 +19,7 @@
 @section('body')
     <h1>Bekräfta: ta bort roll</h1>
     <p>Vill du verkligen ta bort rollen {{ $role->name }}?</p>
+    @include('includes.messages')
     {{ Form::open(array('action' => 'post-admin-roles-delete', 'method' => 'post')) }}
     {{ Form::hidden('role-id', $role->id) }}
     <div class="form">

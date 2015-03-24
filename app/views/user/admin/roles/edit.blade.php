@@ -19,6 +19,7 @@
 @section('body')
     <h1>Ändra roll</h1>
     <p>Du håller på att ändra rollen {{ $role->name }}.</p>
+    @include('includes.messages')
     {{ Form::model($role, array('action' => 'post-admin-roles-edit', 'method' => 'post')) }}
     {{ Form::hidden('id') }}
     <div class="form">

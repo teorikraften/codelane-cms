@@ -27,7 +27,7 @@
 				<div class="description">{{ Form::label('name', 'Användarens e-postadress') }}</div>
 				<div class="input">{{ Form::text('email', NULL, array('class' => 'text')) }}</div>
 				<p>
-					Ett e-postmeddelande kommer skickas till ovan angivna adress när du trycker på Spara användare.
+					Ett e-postmeddelande med en länk till att skapa lösenord kommer skickas till ovan angivna adress när du trycker på Spara användare.
 				</p>
 			</div>
 			<div class="submit">

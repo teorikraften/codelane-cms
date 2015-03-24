@@ -11,7 +11,7 @@
 @section('body')
     <h1>Verifiera användare</h1>
     <p>Vill du verkligen verifiera användaren {{ $user->real_name }} ({{ $user->email }})?</p>
-    
+    @include('includes.messages')
     <table>
 		<tr>
 			<td>Namn</td>
@@ -27,7 +27,7 @@
     {{ Form::hidden('user-id', $user->id) }}
     <div class="form">
 		<div class="submit">
-			{{ Form::submit('Ja, den här personen kan vi lita på', array('class' => 'submit', 'id' => 'yes-button')) }}
+			{{ Form::submit('Ja, den här personen kan vi lita på', array('class' => 'submit', 'id' => 'yes-button', 'name' => 'yes')) }}
 			{{ Form::submit('Nej', array('class' => 'submit no')) }}
 		</div>
 	</div>

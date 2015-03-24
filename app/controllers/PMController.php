@@ -1,13 +1,21 @@
 <?php
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class PMController extends BaseController {
+	// TODO Kolla igenom hela klassen och åtgärda validering och buggar och städa upp
 	/**
 	 * Displays the PM page view.
 	 * @param $token the PM token
 	 */
-	public function showPMPage($token)
-	{
-		$pm = Pm::where('token', '=', $token)->firstOrFail(); // TODO Fix
+	public function showPMPage($token) {
+		try {
+		    $pm = Pm::where('token', '=', $token)->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::back()
+		    	->with('error', 'PM:et som skulle visas hittades inte.');
+		}
+		
 		return View::make('pm.show')
 			->with('pm', $pm)
 			->with('assignments', $pm->users);
@@ -17,40 +25,72 @@ class PMController extends BaseController {
 	 * Displays the PM download page view.
 	 * @param $token the PM token
 	 */
-	public function showDownloadPage($token)
-	{
-		return View::make('pm.download')->with('token', $token);
+	public function showDownloadPage($token) {
+		// TODO
+		return View::make('pm.download')
+			->with('token', $token);
 	}
 
 	/**
 	 * Displays the PM edit page view.
 	 * @param $token the PM token
 	 */
-	public function showEditPMPage($token)
-	{
-		return View::make('pm.edit')->with('pm', PM::where('token', '=', $token)->first());
+	public function showEditPMPage($token) {
+		try {
+		    $pm = Pm::where('token', '=', $token)->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::back()
+		    	->with('error', 'PM:et som skulle visas hittades inte.');
+		}
+		
+		return View::make('pm.edit')
+			->with('pm', $pm);
 	}
 
-	public function editPM()
-	{
-		$pm = PM::findOrFail(Input::get('id'));
+	/**
+	 * Handles post request to edit PM.
+	 */
+	public function editPM() {
+		// TODO Hela funktionen
+
+		try {
+			$pm = PM::findOrFail(Input::get('id'));
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::back()
+		    	->with('error', 'PM:et som skulle visas hittades inte.');
+		}
+
+		if (!(strlen(Input::get('title', '')) > 0))
+			return Redirect::back()
+				->withInput()
+				->with('error', 'Du måste ange PM:ets rubrik.');
+
+		$tags = explode(",", Input::get('tags'));
+
+		$pm->tags()->detach();
+		foreach ($tags as $tag) {
+			$pm->tags()->attach([$tag => ['added_by' => Auth::user()->id]]);
+		}
 		$pm->title = Input::get('title');
 		$pm->content = Input::get('content');
 		$pm->save();
+
 		return Redirect::route('pm-edit', $pm->token);
 	}
 
 	/**
-	 * Displays the PM edit page view.
+	 * Displays the PM edit assignments page view.
 	 * @param $token the PM token
 	 */
-	public function showEditPMAssignmentsPage($token)
-	{
-		$pm = PM::where('token', '=', $token)->firstOrFail();
-		$owners = array(); 
-		$reviewers = array(); 
-		$authors = array(); 
-		$members = array();
+	public function showEditPMAssignmentsPage($token) {
+		try {
+		    $pm = Pm::where('token', '=', $token)->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::route('index')
+		    	->with('error', 'PM:et som skulle ändras hittades inte.');
+		}
+
+		$owners = $reviewers = $authors = $members = array();
 
 		foreach($pm->users as $user) {
 			if ($user->pivot->assignment == 'author')
@@ -62,7 +102,8 @@ class PMController extends BaseController {
 			elseif ($user->pivot->assignment == 'member')
 				$members[] = $user;
 		}
-		return View::make('user.admin.edit-assignments')
+
+		return View::make('user.admin.pm.assignment-edit')
 			->with('pm', $pm)
 			->with('owners', $owners)
 			->with('reviewers', $reviewers)
@@ -70,8 +111,7 @@ class PMController extends BaseController {
 			->with('authors', $authors);
 	}
 
-	public function editPMAssignments()
-	{
+	public function editPMAssignments() {
 		// TODO Validering
 		$owner = explode(',', Input::get('responsible'));
 		$owner = $owner[0];
@@ -173,7 +213,7 @@ class PMController extends BaseController {
 				$pm->status = 'ej veriferat';
 			}
 		}
-		return View::make('user.admin.pm')
+		return View::make('user.admin.pm.index')
 			->with('pms', PM::orderBy('title', 'ASC')->take(200)->get())
 			->with('userPms', $userPms); // TODO Pagination
 	}

@@ -19,6 +19,7 @@
 @section('body')
     <h1>Ändra användare</h1>
     <p>Du håller på att ändra användaren {{ $user->real_name }}.</p>
+    @include('includes.messages')
     {{ Form::model($user, array('action' => 'post-admin-users-edit', 'method' => 'post')) }}
         {{ Form::hidden('id') }}
         <div class="form">

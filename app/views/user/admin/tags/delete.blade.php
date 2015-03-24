@@ -18,6 +18,7 @@
 
 @section('body')
     <h1>Bekräfta: ta bort tagg</h1>
+    @include('includes.messages')
     <p>Vill du verkligen ta bort taggen {{ $tag->name }}?</p>
     {{ Form::open(array('action' => 'post-admin-tags-delete', 'method' => 'post')) }}
     {{ Form::hidden('tag-token', $tag->token) }}

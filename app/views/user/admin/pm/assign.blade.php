@@ -27,6 +27,7 @@
 
 @section('body')
     <h1>Skapa och tilldela PM</h1>
+    @include('includes.messages')
     {{ Form::open(array('action' => 'post-pm-add-assign', 'method' => 'post')) }}
 	    <div class="form">
 			<div class="row">

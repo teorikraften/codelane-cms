@@ -10,6 +10,7 @@
 
 @section('body')
     <h1>Ny roll</h1>
+    @include('includes.messages')
     {{ Form::open(array('action' => 'post-admin-roles-new', 'method' => 'post')) }}
     <div class="form">
 		<div class="row">

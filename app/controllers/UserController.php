@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class UserController extends BaseController {
 	/**
 	 * Displays the profile page for the user.
@@ -133,5 +135,44 @@ class UserController extends BaseController {
 		}
 		return json_encode($userNames
 			);
+	}
+
+	public function showCreatePasswordPage($token) {
+		return View::make('user.create-password')
+			->with('id', $token);
+	}
+
+	public function createPassword()
+	{
+		$credentials = Input::only(
+			'email', 'password', 'password_confirmation', 'id'
+		);
+
+		try {
+		    $user = User::findOrFail($credentials['id']);
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::back()
+		    	->with('error', 'Ett fel uppstod. Vi vet inte vilken användare du vill skapa ett lösenord för.');
+		}
+
+		$error = array();
+		if ($credentials['email'] != $user->email) 
+			$error[] = 'E-postadressen är felaktig';
+		if ($credentials['password'] != $credentials['password_confirmation']) 
+			$error[] = 'Lösenorden stämmer inte överens';
+		if (strlen($credentials['password']) < 7) 
+			$error[] = 'Lösenordet måste vara minst 7 tecken långt';
+
+		if (count($error) != 0) {
+			// If not succes set error and ask user to change input
+			return Redirect::back()
+				->with('error', $error)
+				->withInput();
+		} 
+		
+		$user->password = Hash::make($credentials['password']);
+		$user->save();
+
+		return Redirect::route('index')->with('success', 'Ditt lösenord har skapats. Testa att logga in!');
 	}
 }

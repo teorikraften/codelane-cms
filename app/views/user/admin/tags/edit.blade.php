@@ -18,6 +18,7 @@
 
 @section('body')
     <h1>Ändra tagg</h1>
+    @include('includes.messages')
     <p>Du håller på att ändra taggen {{ $tag->name }}.</p>
     {{ Form::model($tag, array('action' => 'post-admin-tags-edit', 'method' => 'post')) }}
     {{ Form::hidden('token') }}

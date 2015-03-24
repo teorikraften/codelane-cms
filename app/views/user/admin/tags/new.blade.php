@@ -10,6 +10,7 @@
 
 @section('body')
     <h1>Ny tagg</h1>
+    @include('includes.messages')
     {{ Form::open(array('action' => 'post-admin-tags-new', 'method' => 'post')) }}
     <div class="form">
 		<div class="row">

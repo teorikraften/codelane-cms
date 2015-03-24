@@ -43,6 +43,7 @@
 
 @section('body')
     <h1>Ändra personer på PM</h1>
+    @include('includes.messages')
     {{ Form::model($pm, array('action' => 'post-pm-edit-assignments', 'method' => 'post')) }}
     	{{ Form::hidden('id') }}
 	    <div class="form">

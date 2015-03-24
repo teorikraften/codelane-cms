@@ -78,7 +78,7 @@ class RemindersController extends Controller {
 				return Redirect::back()->with('error', 'Felaktig e-postadress.');
 
 			case Password::PASSWORD_RESET:
-				return Redirect::to('/');
+				return Redirect::route('index')->with('success', 'Ditt lösenord har ändrats. Testa att logga in!');;
 		}
 	}
 

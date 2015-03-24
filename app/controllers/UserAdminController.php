@@ -26,11 +26,11 @@ class UserAdminController extends BaseController {
 		try {
 		    $user = User::findOrFail($id);
 		} catch(ModelNotFoundException $e) {
-		    return View::make('user.admin.users.index')
-		    	->with('error', 'Ett fel uppstod. Kontakta systemadministratören om det kvarstår, med felkod 1001.');
+		    return Redirect::route('admin-users')
+		    	->with('error', 'Användaren som skulle verifieras hittades inte.');
 		}
 
-		return View::make('user.admin.users-verify')
+		return View::make('user.admin.users.verify')
 			->with('user', $user);
 	}
 
@@ -41,21 +41,21 @@ class UserAdminController extends BaseController {
 		// If the admin did not click 'yes', we should not verify
 		if (!Input::get('yes'))
 			return Redirect::route('admin-users')
-				->with('warning', 'Användaren togs inte bort.');
+				->with('warning', 'Användaren verifierades inte.');
 
 		// Now find user and edit the database table column, or show error if couldn't find.
 		try {
 			$user = User::findOrFail(Input::get('user-id'));
 		} catch(ModelNotFoundException $e) {
-		    return View::make('user.admin.users.index')
-		    	->with('error', 'Ett fel uppstod. Kontakta systemadministratören om det kvarstår, med felkod 1002.');
+		    return Redirect::route('admin-users')
+		    	->with('error', 'Användaren som skulle verifieras hittades inte.');
 		}
 		
 		$user->privileges = 'verified';
 		$user->save();
 
 		return Redirect::route('admin-users')
-			->with('success', 'Användaren uppdaterades.');
+			->with('success', 'Användaren verifierades.');
 	}
 
 	/**
@@ -66,28 +66,13 @@ class UserAdminController extends BaseController {
 	}
 
 	/**
-	 * Generates a random string with length size.
-	 * @param length (8 if not given) - the size of the string
-	 * @return the generated string, that passes the regex [0-9a-zA-Z]{$length}
-	 */
-	private function generateRandomString($length = 8) {
-	    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
-	    $charactersLength = strlen($characters);
-	    $randomString = '';
-	    for ($i = 0; $i < $length; $i++) {
-	        $randomString .= $characters[rand(0, $charactersLength - 1)];
-	    }
-	    return $randomString;
-	}
-
-	/**
 	 * Handles a post request of adding a user.
 	 */
 	public function addUser() {
 		$real_name = Input::get('real_name');
 		$email = Input::get('email');
 		$privileges = Input::get('privileges');
-		$password = Hash::make($this->generateRandomString());
+		$password = "NULL";
 
 		// Check if input is OK
 		$validator = Validator::make(
@@ -113,7 +98,7 @@ class UserAdminController extends BaseController {
 		// Now, let's check the result of the check. If bad, redirect to relevant page with error message
 		if ($validator->fails()) {
 			$messages = $validator->messages();
-			return Redirect::route('admin-users-new')
+			return Redirect::back()
 				->with('error', $messages->all())
 				->withInput();
 		} 
@@ -127,14 +112,15 @@ class UserAdminController extends BaseController {
 		$user->save();
 
 		// Email the password to the user
-		Mail::send('emails.welcome', array('user' => $user), function($message) {
+		Mail::send('emails.welcome', array('user' => $user), function($message) use($real_name, $email) {
 		    $message
-		    	->to($user->email, $user->real_name)
+		    	->to($email, $real_name)
+		    	->from('no-reply@ds.se', 'Danderyds Sjukhus')
 		    	->subject('Välkommen - välj lösenord!');
 		});
 
 		return Redirect::route('admin-users')
-			->with('success', 'Användaren skapades och ett mejl har skickats.');
+			->with('success', 'Användaren skapades och ett mejl har skickats med en länk till att skapa lösenord.');
 	}
 
 	/**
@@ -142,8 +128,14 @@ class UserAdminController extends BaseController {
 	 */
 	public function showDeleteUserPage($id) 
 	{
-		$user = User::findOrFail($id); // TODO Make sure no fail...
-		return View::make('user.admin.users-delete')->with('user', $user);
+		try {
+			$user = User::findOrFail($id);
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::route('admin-users')
+		    	->with('error', 'Användaren som skulle tas bort hittades inte.');
+		}
+
+		return View::make('user.admin.users.delete')->with('user', $user);
 	}
 
 	/**
@@ -151,13 +143,22 @@ class UserAdminController extends BaseController {
 	 */
 	public function deleteUser() 
 	{
-		// TODO Better
+		// Only 'yes' should make us continue
 		if (!Input::get('yes'))
-			return Redirect::route('admin-users')->with('warning', 'Användaren togs inte bort.'); // TODO show
+			return Redirect::route('admin-users')
+				->with('warning', 'Användaren togs inte bort.');
 
 		$id = Input::get('user-id');
-		User::findOrFail($id)->delete();
-		return Redirect::route('admin-users')->with('success', 'Användaren togs bort.'); // TODO Show
+		
+		try {
+			$user = User::findOrFail($id)->delete();
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::route('admin-users')
+		    	->with('error', 'Användaren som skulle tas bort hittades inte.');
+		}
+
+		return Redirect::route('admin-users')
+			->with('success', 'Användaren togs bort.');
 	}
 
 	/**
@@ -165,8 +166,15 @@ class UserAdminController extends BaseController {
 	 */
 	public function showEditUserPage($id) 
 	{
-		$user = User::findOrFail($id); // TODO Make sure no fail...
-		return View::make('user.admin.users-edit')->with('user', $user)->with('success', 'Användaren ändrades.');
+		try {
+			$user = User::findOrFail($id);
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::route('admin-users')
+		    	->with('error', 'Användaren som skulle ändras hittades inte.');
+		}
+
+		return View::make('user.admin.users.edit')
+			->with('user', $user);
 	}
 
 	/**
@@ -175,6 +183,7 @@ class UserAdminController extends BaseController {
 	public function editUser() 
 	{
 		// TODO Better
+		// TODO Is this really going to work this way? Waiting to implement it until that time
 		$id = Input::get('id');
 		$user = User::findOrFail($id);
 		$user->real_name = Input::get('real_name');

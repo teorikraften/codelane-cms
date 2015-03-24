@@ -14,17 +14,22 @@ Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
 Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
 Route::get('/keywords', ['as' => 'search-autocomplete', 'uses' => 'SearchController@searchAutocomplete']);
 Route::get('/personer', ['as' => 'persons-autocomplete', 'uses' => 'UserController@personsAutocomplete']);
+Route::get('/taggar', ['as' => 'tags-autocomplete', 'uses' => 'TagController@tagsAutocomplete']);
 Route::get('/glomt-losenordet', ['as' => 'recover-password', 'uses' => 'RemindersController@getRemind']);
 Route::post('/glomt-losenordet', ['as' => 'post-recover-password', 'uses' => 'RemindersController@postRemind']);
 Route::get('/aterstall-losenordet/{token}', ['as' => 'reset-password', 'uses' => 'RemindersController@getReset']);
 Route::post('/aterstall-losenordet', ['as' => 'post-reset-password', 'uses' => 'RemindersController@postReset']);
+Route::get('/skapa-losenord/{token}', ['as' => 'create-password', 'uses' => 'UserController@showCreatePasswordPage']);
+Route::post('/skapa-losenord', ['as' => 'post-create-password', 'uses' => 'UserController@createPassword']);
 
 /*
 |
 | Signed out user related routes like sign in and sign up.
 |
 */
-Route::get('/logga-in', ['as' => 'sign-in', 'uses' => 'GuestController@showSignInPage'])
+Route::get('/logga-in', ['as' => 'sign-in', 'uses' => function() {
+	return Redirect::route('index')->withInput();
+}])
 	->before('guest');
 Route::post('/logga-in', ['as' => 'post-sign-in', 'uses' => 'GuestController@signIn'])
 	->before('guest');
