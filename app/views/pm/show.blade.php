@@ -1,4 +1,4 @@
-@extends('master')
+﻿@extends('master')
 
 @section('head-title')
     Visa PM med token: {{ $pm }}
@@ -26,7 +26,7 @@
 	<div class="pm-info">
 	<table>
 		<tr>
-			<td>Ansvarig</td>
+			<td>Ansvarig - Onur</td>
 			<td>Författare</td>
 			<td>Granskare</td>
 		</tr>
