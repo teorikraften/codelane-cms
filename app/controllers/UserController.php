@@ -49,7 +49,7 @@ class UserController extends BaseController {
 		$error = array();
 		if ($new_password != $new_password_again)
 			$error[] = 'Lösenorden stämmer inte överens';
-		if (Hash::check(Auth::user()->password, $old_password))
+		if (!Hash::check($old_password, Auth::user()->password))
 			$error[] = 'Du skrev fel gammalt lösenord';
 
 		if ($validator->fails() || count($error) != 0)
