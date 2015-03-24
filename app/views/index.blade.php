@@ -36,6 +36,9 @@
 						<div class="description">{{ Form::label('remember', 'Kom ihåg mig') }}</div>
 						<div class="clear"></div>
 					</div>
+					<div class="row same">
+						<p><a href="{{ URL::route('recover-password') }}">Jag har glömt mitt lösenord.</a></p>
+					</div>
 					<div class="submit">
 						{{ Form::submit('Logga in', array('class' => 'submit')) }}
 					</div>

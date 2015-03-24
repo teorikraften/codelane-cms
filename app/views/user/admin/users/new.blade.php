@@ -10,6 +10,7 @@
 
 @section('body')
     <h1>Ny användare</h1>
+    @include('includes.messages')
     {{ Form::open(array('action' => 'post-admin-users-new', 'method' => 'post')) }}
 	    <div class="form">
 			<div class="row">

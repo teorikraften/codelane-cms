@@ -11,8 +11,7 @@
 @section('body')
     <h1>PM</h1>
     @include('includes.messages')
-    <a href="{{ URL::route('pm-add') }}" class="action">Skapa nytt</a>
-    <a href="{{ URL::route('pm-add-assign') }}" class="action">Låt någon annan skriva ett PM</a>
+    <a href="{{ URL::route('pm-add-assign') }}" class="action">Tilldela ett PM</a>
     <div class="clear"></div>
     @if(Auth::user()->privileges == 'admin')
         <table>

@@ -97,7 +97,7 @@ class PMController extends BaseController {
 
 	public function showImportPage()
 	{
-		return View::make('pm.import');
+		return View::make('user.import.import');
 	}
 
 	public function import()
@@ -132,7 +132,7 @@ class PMController extends BaseController {
 		}
 
 		$info = PDFParser::parse(Session::get('path'), $file);
-		return View::make('pm.import-verify')->with('file', $info)->with('path', Session::get('path'))->with('filename', $file);
+		return View::make('user.import.import-verify')->with('file', $info)->with('path', Session::get('path'))->with('filename', $file);
 	}
 
 	/**

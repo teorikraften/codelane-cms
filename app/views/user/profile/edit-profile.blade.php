@@ -4,8 +4,13 @@
     Ändra användare: {{ Auth::user()->real_name }}
 @stop
 
+@section('submenu')
+    @include('includes.admin-menu')
+@stop
+
 @section('body') 
     <h1>Ändra information</h1>
+    <p>Ändra informationen som finns sparad om ditt konto genom att fylla i de nya uppgifterna nedan och tryck på spara. Vill du byta lösenord gör du detta längre ned på sidan.</p>
     
     @if(Session::get('errorType') == 'profile')
 		@include("includes.error")
@@ -31,6 +36,7 @@
 	<div class="clear"></div>
 
 	<h2>Byt lösenord</h2>
+    <p>Nedan kan du byta lösenord. Välj ett starkt lösenord. Det måste vara minst 7 tecken långt.</p>
     @if(Session::get('errorType') == 'password')
 		@include("includes.error")
 	@endif

@@ -12,8 +12,12 @@
 */
 Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
 Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
-Route::get('/keywords/', ['as' => 'search-autocomplete', 'uses' => 'SearchController@searchAutocomplete']);
-Route::get('/personer/', ['as' => 'persons-autocomplete', 'uses' => 'UserController@personsAutocomplete']);
+Route::get('/keywords', ['as' => 'search-autocomplete', 'uses' => 'SearchController@searchAutocomplete']);
+Route::get('/personer', ['as' => 'persons-autocomplete', 'uses' => 'UserController@personsAutocomplete']);
+Route::get('/glomt-losenordet', ['as' => 'recover-password', 'uses' => 'RemindersController@getRemind']);
+Route::post('/glomt-losenordet', ['as' => 'post-recover-password', 'uses' => 'RemindersController@postRemind']);
+Route::get('/aterstall-losenordet/{token}', ['as' => 'reset-password', 'uses' => 'RemindersController@getReset']);
+Route::post('/aterstall-losenordet', ['as' => 'post-reset-password', 'uses' => 'RemindersController@postReset']);
 
 /*
 |
@@ -30,8 +34,6 @@ Route::get('/registrera', ['as' => 'sign-up', 'uses' => 'GuestController@showSig
 	->before('guest');
 Route::post('/registrera', ['as' => 'post-sign-up', 'uses' => 'GuestController@signUp'])
 	->before('/guest');
-Route::get('/glomt-losenord', ['as' => 'reset-password', 'uses' => 'GuestController@showResetPasswordPage'])
-	->before('guest');
 
 
 /*
@@ -50,9 +52,6 @@ Route::post('/person/andra', ['as' => 'post-user-edit', 'uses' => 'UserControlle
 
 Route::post('/person/andra-losenord', ['as' => 'post-change-password', 'uses' => 'UserController@changePassword'])
 	->before('auth');
-	
-Route::get('/person/{id}/favoriter', ['as' => 'user-favourites', 'uses' => 'UserController@showFavouritesPage'])
-	->before('auth');
 
 
 /*
@@ -60,14 +59,6 @@ Route::get('/person/{id}/favoriter', ['as' => 'user-favourites', 'uses' => 'User
 | Signed in admin functionality.
 |
 */
-Route::get('/person/personer', ['as' => 'admin-persons', 'uses' => 'AdminController@showPersonListPage'])
-	->before('auth.admin');
-Route::get('/person/pm', ['as' => 'admin-pms', 'uses' => 'AdminController@showPMListPage'])
-	->before('auth.admin');
-Route::get('/person/roller', ['as' => 'admin-roles', 'uses' => 'AdminController@showRolesListPage'])
-	->before('auth.admin');
-
-
 Route::get('/admin/taggar', ['as' => 'admin-tags', 'uses' => 'TagController@showTagsListPage'])
 	->before('auth.admin');
 Route::get('/admin/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'TagController@showAddTagPage'])

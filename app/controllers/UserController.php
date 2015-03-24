@@ -7,7 +7,7 @@ class UserController extends BaseController {
 	 */
 	public function showProfilePage()
 	{
-		return View::make('user.profile');
+		return View::make('user.profile.profile');
 	}
 
 	/**
@@ -16,7 +16,7 @@ class UserController extends BaseController {
 	 */ 
 	public function showEditProfilePage() 
 	{
-		return View::make('user.edit-profile')
+		return View::make('user.profile.edit-profile')
 			->with('error', Session::get('error'))
 			->with('success', Session::get('success'));
 	}
@@ -57,7 +57,7 @@ class UserController extends BaseController {
 			$messages = $validator->messages();
 			// If not succes set error and ask user to change input
 			return Redirect::route('user-edit')
-				->with('errorType', 'profile')
+				->with('errorType', 'password')
 				->with('error', array_merge($messages->all(), $error))
 				->withInput();
 		} 
@@ -116,17 +116,6 @@ class UserController extends BaseController {
 
 		return Redirect::route('user-edit')
 			->with('success', 'Informationen uppdaterades!');
-	}
-
-	/**
-	 * Displays the user's favourites.	 
-	 * @param $userId the user id for the user to be displayed
-	 */
-	public function showFavouritesPage() 
-	{
-		$hej = array('Patric är korv', 'Jacobi och hans ilska');
-		return View::make('user.favourites')
-			->with('favoriter', $hej);
 	}
 
 	public function personsAutocomplete() {

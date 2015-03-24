@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('head-title')
-    Importera PM
+    Verifiera importerat PM
 @stop
 
 @section('head-extra')
