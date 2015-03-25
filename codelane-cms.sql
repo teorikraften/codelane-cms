@@ -1,4 +1,4 @@
--- phpMyAdmin SQL Dump
+﻿-- phpMyAdmin SQL Dump
 -- version 4.3.3
 -- http://www.phpmyadmin.net
 --
@@ -345,7 +345,11 @@ INSERT INTO `users` (`id`, `email`, `password`, `real_name`, `privileges`, `crea
 (2, 'fredrika@jdahl.se', '$2y$10$Wa3q./2RaxcIs/K90VDqieuzGhu8FSxI.E2eosbuaCZVqG8Njtku6', 'Fredrika Svensson (PM-ansvarig)', 'pm-admin', '2015-03-24 20:18:09', '2015-03-24 20:30:57', NULL, 'e7UTlAIgbCFND4EaNnL4gKAit9lp3O2TOtVzLezKe5VARnvoQYKdbCfCLs2q'),
 (3, 'maria@jdahl.se', '$2y$10$U6BKuQr75hAJ3F6gsEQNQ.KPw4fVf710I1awDi1IVkRukLuBJ0.zK', 'Maria Mogren (Verifierad)', 'verified', '2015-03-24 20:20:59', '2015-03-25 08:13:03', NULL, 'peU6ixO6ymNF8pcXjHi3e07q6jrxdtqDqsfIrjFykrkl0LBwln2m4PCac4i1'),
 (4, 'pontus@jdahl.se', '$2y$10$AvjMkP7cE5QGqMva2xYbzu/MR9/ucFVQyXpsBk3gAkCgC8kspf3bK', 'Pontus Stenbäck (Overifierad)', 'unverified', '2015-03-24 20:21:24', '2015-03-24 20:28:10', NULL, 'WoQMyeWYStApvj7ovx8wKxpZA6Gebow7l8DIKFj7NCmzmMxfmYwPhId5whOy'),
-(5, 'andy@jdahl.se', '$2y$10$lQdFSYk.n0B0hGIHrPnTCOICL7EepD0hbv8rsY1ruMIuMHGs2Oqgu', 'Andy Yousef', 'verified', '2015-03-25 07:38:56', '2015-03-25 07:40:06', NULL, 'xUV4ais2bKjESGD3InjxgptflEYOqmtgquSzrHFsMraXSucESNOjOizg81XZ');
+(5, 'andy@jdahl.se', '$2y$10$lQdFSYk.n0B0hGIHrPnTCOICL7EepD0hbv8rsY1ruMIuMHGs2Oqgu', 'Andy Yousef', 'verified', '2015-03-25 07:38:56', '2015-03-25 07:40:06', NULL, 'xUV4ais2bKjESGD3InjxgptflEYOqmtgquSzrHFsMraXSucESNOjOizg81XZ'),
+
+(6, 'testo@jdahl.se', '$2y$10$jfnGX/GfNuDMyrS5Fj6qTOgZRhZrsFpVDTyLeRrhhefS4R.vekNH.', 'Overifierad Lantz', 'verified', '2015-03-06 12:54:52', '2015-03-20 09:00:20', '2015-03-20 09:00:20', 'yIGkSnfroJGwCSs9QS5EXHxpnwTmoSeMQzC1eNcpGjvk3uFa29vddA9NqCQR'),
+(7, 'testv@jdahl.se', '$2y$10$3hvjkf/cQoBgigcjYP48N.HIRvdmZJW15BHkKxDFODAaVG6mW4L..', 'Verifierad Dahl', 'verified', '2015-03-06 12:54:53', '2015-03-25 15:57:18', NULL, 'I4SK4LLE5ctzXD4T5ufoNCRjZv19Xd349PHgo4j5G0xZNakOS84IzEcjMxdV'),
+(8, 'testa@jdahl.se', '$2y$10$jlHY20HMZENpbJoEucSFvuBLB/uwNazIk8zN8e1.KRQRT9TZ9WPhi', 'Admin Jonasson', 'admin', '2015-03-06 12:54:53', '2015-03-24 11:09:03', NULL, 'OOo3SNDgPSAOo1LmaEyGT0dWAQbdgp1fCYFzlA0GysJuKLxJlaWu2gxYw7Ja');
 
 -- --------------------------------------------------------
 
