@@ -27,7 +27,10 @@ class Search {
 		// LINK http://dev.mysql.com/doc/refman/5.7/en/fulltext-search.html
 		// NATURAL LANGUAGE MODE vs BOOLEAN MODE
 		
-		$goodResult = PM::selectRaw("*, MATCH(content, title) AGAINST('" . $searchQuery . "' IN BOOLEAN MODE) AS score")->get();
+		//$goodResult = PM::selectRaw("*, MATCH(content, title) AGAINST('" . $searchQuery . "' IN BOOLEAN MODE) AS score")->get();
+
+		$goodResult = PM::whereRaw("MATCH(content, title) AGAINST(? IN BOOLEAN MODE)", array("'".$searchQuery."'"))
+		->addSelect(DB::raw("*, MATCH(content, title) AGAINST('".$searchQuery."' IN BOOLEAN MODE) AS score"))->get();
 
 		foreach ($goodResult as $key => $pm) {
 			$id = $pm['id'];
