@@ -41,15 +41,40 @@ class Search {
 
 		$splitQuery = explode(' ', $searchQuery);
 		foreach ($splitQuery as $key => $query) {
-			$tag = Tag::where('name', 'like', '%'.$query.'%')->get(); // TODO look into '%' for prestanda
+
+			if (substr($query, 0, 1) === '+') {
+				$score = 10;
+				$query = substr($query, 1);
+			} else if (substr($query, 0, 1) === '-') {
+				$score = -10;
+				$query = substr($query, 1);
+			} else if (substr($query, 0, 1) === '~') {
+				$score = 2;
+				$query = substr($query, 1);
+			} else {
+				$score = 1;
+			}
+
+			$tag = Tag::where('name', 'like', '%'.$query.'%')->get();
 			foreach ($tag as $key => $value) {
 				$tagpms = $value->pm;
 				foreach ($tagpms as $key => $v) {
-					$result = $this->updatePMScore($result, $v, 100);
+					$result = $this->updatePMScore($result, $v, 100 * $score);
 				}
+			}
+
+			$contentResult = Pm::where('content', 'like', '%'.$query.'%')->get();
+			foreach ($contentResult as $key => $v) {
+				$result = $this->updatePMScore($result, $v, 1 * $score);
+			}
+
+			$titleResult = PM::where('title', 'like', '%'.$query.'%')->get();
+			foreach ($titleResult as $key => $v) {
+				$result = $this->updatePMScore($result, $v, 15 * $score);
 			}
 		} 
 
+		/* OLD
 		$tag = Tag::where('name', 'like', '%'.$searchQuery.'%')->get(); // TODO look into '%' for prestanda
 		foreach ($tag as $key => $value) {
 			$tagpms = $value->pm;
@@ -58,7 +83,9 @@ class Search {
 				$result = $this->updatePMScore($result, $v, 100);
 			}
 		}
+		*/
 
+		/* OLD
 		$contentResult = Pm::where('content', 'like', '%'.$searchQuery.'%')->take(10)->get();
 		foreach ($contentResult as $key => $v) {
 			//$result[$v['id']] = $v;
@@ -70,6 +97,7 @@ class Search {
 			//$result[$v['id']] = $v;
 			$result = $this->updatePMScore($result, $v, 15);
 		}
+		*/
 
 
 		// Sort the list
