@@ -19,7 +19,7 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
 	{{ Form::open(array('url' => route('post-search'), 'method' => 'post')) }}
 		<div class="form big-search">
 			<div class="search-field">
-				{{ Form::text('search-query', NULL, array('class' => 'text', 'placeholder' => 'Sök efter PM...', 'id' => 'search-query')) }}
+				{{ Form::text('search-query', $searchQuery, array('class' => 'text', 'placeholder' => 'Sök efter PM...', 'id' => 'search-query')) }}
 			</div>
 			{{ Form::submit('Sök', array('class' => 'submit')) }}
 		</div>
@@ -35,6 +35,7 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
 		    	<h3><a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a></h3>
 		      	<p class="description">{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...</p>
 		  		{{ $pm['score'] }}
+		  		{{ $pm['tag'] }}
 		  		<?php  /*var_dump($pm['pm']);*/ ?>
 		  	</li>
 	  	@endforeach
