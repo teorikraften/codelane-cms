@@ -18,7 +18,7 @@ class SearchController extends BaseController {
 	public function showSearchResultPage($searchQuery, $order = '', $page = 1) 
 	{
 		$search = new Search();
-		$result = $search->basicSearch($searchQuery);
+		$result = $search->pmSearch($searchQuery);
 
 		return View::make('search.result')
 		->with('searchQuery', $searchQuery)
