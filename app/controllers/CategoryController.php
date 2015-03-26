@@ -7,9 +7,14 @@ class CategoryController extends BaseController {
 	 */
 	public function showAllCategories() 
 	{
-		$head = Category::where('id',  '=', 0)->get();
+		$head = Category::where('parent',  '=', 0)->get();
 
-		return View::make('category.show')->with('pm', $head);
+		$list = array();
+		foreach ($head as $key => $value) {
+			$list[$value->id] = $value->allChilds();
+		}
+
+		return View::make('category.show')->with('category', $list);
 	}
 
 	/**
@@ -20,9 +25,12 @@ class CategoryController extends BaseController {
 		$head = Category::where('token',  '=', $token)->get();
 
 		// get pm connected to the category
-		$pms = $head[0]->pm->where('verified', '=' , 1)->whereNotNull('deleted_at')->where('expiration_date', '<' , 'NOW()');
-		//$pms = $head[0];
+		$pms = $head[0]->allPms();//->where('verified', '=' , 1)->whereNotNull('deleted_at')->where('expiration_date', '<' , 'NOW()');
 
-		return View::make('category.show')->with('pm', $pms)->with('token', $token);
+
+		$categories[$head[0]->id] = $head[0]->allChilds();
+
+
+		return View::make('category.show')->with('category', $categories)->with('token', $token)->with('pms', $pms);
 	}
 }
