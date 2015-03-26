@@ -10,7 +10,7 @@ class Search {
 	*/
 
 	/**
-	 * Searches for the 10 highest rated search results from the $searchQuery
+	 * Searches and returns the highest rated search results from the $searchQuery
 	 */
 	function basicSearch($searchQuery, $start = 0, $lenght = 10) {
 
