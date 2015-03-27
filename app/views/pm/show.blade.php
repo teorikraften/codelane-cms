@@ -1,25 +1,11 @@
 ﻿@extends('master')
 
 @section('head-title')
-    Visa PM med token: {{ $pm }}
+    Visa PM "{{ $pm->title }}"
 @stop
 
 @section('head-extra')
-    <script type="text/javascript">
 
-    	function changeSize(divT, diff, valSpan) {
-    		var divToChange = document.getElementById(divT);
-    		var valueSpan = document.getElementById(valSpan);
-    		var value = parseInt(valueSpan.innerHTML) + diff;
-    		if (value < 0)
-    			value = 0;
-    		if (value > 500)
-    			value = 500;
-    		valueSpan.innerHTML = value;
-    		divToChange.style.fontSize = value/100 + 'em';
-    	}
-
-    </script>
 @stop
 
 @section('body')

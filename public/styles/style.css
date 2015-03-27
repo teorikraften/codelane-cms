@@ -483,6 +483,121 @@ ul.result li p.description {
 	width: 300px;
 }
 
+#pmc {
+	padding: 20px;
+	background: #fff;
+	font-size: 14px;
+	width: 900px;
+}
+
+#pmc #pmc-text {
+	width: 700px;
+	float: left;
+	float: left;
+}
+
+#pmc #pm-comments {
+	width: 300px;
+	float: left;
+}
+
+span.comment {
+	display: block;
+	background: #eff;
+}
+span.comment.active {
+	background: #cff;
+}
+
+div.comment-box {
+	padding: 10px;
+	margin: 0 0 10px 0;
+	width: 198px;
+	border: 1px solid #ccc;
+	background: #fff;
+	display: block;
+	font-family: 'Muli', sans-serif;
+	float: left;
+	z-index: 50;
+	position: relative;
+}
+
+div.comment-outer {
+	width: 300px;
+	min-height: 100px;
+	position: absolute;
+	left: 0px;
+	top: 0px;
+	transition: top .2, position .2, margin .2;
+	z-index: 5;
+}
+
+div.comment-outer img {
+	float: left;
+	margin-right: -1px;
+	z-index: 500;
+	position: relative;
+	transition: margin .1s;
+}
+
+div.comment-box span {
+	height: 19px;
+	padding: 3px 0px;
+}
+
+div.comment-box input.text {
+	background: #fff;
+	width: 176px;
+	border: 1px solid #ccc;
+	padding: 10px 10px;
+	border-radius: 0px; /* TODO Fix browser comp */
+	font-size: 15px;
+	font-family: 'Muli', sans-serif; /* TODO Change if change font */
+	transition: border .1s;
+}
+
+div.comment-box button {
+	background: #008472;
+	border: 0;
+	color: #fff;
+	font-weight: bold;
+	font-family: 'Muli', sans-serif;
+	font-size: 14px;
+	margin: 3px 0 0 0;
+	padding: 5px 10px;
+	float: right;
+	border: 1px solid #008472;
+	margin-left: 3px;
+}
+
+div.comment-box button.delete {
+	color: #008472;
+	background: #fff;
+}
+
+div.comment-outer.inactive {
+	z-index: 4;
+}
+div.comment-outer.inactive div.comment-box button {
+}
+div.comment-outer.inactive img {
+	z-index: 1;
+	margin: 0 -21px 0 20px;
+}
+div.comment-outer.inactive div.comment-box input.text {
+	border-color: #fff;
+}
+
+span.placeholder {
+	width: 100%;
+	display: block;
+}
+
+canvas {
+	position: absolute;
+	top: 0;
+	left: 0;
+}
 
 /*===============================
 =             PM                =

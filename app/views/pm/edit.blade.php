@@ -44,6 +44,7 @@
     	<div class="form">
 			<div class="submit">
 				{{ Form::submit('Spara PM', array('class' => 'submit')) }}
+				<a href="{{ URL::route('admin-pm') }}">eller gå tillbaka</a>
 			</div>
 			<div class="row">
 				<div class="description">{{ Form::label('title', 'PM:ets rubrik') }}</div>

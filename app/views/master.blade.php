@@ -6,6 +6,7 @@
     <link href="/styles/style.css" rel="stylesheet">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
 	<link rel="icon" href="/favicon.ico" type="image/x-icon">
+	<meta name="_token" content="{{ csrf_token() }}"/>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script type="text/javascript" src="/js/jquery-1.11.2.js"></script>
   	<script type="text/javascript" src="/js/jquery-ui.js"></script>

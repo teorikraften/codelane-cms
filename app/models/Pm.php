@@ -1,6 +1,10 @@
 <?php
 
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
+
 class Pm extends Eloquent {
+
+	use SoftDeletingTrait;
 
 	/**
 	 * The database table used by the model.
@@ -10,6 +14,8 @@ class Pm extends Eloquent {
 	protected $table = 'pms';
 
 	protected $fillabel = array('title', 'content', 'original_filetype');
+
+	protected $dates = ['deleted_at'];
 
 	// DEFINE RELATIONSHIPS
 
@@ -43,6 +49,14 @@ class Pm extends Eloquent {
 	public function roles() 
 	{
 		return $this->belongsToMany('Role', 'pm_roles', 'pm', 'role');
+	}
+
+	/**
+	 * Reviews conntected to the PM.
+	 */
+	public function reviews() 
+	{
+		return $this->belongsToMany('Review', 'id', 'review');
 	}
 
 	public function assignments() 

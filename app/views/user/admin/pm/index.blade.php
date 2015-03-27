@@ -13,6 +13,40 @@
     @include('includes.messages')
     <a href="{{ URL::route('pm-add-assign') }}" class="action">Tilldela ett PM</a>
     <div class="clear"></div>
+    @if(count($userPms) > 0)
+        <h2>Dina PM</h2>
+        <table>
+            <tr>
+                <th></th>
+                <th></th>
+                <th></th>
+                <th>Status</th>
+                <th>Din uppgift</th>
+                <th>Rubrik</th>
+            </tr>
+            @foreach($userPms as $pm)
+                <tr>
+                    <td><a href="{{ URL::route('pm-show', $pm->token) }}">Visa</a></td>
+                    <td>
+                        @if (Auth::user()->privileges == 'admin') 
+                            <a href="{{ URL::route('pm-edit-assignments', $pm->token) }}">Ändra personer</a>
+                        @endif
+                    </td>
+                    <td>
+                        @if ($pm->pivot->assignment == 'author') 
+                            <a href="{{ URL::route('pm-edit', $pm->token) }}">Ändra</a>
+                        @elseif ($pm->pivot->assignment == 'reviewer') 
+                            <a href="{{ URL::route('pm-review', $pm->token) }}">Granska</a>
+                        @endif
+                    </td>
+                    <th>{{ $pm->status }}</th>
+                    <td>{{ ucfirst(User::assignmentString($pm->pivot->assignment)) }}</td>
+                    <td>{{ $pm->title }}</td>
+                </tr>
+            @endforeach
+        </table>
+    @endif
+
     @if(Auth::user()->privileges == 'admin')
         <table>
     		<tr style="font-size: 25px">
@@ -25,10 +59,10 @@
     		</tr>
         	@foreach($pms as $pm)
         		<tr valign="top">
-                    <td><a href="{{ URL::route('pm-show', $pm->token) }}">Visa</a></td>
-                    <td><a href="{{ URL::route('pm-edit', $pm->token) }}">Ändra</a></td>
-                    <td><a href="{{ URL::route('pm-edit-assignments', $pm->token) }}">Ändra personer</a></td>
-        			<td><a href="{{ URL::route('admin-pm-delete', $pm->token) }}">Ta bort</a></td>
+                    <td><a href="{{ URL::route('pm-show', $pm->token) }}" title="Visa">V</a></td>
+                    <td><a href="{{ URL::route('pm-edit', $pm->token) }}" title="Ändra">Ä</a></td>
+                    <td><a href="{{ URL::route('pm-edit-assignments', $pm->token) }}" title="Ändra personer">ÄP</a></td>
+        			<td><a href="{{ URL::route('admin-pm-delete', $pm->token) }}" title="Ta bort">X</a></td>
                     <td>{{ $pm->title }}</td>
                     <td>
                         <a href="javascript:void()" onclick="$('#pm{{ $pm->id }}').toggle();">Visa</a>
@@ -45,33 +79,4 @@
         	@endforeach
         </table>
     @endif
-    <h2>Dina PM</h2>
-    <table>
-        <tr>
-            <th></th>
-            <th></th>
-            <th></th>
-            <th>Status</th>
-            <th>Din uppgift</th>
-            <th>Rubrik</th>
-        </tr>
-        @foreach($userPms as $pm)
-            <tr>
-                <td><a href="{{ URL::route('pm-show', $pm->token) }}">Visa</a></td>
-                <td>
-                    @if (Auth::user()->privileges == 'admin') 
-                        <a href="{{ URL::route('pm-edit-assignments', $pm->token) }}">Ändra personer</a>
-                    @endif
-                </td>
-                <td>
-                    @if ($pm->pivot->assignment == 'author') 
-                        <a href="{{ URL::route('pm-edit', $pm->token) }}">Ändra</a>
-                    @endif
-                </td>
-                <th>{{ $pm->status }}</th>
-                <td>{{ ucfirst(User::assignmentString($pm->pivot->assignment)) }}</td>
-                <td>{{ $pm->title }}</td>
-            </tr>
-        @endforeach
-    </table>
 @stop

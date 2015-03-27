@@ -14,6 +14,10 @@ Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
 Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
 Route::get('/keywords', ['as' => 'search-autocomplete', 'uses' => 'SearchController@searchAutocomplete']);
 Route::get('/personer', ['as' => 'persons-autocomplete', 'uses' => 'UserController@personsAutocomplete']);
+Route::get('/spara-kommentar', ['as' => 'save-comment', 'uses' => 'PMController@saveComment'])
+	->before('csrf');
+
+
 Route::get('/taggar', ['as' => 'tags-autocomplete', 'uses' => 'TagController@tagsAutocomplete']);
 Route::get('/glomt-losenordet', ['as' => 'recover-password', 'uses' => 'RemindersController@getRemind']);
 Route::post('/glomt-losenordet', ['as' => 'post-recover-password', 'uses' => 'RemindersController@postRemind']);
@@ -123,7 +127,9 @@ Route::post('/admin/personer/andra', ['as' => 'post-admin-users-edit', 'uses' =>
 
 Route::get('/admin/pm', ['as' => 'admin-pm', 'uses' => 'PMController@showPMListPage'])
 	->before('auth.admin');
-Route::get('/admin/pm/ta-bort', ['as' => 'admin-pm-delete', 'uses' => 'PMController@showDeletePMPage'])
+Route::get('/admin/pm/ta-bort/{token}', ['as' => 'admin-pm-delete', 'uses' => 'PMController@showDeletePMPage'])
+	->before('auth.admin');
+Route::post('/admin/pm/ta-bort', ['as' => 'post-admin-pms-delete', 'uses' => 'PMController@deletePM'])
 	->before('auth.admin');
 Route::get('/admin/pm/tilldela', ['as' => 'pm-add-assign', 'uses' => 'PMController@showAssignPMPage'])
 	->before('auth.verified');
@@ -158,10 +164,8 @@ Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@showAddPMPage'
 
 Route::get('/admin/importera', ['as' => 'pm-import', 'uses' => 'PMController@showImportPage'])
 	->before('auth.verified');
-
 Route::post('/admin/importera', ['as' => 'post-pm-import', 'uses' => 'PMController@import'])
 	->before('auth.verified');
-
 Route::any('/admin/importera/verifiera', ['as' => 'pm-import-verify', 'uses' => 'PMController@importVerify'])
 	->before('auth.verified');
 
@@ -171,6 +175,12 @@ Route::get('/pm/{token}/andra', ['as' => 'pm-edit', 'uses' => 'PMController@show
 	->where('token', '.+')
 	->before('auth.verified');
 Route::post('/pm/andra', ['as' => 'post-pm-edit', 'uses' => 'PMController@editPM'])
+	->before('auth.verified');
+
+Route::get('/pm/{token}/granska', ['as' => 'pm-review', 'uses' => 'PMController@showReviewPMPage'])
+	->where('token', '.+')
+	->before('auth.verified');
+Route::post('/pm/granska', ['as' => 'post-pm-review', 'uses' => 'PMController@reviewPM'])
 	->before('auth.verified');
 
 Route::get('/pm/{token}/andra-personer', ['as' => 'pm-edit-assignments', 'uses' => 'PMController@showEditPMAssignmentsPage'])

@@ -66,10 +66,83 @@ class PMController extends BaseController {
 				->with('error', 'Du måste ange PM:ets rubrik.');
 
 		$tags = explode(",", Input::get('tags'));
+		// TODO Verifiera taggarna
 
-		$pm->tags()->detach();
-		foreach ($tags as $tag) {
-			$pm->tags()->attach([$tag => ['added_by' => Auth::user()->id]]);
+		if (count($tags) > 0) {
+			$pm->tags()->detach();
+			foreach ($tags as $tag) {
+				if (!is_null(Tag::where('id', '=', $tag)->first()))
+					$pm->tags()->attach([$tag => ['added_by' => Auth::user()->id]]);
+			}
+		}
+		$pm->title = Input::get('title');
+		$pm->content = Input::get('content');
+		$pm->save();
+
+		return Redirect::route('pm-edit', $pm->token);
+	}
+
+	/**
+	 * Displays the PM edit page view.
+	 * @param $token the PM token
+	 */
+	public function showReviewPMPage($token) {
+		try {
+		    $pm = Pm::where('token', '=', $token)->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::back()
+		    	->with('error', 'PM:et som skulle granskas hittades inte.');
+		}
+
+		$reviews = Review::where('pm', '=', $pm->id)
+			->join('comments', 'comments.id', '=', 'reviews.comment')
+			->join('users', 'comments.user', '=', 'users.id')
+			->get();
+
+		return View::make('pm.review')
+			->with('pm', $pm)
+			->with('assignments', $pm->users)
+			->with('reviews', $reviews);
+	}
+
+	public function saveComment() {
+		try {
+			$comment = Comment::findOrFail(Input::get('id'));
+		} catch(ModelNotFoundException $e) {
+			return;
+		}
+		$comment->content = Input::get('content');
+		$comment->save();
+		return;
+	}
+
+	/**
+	 * Handles post request to edit PM.
+	 */
+	public function reviewPM() {
+		// TODO Hela funktionen
+
+		try {
+			$pm = PM::findOrFail(Input::get('id'));
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::back()
+		    	->with('error', 'PM:et som skulle visas hittades inte.');
+		}
+
+		if (!(strlen(Input::get('title', '')) > 0))
+			return Redirect::back()
+				->withInput()
+				->with('error', 'Du måste ange PM:ets rubrik.');
+
+		$tags = explode(",", Input::get('tags'));
+		// TODO Verifiera taggarna
+
+		if (count($tags) > 0) {
+			$pm->tags()->detach();
+			foreach ($tags as $tag) {
+				if (!is_null(Tag::where('id', '=', $tag)->first()))
+					$pm->tags()->attach([$tag => ['added_by' => Auth::user()->id]]);
+			}
 		}
 		$pm->title = Input::get('title');
 		$pm->content = Input::get('content');
@@ -219,7 +292,7 @@ class PMController extends BaseController {
 	}
 
 	public function showAssignPMPage() {
-		return View::make('user.admin.pm-assign');
+		return View::make('user.admin.pm.assign');
 	}
 
 	public function assignPM() {
@@ -265,5 +338,44 @@ class PMController extends BaseController {
 		}
 
 		return $clean;
+	}
+
+	/**
+	 * Displays a page to add role for admin.
+	 * @param $id id of the role to delete
+	 */
+	public function showDeletePMPage($token) 
+	{
+		try {
+			$pm = PM::where('token', '=', $token)->firstOrFail(); 
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::route('admin-pm')
+		    	->with('error', 'PM:et som skulle tas bort hittades inte.');
+		}
+
+		return View::make('user.admin.pm.delete')->with('pm', $pm);
+	}
+
+	/**
+	 * Handles a post request of delete role.
+	 */
+	public function deletePM() 
+	{
+		// TODO Fix whole function, should add to oldPMs and so
+		// Only yes-button should make this continue
+		if (!Input::get('yes'))
+			return Redirect::route('admin-pm')->with('warning', 'PM:et togs inte bort.');
+
+		$id = Input::get('pm-id');
+
+		try {
+			$role = PM::findOrFail($id)->delete(); 
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::route('admin-pm')
+		    	->with('error', 'PM:et som skulle tas bort hittades inte.');
+		}
+
+		return Redirect::route('admin-pm')
+			->with('success', 'PM:et togs bort.');
 	}
 }
