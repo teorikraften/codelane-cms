@@ -21,5 +21,5 @@
 	
 	PM_LISTA
 
-	{{ var_dump($pms); }}
+	<?php if (isset($pms)) { var_dump($pms); } ?>
 @stop

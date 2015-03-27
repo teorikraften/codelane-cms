@@ -91,10 +91,6 @@ class Search {
 			$result = $this->removeUnwantedResults($result);
 		}
 
-
-		usort($result, "cmpExpiration"); // TODO remove
-		/*
-
 		// Sort the list
 		if ($order == 'default') {
 			usort($result, "cmp");	
@@ -107,7 +103,6 @@ class Search {
 		} else if ($order == 'expiration_date') {
 
 		}
-		*/
 
 		$result = array_slice($result, $start, $lenght);
 
@@ -216,7 +211,7 @@ function cmpAlphabetical($res1, $res2)
 function cmpViewCount($res1, $res2) 
 {
 	throw new Exception("This functon is not done yet");
-	// TODO make function
+	// TODO make function --------------------------------------------------------------------------------------------------
 	if ($res1['tag'] == $res2['tag']) {
 		if ($res1['pm']->title == $res2['pm']->title) 
 		{
@@ -243,13 +238,13 @@ function cmpExpiration($res1, $res2)
 
 function cmpRevision($res1, $res2) 
 {
-	throw new Exception("This functon is not done yet");
+	throw new Exception("We shuld use another column than updated_at");
 	if ($res1['tag'] == $res2['tag']) {
-		if ($res1['pm']->X_date == $res2['pm']->X_date) 
+		if ($res1['pm']->updated_at == $res2['pm']->updated_at) 
 		{
 			return 0;
 		}
-		return ($res1['pm']->x_date < $res2['pm']->x_date) ? -1 : 1;	
+		return ($res1['pm']->updated_at < $res2['pm']->updated_at) ? -1 : 1;	
 	} else {
 		throw new Exception('Unknown compare ' . $res1['tag'] . ' ' . $res2['tag']);
 	}
