@@ -7,34 +7,20 @@
 @section('head-extra')
     <script type="text/javascript" src="/js/reviewer.js"></script>
     <script type="text/javascript">
-        $(document).click(function(event) {
-            // Everything should be hidden from start
-            $('.comment-outer').addClass('inactive');
-            $('.comment').removeClass('active');
-            $('.comment-outer button').hide();
-            $('.comment-box').each(function(i) {
-                if ($(this).children('input.s').val() == '') {
-                    $(this).parent().remove();
-                }
-            });
-
-            rearrange('.comment-outer');
-
-            var id = commentClicked(event);
-            if (id == -1)   
-                return;
-
-            $('#' + id).addClass('active');
-            $('#comment' + id).removeClass('inactive');
-            $('#comment' + id + ' button').show();
-        });
-
+        /**
+         * Initializes the comment functionality and loads earlier comments.
+         */
         $(document).ready(function() {
+            $('#inline-comments').html('<b>För att göra en kommentar i texten</b>: markera stycket du vill kommentera med musen och klicka på knappen "Skapa kommentar". Du kan också skriva en övergripande kommentar om hela texten längst ner på sidan.');
             @foreach ($reviews as $review)
                 @if ($review->parent_comment == 0)
-                    addCommentBox({{ $review->comment }}, '{{ $review->real_name }}', document.getElementById({{ $review->comment }}), '{{ $review->content }}', false);
+                    addCommentBox({{ $review->id }}, '{{ $review->real_name }}', document.getElementById({{ $review->id }}), '{{ $review->content }}', false);
                 @endif;
             @endforeach
+            $('.comment').removeClass('active');
+
+            // Make sure they don't overlap
+            rearrange('.comment-outer');
         });
 
         /**
@@ -50,15 +36,18 @@
         function save(commentId) {
             var textValue = $('#val' + commentId).val();
             $.ajax({
-                method: 'GET',
+                method: 'POST',
                 url: '/spara-kommentar',
                 data: { 
                     id: commentId, 
                     content: textValue, 
                     user: {{ Auth::user()->id }},
-                    _token: $('meta[name=_token]').attr('content')
+                    pm: {{ $pm->id }},
+                    pmc: document.getElementById('pmcc').innerHTML,
+                    _token: $('meta[name=_token]').attr('content'),
                 },
-                context: document.body
+                context: document.body,
+                dataType: 'json',
             }).done(function() {
                 alert('Sparat');
             });
@@ -68,52 +57,53 @@
 
 @section('body')
     <h1>Granska</h1>
+    @include('includes.messages')
     <div class="pm-inf">
         <h2>Information</h2>
-        <table>
-            <tr>
-                <td>Ansvarig: </td>
-                <td>
-                    @foreach ($assignments as $assignment)
-                        @if ($assignment->pivot->assignment == 'owner')
-                            {{ $assignment->real_name }}
-                        @endif
-                    @endforeach
-                </td>
-            </tr>
-            <tr>
-                <td>Författare: </td>
-                <td>
-                    @foreach ($assignments as $assignment)
-                        @if ($assignment->pivot->assignment == 'author')
-                            {{ $assignment->real_name }}
-                        @endif
-                    @endforeach
-                </td>
-            </tr>
-            <tr>
-                <td>Granskare: </td>
-                <td>
-                    @foreach ($assignments as $assignment)
-                        @if ($assignment->pivot->assignment == 'reviewer')
-                            {{ $assignment->real_name }}
-                        @endif
-                    @endforeach
-                </td>
-            </tr>
-        </table>
+        <p>Nedan kan du kommentera texten och ge förslag till {{ count($authors) == 1 ? 'författaren' : 'författarna' }}.</p>
+        <p id="inline-comments">Textfältet där du skriver din kommentar ligger längst ner på denna sida, efter själva texten.</p>
+        <p>
+            Författare är 
+            <ul>
+                @foreach ($assignments as $assignment)
+                    @if ($assignment->pivot->assignment == 'author')
+                        <li>{{ $assignment->real_name }}</li>
+                    @endif
+                @endforeach
+            </ul>
+        </p>
     </div>
     <a href="#" onclick="gText()" class="action">Skapa kommentar</a>
     <div class="clear"></div>
-    <div id="pmc" class="pm-content">
-        <canvas id="canvas" width="100" height="100"></canvas>
+    <div id="pmc" class="pm-content review">
 	    <div id="pmc-text">
             <h1 id="h1">{{ $pm->title }}</h1>
-            {{ $pm->content }}
+            <div id="pmcc">
+                {{ $pm->content }}
+            </div>
         </div>
         <div id="pm-comments">
         </div>
         <div class="clear"></div>
 	</div>
-    <a href="javascript:gText()" class="action">Skapa kommentar</a>
+    <div class="clear" style="height: 100px"></div>
+    <h2>Övergripande kommentar</h2>
+    <p>Här kan du skriva en övergripande kommentar om texten som författaren kan se och förbättra texten efter. Om du godkänner PM:et måste du klicka i rutan längst ner och sedan trycka på "Spara".</p>
+    {{ Form::model($review, array('action' => 'post-save-review', 'method' => 'post')) }}
+    {{ Form::hidden('pm-id', $pm->id) }}
+    <div class="form" style="width: 100%; max-width: none;">
+        <div class="row">
+            <div class="description">{{ Form::label('comment', 'Din kommentar') }}</div>
+            <div class="input">{{ Form::textarea('comment', $comment, array('class' => 'text', 'style' => 'padding: 10px 1%;  height: 200px; width: 102%;')) }}</div>
+        </div>
+        <div class="row same">
+            <div class="input" style="width:30px">{{ Form::checkbox('accept', 'yes', $accepted, array('style' => 'width: 30px', 'class' => 'checkbox', 'id' => 'accept')) }}</div>
+            <div class="description" style="float: left">{{ Form::label('accept', 'Jag godkänner detta PM (klicka inte i rutan om du inte godkänner, din kommentar sparas ändå)') }}</div>
+            <div class="clear"></div>
+        </div>
+        <div class="submit">
+            {{ Form::submit('Spara', array('class' => 'submit')) }}
+        </div>
+    </div>
+    {{ Form::close() }}
 @stop

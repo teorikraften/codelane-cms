@@ -79,7 +79,7 @@ th, td {
 }
 #footer .centrator {
 	padding: 20px 15px;
-	max-width: 900px;
+	max-width: 1000px;
 }
 /* TODO Make responsive */
 #footer .col {
@@ -150,7 +150,7 @@ th, td {
 	margin: 20px 0 0 40px;
 }
 .centrator {
-	max-width: 960px;
+	max-width: 1060px;
 	margin: 0 auto;
 }
 
@@ -237,7 +237,7 @@ ul.menu {
 }
 .submenu ul {
 	list-style-type: none;
-	max-width: 920px;
+	max-width: 1020px;
 	margin: 0 auto;
 	display: block;
 }
@@ -332,7 +332,7 @@ ul.menu {
 =             Container            =
 ==================================*/
 #container {
-	max-width: 900px;
+	max-width: 1000px;
 	margin: 0 auto 50px;
 	padding: 0 15px;
 	line-height: 1.5;
@@ -483,11 +483,14 @@ ul.result li p.description {
 	width: 300px;
 }
 
+/*===============================
+=           PM-review           =
+===============================*/
 #pmc {
 	padding: 20px;
 	background: #fff;
 	font-size: 14px;
-	width: 900px;
+	width: 1000px;
 }
 
 #pmc #pmc-text {
@@ -501,18 +504,18 @@ ul.result li p.description {
 	float: left;
 }
 
-span.comment {
+.review span.comment {
 	display: block;
 	background: #eff;
 }
-span.comment.active {
+.review span.comment.active {
 	background: #cff;
 }
 
 div.comment-box {
 	padding: 10px;
 	margin: 0 0 10px 0;
-	width: 198px;
+	width: 259px;
 	border: 1px solid #ccc;
 	background: #fff;
 	display: block;

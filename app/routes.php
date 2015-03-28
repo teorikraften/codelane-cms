@@ -14,7 +14,7 @@ Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
 Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
 Route::get('/keywords', ['as' => 'search-autocomplete', 'uses' => 'SearchController@searchAutocomplete']);
 Route::get('/personer', ['as' => 'persons-autocomplete', 'uses' => 'UserController@personsAutocomplete']);
-Route::get('/spara-kommentar', ['as' => 'save-comment', 'uses' => 'PMController@saveComment'])
+Route::post('/spara-kommentar', ['as' => 'save-comment', 'uses' => 'PMController@saveComment'])
 	->before('csrf');
 
 
@@ -180,7 +180,7 @@ Route::post('/pm/andra', ['as' => 'post-pm-edit', 'uses' => 'PMController@editPM
 Route::get('/pm/{token}/granska', ['as' => 'pm-review', 'uses' => 'PMController@showReviewPMPage'])
 	->where('token', '.+')
 	->before('auth.verified');
-Route::post('/pm/granska', ['as' => 'post-pm-review', 'uses' => 'PMController@reviewPM'])
+Route::post('/pm/granska', ['as' => 'post-save-review', 'uses' => 'PMController@reviewPM'])
 	->before('auth.verified');
 
 Route::get('/pm/{token}/andra-personer', ['as' => 'pm-edit-assignments', 'uses' => 'PMController@showEditPMAssignmentsPage'])

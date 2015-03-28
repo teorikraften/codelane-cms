@@ -58,12 +58,8 @@ function rearrange(selector) {
  * @param alignment the element to align after
  */
 function align(element, alignment) {
-    if (alignment == null) {
-        element.style.display = 'none';
-        return;
-    }
     element.style.top = alignment.offsetTop + 'px';
-    element.style.left = (alignment.offsetLeft + alignment.offsetWidth + 20) + 'px';
+    element.style.left = (alignment.offsetLeft + alignment.offsetWidth + 10) + 'px';
 
     return;
 }
@@ -96,10 +92,8 @@ Selection.prototype.coverAll = function() {
  */
 Selection.prototype.commentize = function(userName) {
     // We should leave if we're trying to comment on the wrong part of the page
-    if (!elementContainsSelection(document.getElementById('pmcc'))) {
-        alert('Markera den text du vill kommentera och klicka sedan på spara. Texten måste tillhöra PM:et och man kan inte kommentera rubriken.');
+    if (!elementContainsSelection(document.getElementById('pmc-text')))
         return;
-    }
 
     // The id of the new comment TODO Fix
     var thisId = 'none';
@@ -119,8 +113,14 @@ Selection.prototype.commentize = function(userName) {
         range.insertNode(b);
     }
 
+    // Now place a placeholder in the beginning of the range, 
+    // so we now where we are when placing comments
+    var placeHolder = document.createElement('span');
+    placeHolder.className = 'placeholder';
+    range.insertNode(placeHolder);
+
     // Adds the box
-    addCommentBox(thisId, userName, document.getElementById(thisId));
+    addCommentBox(thisId, userName, placeHolder);
     
     // Make sure it doesn't overlap
     rearrange('.comment-outer');
@@ -323,25 +323,3 @@ function commentClicked(event) {
     // Else, return "not found code" -1
     return -1;
 }
-
-$(document).click(function(event) {
-    // Everything should be hidden from start
-    $('.comment-outer').addClass('inactive');
-    $('.comment').removeClass('active');
-    $('.comment-outer button').hide();
-    $('.comment-box').each(function(i) {
-        if ($(this).children('input.s').val() == '') {
-            $(this).parent().remove();
-        }
-    });
-
-    rearrange('.comment-outer');
-
-    var id = commentClicked(event);
-    if (id == -1)   
-        return;
-
-    $('#' + id).addClass('active');
-    $('#comment' + id).removeClass('inactive');
-    $('#comment' + id + ' button').show();
-});

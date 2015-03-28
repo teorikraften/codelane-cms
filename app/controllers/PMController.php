@@ -94,26 +94,64 @@ class PMController extends BaseController {
 		    	->with('error', 'PM:et som skulle granskas hittades inte.');
 		}
 
-		$reviews = Review::where('pm', '=', $pm->id)
-			->join('comments', 'comments.id', '=', 'reviews.comment')
-			->join('users', 'comments.user', '=', 'users.id')
+		$comments = Comment::where('pm', '=', $pm->id)
+			->select('comments.id as id', 'content', 'users.real_name', 'pm')
+			->join('users', 'users.id', '=', 'comments.user')
 			->get();
+
+		$authors = array();
+		foreach($pm->users as $assignment) {
+			if ($assignment->pivot->assignment == 'author')
+				$authors[] = $assignment;
+		}
+
+		try {
+			$review = Review::where('pm', '=', $pm->id)->where('user', '=', Auth::user()->id)->firstOrFail();
+			$accepted = $review->accepted == 1;
+			$comment = Comment::findOrFail($review->comment);
+			$commentC = $comment->content;
+		} catch(ModelNotFoundException $e) {
+			$accepted = false;
+			$commentC = '';
+		}
 
 		return View::make('pm.review')
 			->with('pm', $pm)
 			->with('assignments', $pm->users)
-			->with('reviews', $reviews);
+			->with('authors', $authors)
+			->with('reviews', $comments)
+			->with('accepted', $accepted)
+			->with('comment', $commentC);
 	}
 
 	public function saveComment() {
 		try {
+			$pm = PM::findOrFail(Input::get('pm'));
+		} catch(ModelNotFoundException $e) {
+			return Response::json(null);
+		}
+
+		try {
 			$comment = Comment::findOrFail(Input::get('id'));
 		} catch(ModelNotFoundException $e) {
-			return;
+			if (Input::get('id') == 'none') {
+				$comment = new Comment;
+				$comment->user = Auth::user()->id;
+				$comment->parent_comment = 0;
+				$comment->pm = $pm->id;
+			} else {
+				return Response::json(null);
+			}
 		}
+
 		$comment->content = Input::get('content');
 		$comment->save();
-		return;
+
+		$pm->content = str_replace('id="none"', 'id="'.intval($comment->id).'"', Input::get('pmc'));
+		$pm->save();
+
+		return Response::json($comment->id);
+
 	}
 
 	/**
@@ -121,34 +159,39 @@ class PMController extends BaseController {
 	 */
 	public function reviewPM() {
 		// TODO Hela funktionen
+		$commentContent = Input::get('comment');
+		$accepted = Input::get('accept', 'no');
 
 		try {
-			$pm = PM::findOrFail(Input::get('id'));
+			$pm = PM::findOrFail(Input::get('pm-id'));
 		} catch(ModelNotFoundException $e) {
 		    return Redirect::back()
-		    	->with('error', 'PM:et som skulle visas hittades inte.');
+		    	->with('error', 'PM:et som skulle granskas hittades inte.');
 		}
 
-		if (!(strlen(Input::get('title', '')) > 0))
-			return Redirect::back()
-				->withInput()
-				->with('error', 'Du måste ange PM:ets rubrik.');
+		try {
+			$review = Review::where('pm', '=', $pm->id)->where('user', '=', Auth::user()->id)->firstOrFail();
+			$comment = Comment::findOrFail($review->comment);
+		} catch(ModelNotFoundException $e) {
+			$comment = new Comment;
+			$comment->user = Auth::user()->id;
+			$comment->parent_comment = 0; 
+			$comment->pm = $pm->id;
+			$comment->save();
 
-		$tags = explode(",", Input::get('tags'));
-		// TODO Verifiera taggarna
-
-		if (count($tags) > 0) {
-			$pm->tags()->detach();
-			foreach ($tags as $tag) {
-				if (!is_null(Tag::where('id', '=', $tag)->first()))
-					$pm->tags()->attach([$tag => ['added_by' => Auth::user()->id]]);
-			}
+			$review = new Review;
+			$review->user = Auth::user()->id;
+			$review->pm = $pm->id;
+			$review->accepted = 0;
+			$review->comment = $comment->id;
 		}
-		$pm->title = Input::get('title');
-		$pm->content = Input::get('content');
-		$pm->save();
 
-		return Redirect::route('pm-edit', $pm->token);
+		$review->accepted = $accepted == 'yes' ? 1 : 0;
+		$review->save();
+		$comment->content = $commentContent;
+		$comment->save();
+
+		return Redirect::route('pm-review', $pm->token)->with('success', 'Kommentaren sparades!');
 	}
 
 	/**
