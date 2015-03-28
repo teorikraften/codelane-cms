@@ -18,7 +18,7 @@ class SearchController extends BaseController {
 	public function showSearchResultPage($searchQuery, $order = '', $page = 1) 
 	{
 		$search = new Search();
-		$result = $search->basicSearch($searchQuery);
+		$result = $search->pmSearch($searchQuery);
 
 		return View::make('search.result')
 		->with('searchQuery', $searchQuery)
@@ -31,5 +31,15 @@ class SearchController extends BaseController {
 	 */
 	public function search() {
 		return Redirect::route('search-result', Input::get('search-query'));
+	}
+
+	public function searchAutocomplete() {
+		$searchQuery = Input::get('term');
+		$tags = Tag::where('name', 'LIKE', '%' . $searchQuery . '%')->take(7)->get();
+		$result = array();
+		foreach($tags as $tag) {
+			$result[] = $tag->name;
+		}
+		return json_encode($result);
 	}
 }

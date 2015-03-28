@@ -1,11 +1,18 @@
 @extends('master')
 
 @section('head-extra')
+  	<script type="text/javascript">
+	  $(function() {
+	    $("#search-query").autocomplete({
+	      source: '/keywords',
+	      appendTo: '#search-autocomplete-list'
+	    });
+	  });
+	</script>
 @stop
 
 @section('body')
 	<div class="first-page">
-
 		@if(Auth::guest())
 
 		    <h1>Välkommen</h1>
@@ -29,6 +36,9 @@
 						<div class="description">{{ Form::label('remember', 'Kom ihåg mig') }}</div>
 						<div class="clear"></div>
 					</div>
+					<div class="row same">
+						<p><a href="{{ URL::route('recover-password') }}">Jag har glömt mitt lösenord.</a></p>
+					</div>
 					<div class="submit">
 						{{ Form::submit('Logga in', array('class' => 'submit')) }}
 					</div>
@@ -42,12 +52,14 @@
 			@include("includes.error")
 			<div class="form big-search">
 				<div class="search-field">
-					{{ Form::text('search-query', NULL, array('class' => 'text', 'placeholder' => 'Sök efter PM...')) }}
+					{{ Form::text('search-query', NULL, array('id' => 'search-query', 'class' => 'text', 'placeholder' => 'Sök efter PM...')) }}
 				</div>
 				{{ Form::submit('Sök', array('class' => 'submit')) }}
-				</div>
 			</div>
 			{{ Form::close() }}
+			<div id="search-autocomplete-list"></div>
+
+			<div style="height: 150px;"></div>
 
 		@endif
 	</div>

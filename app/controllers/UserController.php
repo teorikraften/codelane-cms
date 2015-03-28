@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class UserController extends BaseController {
 	/**
 	 * Displays the profile page for the user.
@@ -7,7 +9,7 @@ class UserController extends BaseController {
 	 */
 	public function showProfilePage()
 	{
-		return View::make('user.profile');
+		return View::make('user.profile.profile');
 	}
 
 	/**
@@ -16,7 +18,7 @@ class UserController extends BaseController {
 	 */ 
 	public function showEditProfilePage() 
 	{
-		return View::make('user.edit-profile')
+		return View::make('user.profile.edit-profile')
 			->with('error', Session::get('error'))
 			->with('success', Session::get('success'));
 	}
@@ -43,13 +45,13 @@ class UserController extends BaseController {
 		[
     		'new_password.required' => 'Fyll i ditt nya lösenord',
     		'new_password_again.required' => 'Du måste skriva ditt lösenord två gånger så att vi vet att du skrev rätt',
-    		'new_password.min' => 'Ditt nya lösenord är för kort',
+    		'new_password.min' => 'Det önskade lösenordet är för kort, lösenordet måste vara större än eller lika med 7 tecken långt.',
 		]);
 
 		$error = array();
 		if ($new_password != $new_password_again)
 			$error[] = 'Lösenorden stämmer inte överens';
-		if (Hash::check(Auth::user()->password, $old_password))
+		if (!Hash::check($old_password, Auth::user()->password))
 			$error[] = 'Du skrev fel gammalt lösenord';
 
 		if ($validator->fails() || count($error) != 0)
@@ -57,7 +59,7 @@ class UserController extends BaseController {
 			$messages = $validator->messages();
 			// If not succes set error and ask user to change input
 			return Redirect::route('user-edit')
-				->with('errorType', 'profile')
+				->with('errorType', 'password')
 				->with('error', array_merge($messages->all(), $error))
 				->withInput();
 		} 
@@ -118,14 +120,59 @@ class UserController extends BaseController {
 			->with('success', 'Informationen uppdaterades!');
 	}
 
-	/**
-	 * Displays the user's favourites.	 
-	 * @param $userId the user id for the user to be displayed
-	 */
-	public function showFavouritesPage() 
+	public function personsAutocomplete() {
+		$users = User::where('real_name', 'LIKE', '%' . Input::get('q') . '%')
+				->orWhere('email', 'LIKE', '%' . Input::get('q') . '%')
+				->where('deleted_at', '=', 'NULL')
+				->take(10)
+				->get();
+		$userNames = array();
+		foreach ($users as $user) {
+			$var = new stdClass();
+			$var->id = $user->id;
+			$var->name = $user->real_name . ' (' . $user->email . ')';
+			$userNames[] = $var;
+		}
+		return json_encode($userNames
+			);
+	}
+
+	public function showCreatePasswordPage($token) {
+		return View::make('user.create-password')
+			->with('id', $token);
+	}
+
+	public function createPassword()
 	{
-		$hej = array('Patric är korv', 'Jacobi och hans ilska');
-		return View::make('user.favourites')
-			->with('favoriter', $hej);
+		$credentials = Input::only(
+			'email', 'password', 'password_confirmation', 'id'
+		);
+
+		try {
+		    $user = User::findOrFail($credentials['id']);
+		} catch(ModelNotFoundException $e) {
+		    return Redirect::back()
+		    	->with('error', 'Ett fel uppstod. Vi vet inte vilken användare du vill skapa ett lösenord för.');
+		}
+
+		$error = array();
+		if ($credentials['email'] != $user->email) 
+			$error[] = 'E-postadressen är felaktig';
+		if ($credentials['password'] != $credentials['password_confirmation']) 
+			$error[] = 'Lösenorden stämmer inte överens';
+		if (strlen($credentials['password']) < 7) 
+			$error[] = 'Lösenordet måste vara minst 7 tecken långt';
+
+		if (count($error) != 0) {
+			// If not succes set error and ask user to change input
+			return Redirect::back()
+				->with('error', $error)
+				->withInput();
+		} 
+		
+		$user->password = Hash::make($credentials['password']);
+		$user->save();
+
+		return Redirect::route('index')->with('success', 'Ditt lösenord har skapats. Testa att logga in!');
 	}
 }

@@ -11,18 +11,7 @@ class Comment extends Eloquent {
 
 	protected $fillable = array('user', 'parent_comment', 'content');
 
-	/**
-	 * Parent review.
-	 */
-	public function pm() 
-	{
-		return $this->belongsTo('Review');
-	}
-
-	public function childComments() 
-	{
+	public function childComments() {
 		return $this->hasMany('Comment');
 	}
-
-
 }

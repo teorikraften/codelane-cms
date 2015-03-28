@@ -7,7 +7,7 @@ class Review extends Eloquent {
 	 *
 	 * @var string
 	 */
-	protected $table = 'rewiews';
+	protected $table = 'reviews';
 
 	protected $fillable = array('pm', 'user', 'accepted', 'comment');
 

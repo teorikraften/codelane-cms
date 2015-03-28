@@ -4,10 +4,11 @@ use Illuminate\Auth\UserTrait;
 use Illuminate\Auth\UserInterface;
 use Illuminate\Auth\Reminders\RemindableTrait;
 use Illuminate\Auth\Reminders\RemindableInterface;
+use Illuminate\Database\Eloquent\SoftDeletingTrait;
 
 class User extends Eloquent implements UserInterface, RemindableInterface {
 
-	use UserTrait, RemindableTrait;
+	use UserTrait, RemindableTrait, SoftDeletingTrait;
 
 	/**
 	 * The database table used by the model.
@@ -24,6 +25,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	protected $hidden = array('password', 'remember_token');
 
 	protected $fillable = array('email', 'password', 'real_name', 'priveleges','remember_token');
+
+	protected $dates = ['deleted_at'];
 
 	// DEFINE RELATIONSHIPS
 
@@ -44,11 +47,19 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
+	 * Roles of the user.
+	 */
+	public function pms() 
+	{
+		return $this->belongsToMany('Pm', 'assignments', 'user', 'pm')->withPivot('assignment');
+	}
+
+	/**
 	 * Actions made by the user.
 	 */
 	public function assignment() 
 	{
-		return $this->hasMany('Assignemnt');
+		return $this->hasMany('Assignment', 'user');
 	}
 
 	/**
@@ -61,11 +72,37 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	/**
 	 * Tags created by the user 
-	 */
+	 
 	public function createdTags() 
 	{
+		return;
 		// TODO thinking if needed and 
 			//how to implement since I atm didn´t created a model for pm_tags
 	}
+*/
+	/**
+	 * Returns user's privileges as a nice string word.
+	 */
+	public function privileges() {
+		if ($this->privileges == 'admin') 
+			return "systemadministatör";
+		if ($this->privileges == 'pm-admin') 
+			return "PM-ansvarig";
+		if ($this->privileges == 'verified') 
+			return "verifierad";
+		return "overifierad";
+	}
 
+	/**
+	 * Returns user's privileges as a nice string word.
+	 */
+	public static function assignmentString($assignment) {
+		if ($assignment == 'author') 
+			return "författare";
+		if ($assignment == 'owner') 
+			return "ägare";
+		if ($assignment == 'reviewer') 
+			return "granskare";
+		return "medlem";
+	}
 }
