@@ -199,7 +199,7 @@ ul.menu {
 	float: left;
     margin: 0;
     padding-right: 40px;
-    width: 350px;
+    width: 550px; /* Changed from 350px to make room for categories */
     height: 60px;
     font-size: 0;
 }
@@ -261,12 +261,13 @@ ul.menu {
 .visible-xs {
 	display: none !important;
 }
-@media (min-width: 768px){
+/* Changed responsive limit to fit advanced search */
+@media (min-width: 977px){
 	.responsive-menu{
 		display: block !important;
 	}
 }
-@media (max-width: 767px){
+@media (max-width: 976px){
 	ul.menu {
 		position: relative;
 		display: block;
@@ -767,3 +768,50 @@ ul.ui-autocomplete li.ui-state-focus {
 .ui-helper-hidden-accessible {
 	display: none;
 }
+
+/*==================================
+=            Categories            =
+==================================*/
+
+div#category-output {
+	max-width: 100%;
+}
+
+div#categories {
+	max-width: 100%;
+	margin: 0 0 20px 0;
+}
+
+.centrator #categories > a {
+	display: inline-block;
+	width: 100px;
+	height: 40px;
+    float: left;
+    background: #008472;   
+    margin: 4px;
+}
+.centrator #categories > a.btn {
+	text-decoration: none;
+	text-align: center;
+	vertical-align: center;
+	line-height: 20px;
+	padding: 10px 5px 0 5px;
+	color: #fff;
+	font-family: 'Muli', sans-serif;
+	font-weight: normal;
+	font-size: 14px;
+	border: 0;
+	float: left;
+	display: inline-block;
+	color: #fff;
+}
+/*==========  Color stylings for category buttons  ==========*/
+
+.centrator #categories > a#default {
+	background: #008472; 
+}
+
+
+
+
+
