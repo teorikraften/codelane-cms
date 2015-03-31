@@ -14,7 +14,9 @@ class CategoryController extends BaseController {
 			$list[$value->id] = $value->allChilds();
 		}
 
-		return View::make('category.show')->with('category', $list);
+		return View::make('category.show')
+			->with('category', $list)
+			->with('categories', $head);
 	}
 
 	/**
@@ -31,6 +33,6 @@ class CategoryController extends BaseController {
 		$categories[$head[0]->id] = $head[0]->allChilds();
 
 
-		return View::make('category.show')->with('category', $categories)->with('token', $token)->with('pms', $pms);
+		return View::make('category.show')->with('category', $categories)->with('token', $token)->with('pms', $pms)->with('categories', $head);
 	}
 }
