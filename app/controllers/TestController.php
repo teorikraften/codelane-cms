@@ -102,7 +102,7 @@ class TestController extends BaseController {
 		$path = __DIR__.'/../storage/uploads/';
 		$file = Input::file('file')->getClientOriginalName();
 		$zipPath = $path . '/' . str_replace('.', '', $file) . rand(0, 100000);
-   		$dataFile = 'word/document.xml';
+   		$xmlFile = 'word/document.xml';
 
 		Input::file('file')->move($path, $file);
 
@@ -112,25 +112,86 @@ class TestController extends BaseController {
 		if ($res === TRUE) {
 		  	// extract it to the path we determined above
 		  	$zip->extractTo($zipPath);
-		  	if (($index = $zip->locateName($dataFile)) !== false) {
-            	// If found, read it to the string
-	            $data = $zip->getFromIndex($index);
-	            // Close archive file
-	            $zip->close();
-	            // Load XML from a string
-	            // Skip errors and warnings
-        		$xml = new DOMDocument();
-	            $xml->loadXML($data);
+		  	
+			// set location of docx text content file
+		    $reader = new XMLReader;
+		    $reader->open($zipPath . '/' . $xmlFile);
+		    
+		    // set up variables for formatting
+		    $formatting['bold'] = 'closed'; 
+		    $formatting['italic'] = 'closed'; 
+		    $formatting['underline'] = 'closed'; 
+		    $formatting['header'] = 0;
+		    
+		    // loop through docx xml dom
+		    while ($reader->read()) { 
+		        // look for new paragraphs
+		        if ($reader->nodeType == XMLREADER::ELEMENT && $reader->name === 'w:p'){ 
+		            // set up new instance of XMLReader for parsing paragraph independantly
+		            $paragraph = new XMLReader;
+		            $p = $reader->readOuterXML();
+		            $paragraph->xml($p);
+		            
+		            // search for heading
+		            preg_match('/<w:pStyle w:val="(Heading.*?[1-6])"/',$p,$matches);
 
-	            // Return data without XML formatting tags
-	            $contents = explode('\n',strip_tags($xml->saveXML()));
-	            foreach($contents as $i=>$content) {
-	                $text .= $contents[$i];
-	            }
-	        } else {
-	        	return Redirect::back()->with('error', 'Datafilen kunde inte hittas: '. $dataFile .'.');
-	        }
-        	//$zip->close();
+		            switch (@$matches[1]) {
+		                case 'Heading1' : $formatting['header'] = 1; break;
+		                case 'Heading2' : $formatting['header'] = 2; break;
+		                case 'Heading3' : $formatting['header'] = 3; break;
+		                case 'Heading4' : $formatting['header'] = 4; break;
+		                case 'Heading5' : $formatting['header'] = 5; break;
+		                case 'Heading6' : $formatting['header'] = 6; break;
+		                default:  $formatting['header'] = 0; break;
+		            }
+		            
+		            // open h-tag or paragraph
+		            $text .= ($formatting['header'] > 0) ? '<h'.$formatting['header'].'>' : '<p>';
+		            
+		            // loop through paragraph dom
+		            while ($paragraph->read()){
+		                // look for elements
+		                if ($paragraph->nodeType == XMLREADER::ELEMENT && $paragraph->name === 'w:r'){
+		                    $node = trim($paragraph->readInnerXML());
+		 
+		                    // add <br> tags
+		                    if (strstr($node,'<w:br ')) $text .= '<br>';
+		 
+		                    // look for formatting tags                    
+		                    $formatting['bold'] = (strstr($node,'<w:b/>')) ? (($formatting['bold'] == 'closed') ? 'open' : $formatting['bold']) : (($formatting['bold'] == 'opened') ? 'close' : $formatting['bold']);
+		                    $formatting['italic'] = (strstr($node,'<w:i/>')) ? (($formatting['italic'] == 'closed') ? 'open' : $formatting['italic']) : (($formatting['italic'] == 'opened') ? 'close' : $formatting['italic']);
+		                    $formatting['underline'] = (strstr($node,'<w:u ')) ? (($formatting['underline'] == 'closed') ? 'open' : $formatting['underline']) : (($formatting['underline'] == 'opened') ? 'close' : $formatting['underline']);
+		                    
+		                    // build text string of doc
+		                    $text .=     (($formatting['bold'] == 'open') ? '<strong>' : '').
+		                                (($formatting['italic'] == 'open') ? '<em>' : '').
+		                                (($formatting['underline'] == 'open') ? '<u>' : '').
+		                                htmlentities(iconv('UTF-8', 'ASCII//TRANSLIT',$paragraph->expand()->textContent)).
+		                                (($formatting['underline'] == 'close') ? '</u>' : '').
+		                                (($formatting['italic'] == 'close') ? '</em>' : '').
+		                                (($formatting['bold'] == 'close') ? '</strong>' : '');
+		                    
+		                    // reset formatting variables
+		                    foreach ($formatting as $key=>$format){
+		                        if ($format == 'open') $formatting[$key] = 'opened';
+		                        if ($format == 'close') $formatting[$key] = 'closed';
+		                    }
+		                }    
+		            }        
+		            $text .= ($formatting['header'] > 0) ? '</h'.$formatting['header'].'>' : '</p>';
+		        }
+		    
+		    }
+		    $reader->close();
+		    
+		    // suppress warnings. loadHTML does not require valid HTML but still warns against it...
+		    // fix invalid html
+		    $doc = new DOMDocument();
+		    $doc->encoding = 'UTF-8';
+		    @$doc->loadHTML($text);
+		    $goodHTML = simplexml_import_dom($doc)->asXML();
+
+        	$zip->close();
 		} else {
 			return Redirect::back()->with('error', 'Ett fel uppstod när filen analyserades.');
 		}
