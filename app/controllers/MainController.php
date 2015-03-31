@@ -6,6 +6,6 @@ class MainController extends BaseController {
 	 */
 	public function showIndex()
 	{
-		return View::make('index');
+		return View::make('index')->withInput(Input::all());
 	}
 }

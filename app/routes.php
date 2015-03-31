@@ -10,6 +10,11 @@
 | and give it the Closure to execute when that URI is requested.
 |
 */
+Route::get('decode', ['as' => 'decode-test', 'uses' => 'TestController@showDecodePage']);
+Route::post('decode', ['as' => 'post-decode-test', 'uses' => 'TestController@decode']);
+Route::get('encode', ['as' => 'encode-test', 'uses' => 'TestController@showEncodePage']);
+Route::post('encode', ['as' => 'post-encode-test', 'uses' => 'TestController@encode']);
+
 Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
 Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
 Route::get('/keywords', ['as' => 'search-autocomplete', 'uses' => 'SearchController@searchAutocomplete']);
@@ -169,7 +174,7 @@ Route::post('/admin/importera', ['as' => 'post-pm-import', 'uses' => 'PMControll
 Route::any('/admin/importera/verifiera', ['as' => 'pm-import-verify', 'uses' => 'PMController@importVerify'])
 	->before('auth.verified');
 
-Route::get('/pm/{token}/original', ['as' => 'pm-download', 'uses' => 'PMController@showDownloadPage'])
+Route::get('/pm/{token}/ladda-ner', ['as' => 'pm-download', 'uses' => 'PMController@download'])
 	->where('token', '.+');
 Route::get('/pm/{token}/andra', ['as' => 'pm-edit', 'uses' => 'PMController@showEditPMPage'])
 	->where('token', '.+')

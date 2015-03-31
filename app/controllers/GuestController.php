@@ -18,7 +18,7 @@ class GuestController extends BaseController {
 		{
 			return Redirect::intended()->with('message', 'Du loggades in.');
 		}
-		return Redirect::route('sign-in')->with('error', array('Fel användarnamn eller lösenord.'));
+		return Redirect::route('index')->withInput()->with('error', array('Fel användarnamn eller lösenord.'));
 	}
 
 	/**
