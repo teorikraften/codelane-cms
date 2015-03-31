@@ -11,6 +11,7 @@ return array(
     'Assignment' => $baseDir . '/app/models/Assignment.php',
     'BaseController' => $baseDir . '/app/controllers/BaseController.php',
     'Category' => $baseDir . '/app/models/Category.php',
+    'CategoryController' => $baseDir . '/app/controllers/CategoryController.php',
     'Comment' => $baseDir . '/app/models/Comment.php',
     'CreatePasswordRemindersTable' => $baseDir . '/app/database/migrations/2015_03_24_174656_create_password_reminders_table.php',
     'DatabaseSeeder' => $baseDir . '/app/database/seeds/DatabaseSeeder.php',
@@ -103,4 +104,6 @@ return array(
     'Whoops\\Module' => $vendorDir . '/filp/whoops/src/deprecated/Zend/Module.php',
     'Whoops\\Provider\\Zend\\ExceptionStrategy' => $vendorDir . '/filp/whoops/src/deprecated/Zend/ExceptionStrategy.php',
     'Whoops\\Provider\\Zend\\RouteNotFoundStrategy' => $vendorDir . '/filp/whoops/src/deprecated/Zend/RouteNotFoundStrategy.php',
+    'simple_html_dom' => $baseDir . '/app/classes/simplehtmldom/simple_html_dom.php',
+    'simple_html_dom_node' => $baseDir . '/app/classes/simplehtmldom/simple_html_dom.php',
 );

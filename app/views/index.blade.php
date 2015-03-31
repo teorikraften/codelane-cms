@@ -25,7 +25,7 @@
 				<div class="content">
 					<div class="row">
 						<div class="description">{{ Form::label('email', 'E-postadress') }}</div>
-						<div class="input">{{ Form::text('email', NULL, array('class' => 'text', 'placeholder' => 'namn@exempel.se')) }}</div>
+						<div class="input">{{ Form::text('email', NULL, array('class' => 'text', 'placeholder' => '')) }}</div>
 					</div>
 					<div class="row">
 						<div class="description">{{ Form::label('password', 'Lösenord') }}</div>

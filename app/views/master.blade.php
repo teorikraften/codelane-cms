@@ -44,6 +44,7 @@
 							<li><a href="{{ URL::route('sign-up') }}">Registrera dig</a></li>
 						@elseif(!Auth::guest())
 							<li><a href="{{ URL::route('user') }}">Min sida</a></li>
+							<li><a href="{{ URL::route('category-showAll') }}">Avancerad sökning</a></li> <!-- Added advanced search to menu -->
 							<li><a href="{{ URL::route('sign-out') }}">Logga ut</a></li>
 						@endif
 						<li></li>

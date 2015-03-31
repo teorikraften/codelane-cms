@@ -49,9 +49,14 @@
         @foreach($pm->tags as $tag)
             <a href="{{ URL::route('tag-show', $tag->token) }}" class="inline-action">{{ $tag->name }}</a>
         @endforeach
+        @if(count($pm->tags) == 0) 
+            <p>Inga taggar är associerade med detta PM.</p>
+        @endif
+        <a class="action" href="{{ URL::route('pm-download', $pm->token) }}">Ladda ner som .docx</a>
+        <div class="clear"></div>
     </div>
-    <h1>{{ $pm->title }}</h1>
     <div id="pmc" class="pm-content">
+        <h1>{{ $pm->title }}</h1>
 	    {{ $pm->content }}
 	</div>
 @stop
