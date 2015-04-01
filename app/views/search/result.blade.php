@@ -40,7 +40,7 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
 		  	</li>
 	  	@endforeach
 	</ul>
-	<div id="search_page_selector">
+	<div class="search_page_selector">
 		<table cellspacing="0" cellpadding="0">
 			<tr>
 				<td>

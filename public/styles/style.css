@@ -772,10 +772,31 @@ ul.ui-autocomplete li.ui-state-focus {
 =    Search result page selector   =
 ==================================*/
 
-#search_page_selector {
-	padding-top: 20px;
+.search_page_selector {
+	padding-top: 30px;
 	border-top: 1px solid #ccc;
 }
+
+.search_page_selector a {
+	background-color: #fff;
+	color: #008472;
+	padding: 5px 10px;
+	text-decoration: none;
+	border: 1px solid #008472;
+}
+
+.search_page_selector a:hover {
+	background-color: #e5e5e5;
+}
+
+.search_page_selector a:active {
+	background-color: #989898;
+}
+
+.search_page_selector .current_page {
+	background-color: #fff;
+}
+	
 
 /*==================================
 =            Categories            =
