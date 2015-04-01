@@ -769,6 +769,20 @@ ul.ui-autocomplete li.ui-state-focus {
 }
 
 /*==================================
+=    Search result page selector   =
+==================================*/
+
+#search_page_selector {
+	padding-top: 20px;
+	border-top: 1px solid #ccc;
+}
+
+#search_page_selector table tr td {
+	background-color: gray;
+	padding: 5px;
+}
+
+/*==================================
 =            Categories            =
 ==================================*/
 
