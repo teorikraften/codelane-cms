@@ -36,7 +36,7 @@ class Category extends Eloquent {
 		foreach ($this->childs as $key => $value) {
 			$children[$value->id] = $value->allChilds();
 		}
-
+		
 		$list = array();
 		$list[$this->id]['category'] = $this;
 		$list[$this->id]['children'] = $children;
