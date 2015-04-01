@@ -17,12 +17,17 @@ class SearchController extends BaseController {
 	 */ 
 	public function showSearchResultPage($searchQuery, $order = '', $page = 1) 
 	{
+
+		$start = ($page - 1)* 10;
+
 		$search = new Search();
-		$result = $search->pmSearch($searchQuery);
+		$result = $search->pmSearch($searchQuery, $start, 10, $order);
 
 		return View::make('search.result')
 		->with('searchQuery', $searchQuery)
-		->with('result', $result);
+		->with('result', $result)
+		->with('page', $page)
+		->with('order', $order);
 	}
 
 	/**
