@@ -40,4 +40,16 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
 		  	</li>
 	  	@endforeach
 	</ul>
+	<div id="search_page_selector">
+		<table>
+			<tr>
+				<td>
+					<a href="">Föregående</a>
+				</td>
+				<td>
+					<a href="">Nästa</a>
+				</td>
+			</tr>
+		</table>
+	</div>
 @stop
