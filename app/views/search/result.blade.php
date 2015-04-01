@@ -41,21 +41,18 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
 	  	@endforeach
 	</ul>
 	<div id="search_page_selector">
-		<table>
+		<table cellspacing="0" cellpadding="0">
 			<tr>
-
 				<td>
 					<a href="">Föregående</a>
 				</td>
 
 				<?php $sidor = 10;  /* dummy variabel! TODO: change this into a real variable */ ?>
-				<?php
-					for($page; $page <= 10; $page++) {
-						echo "<td>
-								$page
-							</td>";
-					}
-				?>
+				@for($page; $page <= $sidor; $page++)
+					<td>
+						<a href=""> {{ $page }} </a>
+					</td>
+				@endfor
 				<td>
 					<a href="">Nästa</a>
 				</td>

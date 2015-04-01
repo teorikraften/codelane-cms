@@ -777,9 +777,32 @@ ul.ui-autocomplete li.ui-state-focus {
 	border-top: 1px solid #ccc;
 }
 
-#search_page_selector table tr td {
-	background-color: yellow;
-	padding: 5px;
+* {
+	color: #fff;
+	display: block;
+	text-decoration: none;
+	padding: 15px 20px;
+	background-color: #008472;
+	transition: padding 100s, background-color 100s;
+	-moz-animation-name: spin2;
+    -moz-animation-duration: 50000ms;
+    -moz-animation-iteration-count: infinite;
+    -moz-animation-timing-function: linear;
+}
+
+@-moz-keyframes spin2 {
+    from { -moz-transform: rotate(0deg); }
+    to { -moz-transform: rotate(360deg); }
+}
+
+@-moz-keyframes spin {
+    from { -moz-transform: rotate(0deg); background: #fb0; }
+    to { -moz-transform: rotate(360deg); background: #0bf; }
+}
+
+#search_page_selector a:hover {
+ 	padding: 1000px;
+ 	background-color: #45f523;
 }
 
 /*==================================
