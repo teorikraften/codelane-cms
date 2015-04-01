@@ -35,7 +35,6 @@ body {
 .pull-left {
 	float: left;
 }
-
 .pull-right {
 	float: right;
 }
@@ -810,7 +809,14 @@ div#categories {
 .centrator #categories > a#default {
 	background: #008472; 
 }
-
+.first-page .pop {
+	padding: 10px 10px 10px 30px;
+	margin: 5px -21px 5px 0;
+}
+.first-page .pop.no-bullet {
+	list-style-type: none;
+	padding: 10px;
+}
 
 
 

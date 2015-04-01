@@ -30,17 +30,19 @@ class GuestController extends BaseController {
 		$name = Input::get('name');
 		$email = Input::get('email');
 		$password = Input::get('password');
+		$password2 = Input::get('confirm_password');
 
 		$validator = Validator::make(
 		[
 			'name' => $name,
 			'email' => $email,
 			'password' => $password,
+			'password_confirmation' => $password2,
 		],
 		[
 			'name' => 'required',
 			'email' => 'required|email|unique:users,email',
-			'password' => 'required|min:7', 
+			'password' => 'required|min:7|confirmed',
 		],
 		[
     		'name.required' => 'Fyll i ditt namn',
@@ -49,6 +51,7 @@ class GuestController extends BaseController {
     		'email.unique' => 'E-postadressen används redan, testa att logga in istället',
     		'password.required' => 'Fyll i ditt önskade lösenord',
     		'password.min' => 'Ditt lösenord är för kort, det måste vara minst 7 tecken',
+    		'password.confirmed' => 'Dina lösenord stämmer inte överens',
 		]);
 
 		$error = array();
@@ -64,11 +67,10 @@ class GuestController extends BaseController {
 		// Add user to database 
 		$user = User::create(['real_name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
 
-		// Authenticate user
-		Auth::login($user);
+		// TODO Skicka mejl här?
 
 		// TODO if succes redirect to role select
-		return Redirect::route('user', array(Auth::user()->id));
+		return Redirect::route('sign-up')->with('success', 'Ditt konto har skapats. Du kommer få ett mejl när ditt konto godkänts av en administratör.');
 	}
 
 

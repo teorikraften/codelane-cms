@@ -36,10 +36,6 @@ Route::post('/skapa-losenord', ['as' => 'post-create-password', 'uses' => 'UserC
 | Signed out user related routes like sign in and sign up.
 |
 */
-Route::get('/logga-in', ['as' => 'sign-in', 'uses' => function() {
-	return Redirect::route('index')->withInput();
-}])
-	->before('guest');
 Route::post('/logga-in', ['as' => 'post-sign-in', 'uses' => 'GuestController@signIn'])
 	->before('guest');
 Route::get('/logga-ut', ['as' => 'sign-out', 'uses' => 'GuestController@showSignOutPage'])
