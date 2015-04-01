@@ -69,7 +69,7 @@ class GuestController extends BaseController {
 			'privileges' => 'unverified'
 		]);
 
-		// Send mail to inform user that the account has been created and waiting for verification
+		// Send email to user
 		Mail::send('emails.welcome-unverified', array('name' => $data['name']), function($message) use($data) {
 		    $message
 		    	->to($data['email'], $data['name'])
@@ -98,5 +98,5 @@ class GuestController extends BaseController {
 			->with('error', Session::get('error'))
 			->with('input', Session::get('input'));
 	}
-	
+
 }

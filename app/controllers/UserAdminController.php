@@ -54,6 +54,14 @@ class UserAdminController extends BaseController {
 		$user->privileges = 'verified';
 		$user->save();
 
+		// Send mail to inform user that the account has been created and waiting for verification
+		Mail::send('emails.welcome-verified', array('name' => $user->real_name, 'email' => $user->email), function($message) use($user) {
+		    $message
+		    	->to($user->email, $user->real_name)
+		    	->from('no-reply@ds.se', 'Danderyds Sjukhus')
+		    	->subject('Du är nu godkänd!');
+		});
+
 		return Redirect::route('admin-users')
 			->with('success', 'Användaren verifierades.');
 	}
