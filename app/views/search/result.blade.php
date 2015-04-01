@@ -43,9 +43,19 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
 	<div id="search_page_selector">
 		<table>
 			<tr>
+
 				<td>
 					<a href="">Föregående</a>
 				</td>
+
+				<?php $sidor = 10;  /* dummy variabel! TODO: change this into a real variable */ ?>
+				<?php
+					for($page; $page <= 10; $page++) {
+						echo "<td>
+								$page
+							</td>";
+					}
+				?>
 				<td>
 					<a href="">Nästa</a>
 				</td>
