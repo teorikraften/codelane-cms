@@ -41,7 +41,8 @@ Route::filter('auth', function()
 		{
 			return Response::make('Unauthorized', 401);
 		}
-		return Redirect::guest(route('sign-in'));
+		return Redirect::guest(route('index'))
+			->with('error', 'Du har måste logga in för att komma åt denna sida.');
 	}
 });
 
@@ -60,7 +61,8 @@ Route::filter('auth.verified', function ()
 		{
 			return Response::make('Unauthorized', 401);
 		}
-		return Redirect::guest(route('sign-in'));
+		return Redirect::guest(route('index'))
+			->with('error', 'Du har måste vara verifierad för att komma åt denna sida.');
 	}
 });
 
@@ -73,7 +75,8 @@ Route::filter('auth.admin', function()
 		{
 			return Response::make('Unauthorized', 401);
 		}
-		return Redirect::guest(route('sign-in'));
+		return Redirect::guest(route('sign-in'))
+			->with('error', 'Du har måste vara administratör för att komma åt denna sida.');
 	}
 });
 
