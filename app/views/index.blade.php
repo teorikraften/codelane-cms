@@ -95,8 +95,8 @@
 							<div class="input">{{ Form::password('password', array('class' => 'text')) }}</div>
 						</div>
 						<div class="row">
-							<div class="description">{{ Form::label('password', 'Upprepa lösenord') }}</div>
-							<div class="input">{{ Form::password('confirm_password', array('class' => 'text')) }}</div>
+							<div class="description">{{ Form::label('password_confirmation', 'Upprepa lösenord') }}</div>
+							<div class="input">{{ Form::password('password_confirmation', array('class' => 'text')) }}</div>
 						</div>
 						<div class="submit">
 							{{ Form::submit('Registrera', array('class' => 'submit')) }}
