@@ -778,10 +778,6 @@ ul.ui-autocomplete li.ui-state-focus {
 }
 
 * {
-	color: #fff;
-	display: block;
-	text-decoration: none;
-	padding: 15px 20px;
 	transition: padding 100s, background-color 100s;
     -webkit-animation-name: spin;
     -webkit-animation-duration: 40000ms;
