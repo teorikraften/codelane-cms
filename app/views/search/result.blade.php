@@ -35,7 +35,7 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
 		    	<h3><a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a></h3>
 		      	<p class="description">{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...</p>
 		  		{{ $pm['score'] }}
-		  		{{ $pm['tag'] }}
+		  		{{ $pm['operator'] }}
 		  		<?php  /*var_dump($pm['pm']);*/ ?>
 		  	</li>
 	  	@endforeach

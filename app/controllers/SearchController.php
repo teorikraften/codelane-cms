@@ -9,23 +9,49 @@ class SearchController extends BaseController {
 		return View::make('search.index');
 	}
 
+	public function changeSearchResultPage($query, $page = 1, $order = '') {
+		if (Cache::has($query)) {
+			$search = Cache::get($query);
+		} else {
+			showSearchResultPage($searchQuery, $page, $order);
+		}
+
+		return null; // TODO
+	}
+
+
 	/**
 	 * Displays the search result for given query.
 	 * @param $searchQuery the query to search for
 	 * @param $order the sorting order, '' by default
 	 * @param $page the page number, 1 by default
 	 */ 
-	public function showSearchResultPage($searchQuery, $order = '', $page = 1) 
+	public function showSearchResultPage($searchQuery, $page = 1, $order = 'score') 
 	{
 
-		$start = ($page - 1)* 10;
+		if ($searchQuery == '') {
+			return View::make('search.index')->with('error', 'Empty searchQuery');
+		}
 
-		$search = new Search();
-		$result = $search->pmSearch($searchQuery, $start, 10, $order);
+		if (Cache::has($searchQuery)) {
+
+			$search = Cache::get($searchQuery);
+
+			echo 'Det finns något i cachen. HURRA!';
+			exit;
+		} else {
+			$search = new Search($searchQuery);
+			$search->pmSearch();
+			Cache::put($searchQuery, $search, 5);
+		}
+
+
+		$search->sortSearchResult($order);
+		$returnResult = $search->getPage($page);
 
 		return View::make('search.result')
 		->with('searchQuery', $searchQuery)
-		->with('result', $result)
+		->with('result', $returnResult)
 		->with('page', $page)
 		->with('order', $order);
 	}
