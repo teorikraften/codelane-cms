@@ -9,25 +9,20 @@ class SearchController extends BaseController {
 		return View::make('search.index');
 	}
 
-	public function changeSearchResultPage($query, $page = 1, $order = '') {
-		if (Cache::has($query)) {
-			$search = Cache::get($query);
-		} else {
-			showSearchResultPage($searchQuery, $page, $order);
-		}
-
-		return null; // TODO
-	}
-
-
 	/**
 	 * Displays the search result for given query.
 	 * @param $searchQuery the query to search for
 	 * @param $order the sorting order, '' by default
 	 * @param $page the page number, 1 by default
 	 */ 
-	public function showSearchResultPage($searchQuery, $page = 1, $order = 'score') 
+	public function showSearchResultPage($searchQuery, $order = 'score', $page = 1) 
 	{
+		try {
+			$page = intval($page);
+		} catch(Exception $e) {
+			$page = 1;
+		}
+
 
 		if ($searchQuery == '') {
 			return View::make('search.index')->with('error', 'Empty searchQuery');
@@ -37,8 +32,8 @@ class SearchController extends BaseController {
 
 			$search = Cache::get($searchQuery);
 
-			echo 'Det finns något i cachen. HURRA!';
-			exit;
+			//echo 'Det finns något i cachen. HURRA!';
+			//exit;
 		} else {
 			$search = new Search($searchQuery);
 			$search->pmSearch();
@@ -52,8 +47,9 @@ class SearchController extends BaseController {
 		return View::make('search.result')
 		->with('searchQuery', $searchQuery)
 		->with('result', $returnResult)
+		->with('order', $order)
 		->with('page', $page)
-		->with('order', $order);
+		->with('maxPage', $search->maximumPage());
 	}
 
 	/**

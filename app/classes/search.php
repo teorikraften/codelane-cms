@@ -76,7 +76,7 @@ class Search {
 	 * @return int Maximum pagenumber.
 	 */
 	function maximumPage() {
-		return count($this->result) / 10;
+		return ceil(count($this->result) / 10);
 	}
 
 	/**
@@ -86,8 +86,8 @@ class Search {
 	 * @return array The page defined in param page
 	 */
 	public function getPage($page = 1) {
-		if ($page > count($this->result) / 10 || $page <= 0) {
-			$this->error[] = "illegal pagenumber, page 1 returned";
+		if ($page > ceil(count($this->result) / 10) || $page <= 0) {
+			$this->error[] = "Illegal pagenumber, page 1 returned";
 			return array_slice($this->result, 0, 10);
 		}
 		return array_slice($this->result, ($page -1) * 10, 10);
