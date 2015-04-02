@@ -39,9 +39,9 @@ $(function() {
 <h2 class="search">Sökning: {{ $searchQuery }}</h2>
 <h2 id="inline">Sortera efter: 
 	<ul class="sortby">
-		<li><a href="#">Namn</a></li>
-		<li><a href="#">Popularitet</a></li>
-		<li class="active"><a href="#">Relevans</a></li>
+		<li><a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'alphabetical'))}}">Namn</a></li>
+		<li><a href="#">Mest sedda</a></li>
+		<li class="active"><a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'score'))}}">Relevans</a></li>
 		<li><a href="#">Senast uppdaterad</a></li>
 	</ul>
 </h2>
