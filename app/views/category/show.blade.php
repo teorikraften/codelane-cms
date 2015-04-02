@@ -7,6 +7,16 @@
 
 @section('head-extra')
     <link rel="stylesheet" type="text/css" href="/styles/catstyle.css">
+    <script type="text/javascript">
+    $(function() {
+	    $(".sortby li").on('click', function() {
+	    	if(!$(this).hasClass('active')) {
+	    		$(this).siblings('li').removeClass('active');
+	    		$(this).addClass('active');
+	    	}
+	    	});
+    });
+    </script>
 @stop
 
 @section('body')
@@ -15,7 +25,7 @@
 	@foreach($categories as $category1)
 		<a href="{{ URL::route('category-show', $category1->token) }}" class="btn">{{ $category1->name }}</a>
 	@endforeach
-	
+
 	@if (Route::currentRouteName() != 'category-showAll')
 		@foreach (Category::where('parent', '=', $category1->id)->get() as $child)
 			<a href="{{ URL::route('category-show', $child->token) }}" class="btn">{{ $child->name }}</a>
@@ -23,6 +33,14 @@
 	@endif
 </div>
 <div class="clear" id="category-output">
+	<h2 id="inline">Sortera efter: 
+		<ul class="sortby">
+			<li><a href="#">Namn</a></li>
+			<li><a href="#">Popularitet</a></li>
+			<li class="active"><a href="#">Relevans</a></li>
+			<li><a href="#">Senast uppdaterad</a></li>
+		</ul>
+	</h2>
 	<strong>
 	Detta är en lista med alla kategorier och under kategorier från head kategorien som defineras i urlen.
 

@@ -796,7 +796,35 @@ ul.ui-autocomplete li.ui-state-focus {
 .search_page_selector .current_page {
 	background-color: #fff;
 }
-	
+
+/*=====================================================
+=            Search result sorting options            =
+=====================================================*/
+
+.sortby {
+	display: inline-block;
+	list-style: none;
+}
+
+.sortby li {
+	display: inline-block;
+	background: #008472;  
+}
+
+.sortby a {
+	display: inline-block;
+	text-decoration: none;
+	color: #fff;
+	width: 100%;
+	height: 100%;
+	padding: 5px;
+	font-family: 'Muli', sans-serif;
+	font-weight: normal;
+	font-size: 14px;
+}
+.sortby .active {
+	background: #004038;
+}
 
 /*==================================
 =            Categories            =

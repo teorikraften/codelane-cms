@@ -12,6 +12,14 @@ $(function() {
 		appendTo: '#search-autocomplete-list'
 	});
 });
+$(function() {
+    $(".sortby li").on('click', function() {
+    	if(!$(this).hasClass('active')) {
+    		$(this).siblings('li').removeClass('active');
+    		$(this).addClass('active');
+	    }
+	});
+});
 </script>
 @stop
 
@@ -29,6 +37,14 @@ $(function() {
 
 <h1>Sökresultat</h1>
 <h2 class="search">Sökning: {{ $searchQuery }}</h2>
+<h2 id="inline">Sortera efter: 
+	<ul class="sortby">
+		<li><a href="#">Namn</a></li>
+		<li><a href="#">Popularitet</a></li>
+		<li class="active"><a href="#">Relevans</a></li>
+		<li><a href="#">Senast uppdaterad</a></li>
+	</ul>
+</h2>
 <ul class="result">
 	@foreach($result as $pm)
 	<li>
