@@ -4,6 +4,7 @@
 	        <li><a href="{{ URL::route('user') }}">Dina uppgifter</a></li>
 	        <li><a href="{{ URL::route('pm-import') }}">Importera PM</a></li>
 	        <li><a href="{{ URL::route('admin-tags') }}">Taggar</a></li>
+	        <li><a href="{{ URL::route('admin-categories') }}">Kategorier</a></li>
 	        <li><a href="{{ URL::route('admin-roles') }}">Roller</a></li>
 	        <li><a href="{{ URL::route('admin-users') }}">Användare</a></li>
 	        <li><a href="{{ URL::route('admin-pm') }}">PM</a></li>

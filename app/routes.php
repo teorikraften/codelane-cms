@@ -85,6 +85,22 @@ Route::post('/admin/taggar/andra', ['as' => 'post-admin-tags-edit', 'uses' => 'T
 	->before('auth.admin');
 
 
+Route::get('/admin/kategorier', ['as' => 'admin-categories', 'uses' => 'CategoryController@showCategoriesListPage'])
+	->before('auth.admin');
+Route::get('/admin/kategorier/ny', ['as' => 'admin-categories-new', 'uses' => 'CategoryController@showAddCategoryPage'])
+	->before('auth.admin');
+Route::post('/admin/kategorier/ny', ['as' => 'post-admin-categories-new', 'uses' => 'CategoryController@addCategory'])
+	->before('auth.admin');
+Route::get('/admin/kategorier/ta-bort/{token}', ['as' => 'admin-categories-delete', 'uses' => 'CategoryController@showDeleteCategoryPage'])
+	->before('auth.admin');
+Route::post('/admin/kategorier/ta-bort', ['as' => 'post-admin-categories-delete', 'uses' => 'CategoryController@deleteCategory'])
+	->before('auth.admin');
+Route::get('/admin/kategorier/andra/{token}', ['as' => 'admin-categories-edit', 'uses' => 'CategoryController@showEditCategoryPage'])
+	->before('auth.admin');
+Route::post('/admin/kategorier/andra', ['as' => 'post-admin-categories-edit', 'uses' => 'CategoryController@editCategory'])
+	->before('auth.admin');
+
+
 Route::get('/admin/roller', ['as' => 'admin-roles', 'uses' => 'RoleController@showRolesListPage'])
 	->before('auth.admin');
 Route::get('/admin/roller/ny', ['as' => 'admin-roles-new', 'uses' => 'RoleController@showAddRolePage'])
