@@ -10,13 +10,16 @@ class CategoryController extends BaseController {
 		$head = Category::where('parent',  '=', 0)->get();
 
 		$list = array();
+		$pms = array();
 		foreach ($head as $key => $value) {
 			$list[$value->id] = $value->allChilds();
+			$pms = array_merge($pms, $head[$key]->allPms());
 		}
 
 		return View::make('category.show')
 			->with('category', $list)
-			->with('categories', $head);
+			->with('categories', $head)
+			->with('pms', $pms);
 	}
 
 	/**

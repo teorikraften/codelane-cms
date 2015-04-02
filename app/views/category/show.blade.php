@@ -27,6 +27,10 @@
 	Author - Johan Jonasson
 	<br>
 	</strong>
+{{-- TODO: Remove duplicates --}}
+@foreach ($pms as $pm)
+	<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a><br>
+@endforeach
 </div>
     {{ var_dump($category) }}
 
