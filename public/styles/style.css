@@ -816,6 +816,7 @@ div#categories {
 	width: 100px;
 	height: 40px;
     float: left;
+    word-wrap: break-word;
     background: #008472;   
     margin: 4px;
 }

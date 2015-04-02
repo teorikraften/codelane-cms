@@ -15,6 +15,12 @@
 	@foreach($categories as $category1)
 		<a href="{{ URL::route('category-show', $category1->token) }}" class="btn">{{ $category1->name }}</a>
 	@endforeach
+	
+	@if (Route::currentRouteName() != 'category-showAll')
+		@foreach (Category::where('parent', '=', $category1->id)->get() as $child)
+			<a href="{{ URL::route('category-show', $child->token) }}" class="btn">{{ $child->name }}</a>
+		@endforeach
+	@endif
 </div>
 <div class="clear" id="category-output">
 	<strong>
