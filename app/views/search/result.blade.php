@@ -42,21 +42,23 @@ Sökresultat av sökningen: "{{ $searchQuery }}"
 	</ul>
 	<div class="search_page_selector">
 		<table cellspacing="0" cellpadding="0">
-			<tr>
-				<td>
-					<a href="">Föregående</a>
-				</td>
-
-				<?php $sidor = 10;  /* dummy variabel! TODO: change this into a real variable */ ?>
-				@for($page; $page <= $sidor; $page++)
+			<tbody>
+				<tr>
 					<td>
-						<a href=""> {{ $page }} </a>
+						<a href="">Föregående</a>
 					</td>
-				@endfor
-				<td>
-					<a href="">Nästa</a>
-				</td>
-			</tr>
+
+					<?php $sidor = 10;  /* dummy variabel! TODO: change this into a real variable */ ?>
+					@for($page; $page <= $sidor; $page++)
+						<td>
+							<a href=""> {{ $page }} </a>
+						</td>
+					@endfor
+					<td>
+						<a href="">Nästa</a>
+					</td>
+				</tr>
+			</tbody>
 		</table>
 	</div>
 @stop
