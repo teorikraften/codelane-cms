@@ -63,17 +63,17 @@ $(function() {
 
 				<td>
 					@if ($page > 1)
-					<a href="{{ URL::route('search-result', $searchQuery.'/'.'score'.'/'. ($page-1) ) }}">Föregående</a>
+					<a href="{{ URL::route('search-result', $searchQuery.'/'. $order .'/'. ($page-1) ) }}">Föregående</a>
 					@endif
 				</td>
 				@for($pageNumber = 1; $pageNumber <= $maxPage; $pageNumber++)
 				<td>
-					<a href="{{ URL::route('search-result', $searchQuery.'/'.'score'.'/'. ($pageNumber ) )}}"> {{ $pageNumber }} </a>
+					<a href="{{ URL::route('search-result', $searchQuery.'/'. $order .'/'. ($pageNumber ) )}}"> {{ $pageNumber }} </a>
 				</td>
 				@endfor
 				<td>
 					@if ($page < $maxPage)
-					<a href="{{ URL::route('search-result', $searchQuery.'/'.'score'.'/'. ($page+1) ) }}">Nästa</a>
+					<a href="{{ URL::route('search-result', $searchQuery.'/'. $order .'/'. ($page+1) ) }}">Nästa</a>
 					@endif
 				</td>
 			</tr>
