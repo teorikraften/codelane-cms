@@ -1,4 +1,5 @@
-@if(Auth::user()->privileges == 'admin')
+@if(Auth::guest())
+@elseif(Auth::user()->privileges == 'admin')
 	<div class="submenu">
 	    <ul>
 	        <li><a href="{{ URL::route('user') }}">Dina uppgifter</a></li>

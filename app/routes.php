@@ -243,7 +243,7 @@ Route::get('/statistik/pm/{token}', ['as' => 'statistics-pm', 'uses' => 'Statist
 | Category routes.
 |
 */
-Route::get('/kategori', ['as' => 'category-showAll', 'uses' => 'CategoryController@showAllCategories'])
+Route::get('/kategori', ['as' => 'category-show-all', 'uses' => 'CategoryController@showAllCategories'])
 	->before('auth');
 Route::get('/kategori/{token}', ['as' => 'category-show', 'uses' => 'CategoryController@showCategory'])
 	->before('auth');
