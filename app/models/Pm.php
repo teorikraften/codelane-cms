@@ -13,7 +13,7 @@ class Pm extends Eloquent {
 	 */
 	protected $table = 'pms';
 
-	protected $fillabel = array('title', 'content', 'original_filetype');
+	protected $fillable = array('title', 'content', 'original_filetype');
 
 	protected $dates = ['deleted_at'];
 
