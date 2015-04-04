@@ -804,6 +804,7 @@ ul.ui-autocomplete li.ui-state-focus {
 .sortby {
 	display: inline-block;
 	list-style: none;
+	margin: 0;
 }
 
 .sortby li {

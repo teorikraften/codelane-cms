@@ -22,12 +22,14 @@
 @section('body')
 
 <div class="" id="categories">
-	@foreach($categories as $category1)
-		<a href="{{ URL::route('category-show', $category1->token) }}" class="btn">{{ $category1->name }}</a>
-	@endforeach
+	@if (Route::currentRouteName() == 'category-showAll')
+		@foreach($categories as $category1)
+			<a href="{{ URL::route('category-show', $category1->token) }}" class="btn">{{ $category1->name }}</a>
+		@endforeach
+	@endif
 
 	@if (Route::currentRouteName() != 'category-showAll')
-		@foreach (Category::where('parent', '=', $category1->id)->get() as $child)
+		@foreach (Category::where('parent', '=', $categories[0]->id)->get() as $child)
 			<a href="{{ URL::route('category-show', $child->token) }}" class="btn">{{ $child->name }}</a>
 		@endforeach
 	@endif
