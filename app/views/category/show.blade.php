@@ -25,15 +25,23 @@
 	@if (Route::currentRouteName() == 'category-show')
 		@foreach($categories as $currentCat)
 
-			@foreach($currentCat->getAllChilds() as $a)
-				{{ $a->id }}
+
+			<a href="{{ URL::route('category-showAll')}}" class="btn">Root</a> >
+
+			@foreach($currentCat->allParents() as $a)
+				<a href="{{ URL::route('category-show', Category::where('parent', '=', $a->parent)->where('id', '=', $a->id)->first()->token)}}" class="btn">{{ $a->name }}</a> >
 			@endforeach
 
+			<a href="{{ URL::route('category-show', $currentCat->token)}}" class="btn">{{ $currentCat->name }}</a>
+
+{{--
 			@if ($currentCat->parent != 0)
-			<a href="{{ URL::route('category-show', Category::find($currentCat->parent)->token)}}" class="btn">{{ $currentCat->name }}</a>
+				<a href="{{ URL::route('category-show', Category::find($currentCat->parent)->token)}}" class="btn">{{ $currentCat->name }}</a>>
 			@else
-			<a href="{{ URL::route('category-showAll')}}" class="btn">{{ $currentCat->name }}</a>
+				<a href="{{ URL::route('category-showAll')}}" class="btn">{{ $currentCat->name }}</a>>
 			@endif
+			--}}
+		
 		@endforeach
 	@endif 
 </div>
