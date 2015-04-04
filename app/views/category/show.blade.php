@@ -1,8 +1,7 @@
 @extends('master')
 
 @section('head-title')
-    Visa category: 
-    <?php if (isset($token)) { echo $token; } ?>
+    Visa kategori: @if (isset($token)) {{ $categories[0]->name}} @endif 
 
 @stop
 
@@ -53,6 +52,15 @@
 	<h2 id="inline">Sortera efter: 
 		<ul class="sortby">
 			@if(!isset($token))
+
+			<li <?php if ($order == 'alphabetical') echo "class='active'"?> >
+			<a href="{{ URL::route('category-showAllSorted', array('order' => 'alphabetical') )}}">Namn</a></li>
+			<li <?php if ($order == 'view_count') echo "class='active'"?> >
+			<a href="{{ URL::route('category-showAllSorted', array(/* TODO , 'order' => 'view_count' */) )}}">Popularitet</a></li>
+			<li <?php if ($order == 'score') echo "class='active'"?> >
+			<a href="{{ URL::route('category-showAllSorted', array('order' => 'score') )}}">Relevans</a></li>
+			<li <?php if ($order == 'revision_date') echo "class='active'"?> >
+			<a href="{{ URL::route('category-showAllSorted', array(/* TODO , 'order' => 'revision_date' */) )}}">Senast uppdaterad</a>
 				
 			@else
 			<li <?php if ($order == 'alphabetical') echo "class='active'"?> >
