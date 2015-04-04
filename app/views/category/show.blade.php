@@ -63,42 +63,21 @@
 	<hr>
 	{{-- TODO: Remove duplicates --}}
 	@foreach ($pms as $pm)
-		<div id="pmListing" onclick="location.href='{{ URL::route('pm-show', $pm['token']) }}';">
+		<div id="pmListing" onclick="location.href='{{ URL::route('pm-show', $pm['pm']->token) }}';">
+
 			<div id="adriansskit">
-			<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a>
+			<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>
 		</div>
 			<div id="pmInfo">
-				<b>Författare:</b> {{ $pm['created_by'] }}
+				<b>Författare:</b> {{ $pm['pm']->created_by }}
 				<br>
-				<b>Skapad:</b> {{ substr($pm['created_at'], 0, 11) }}
+				<b>Skapad:</b> {{ substr($pm['pm']->created_at, 0, 11) }}
 			</div>
 			<div id="catDescription">
-				{{ substr(trim(strip_tags($pm['content'])), 0, 200) }}...
+				{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...
 			</div>
 		</div>
 	@endforeach
 </div>
 @stop
-
-<!--
-	<strong>
-	Detta är en lista med alla kategorier och under kategorier från head kategorien som defineras i urlen.
-
-	OBS förstå hur listan är uppbyggd innan du försöker använda den. (rekursion krävs). Jag hjälper dig om du säger vad du vill ha.
-	<br>
-	Lägre ner kommer alla om som ligger i denna kategori eller en underkategori
-	<br>
-	Author - Johan Jonasson
-	<br>
-	</strong>
-
-     var_dump($category) 
-
-
-	
-	PM_LISTA
-
-	 if (isset($pms)) { var_dump($pms); }
-	-->
-
 

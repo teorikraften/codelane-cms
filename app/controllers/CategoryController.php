@@ -5,42 +5,42 @@ class CategoryController extends BaseController {
 	/**
 	 * Display all categories
 	 */
-	public function showAllCategories() 
+	public function showAllCategories($order = 'alphabetical', $page = 1) 
 	{
 		$head = Category::where('parent',  '=', 0)->get();
 
-		$list = array();
-		$pms = array();
-		foreach ($head as $key => $value) {
-			$list[$value->id] = $value->allChilds();
-			$pms = array_merge($pms, $head[$key]->allPms());
-		}
+		
+		$order = 'score';
+		$page = 1;
+
+		$search = new Search('ALL');
+		$search->findAllPms();
 
 		return View::make('category.show')
 			->with('categories', $head)
-			->with('pms', $pms);
+			->with('pms', $search->getResult())
+			->with('order', $order)
+			->with('page', $page);
 	}
 
 	/**
 	 * Show the category with id parentID and all children.
 	 */ 
-	public function showCategory($token) 
+	public function showCategory($token, $order = 'alphabetical', $page = 1) 
 	{
-		$head = Category::where('token',  '=', $token)->get();
+		$category = Category::where('token',  '=', $token)->first();
 
-		// get pm connected to the category
-		//$pms = $head[0]->allPms();//->where('verified', '=' , 1)->whereNotNull('deleted_at')->where('expiration_date', '<' , 'NOW()');
-
-
-		$categories[$head[0]->id] = $head[0]->allChilds();
+		$categories[$category->id] = $category->allChilds();
 
 		$search = new Search('category');
-		$search->categorySearch($head[0]);
+		$search->categorySearch($category);
 
 		return View::make('category.show')
 			->with('token', $token)
+			->with('categories', array(0 => $category))
 			->with('pms', $search->getResult())
-			->with('categories', $head);
+			->with('order', $order)
+			->with('page', $page);
 	}
 
 	/**
