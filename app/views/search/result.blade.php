@@ -39,10 +39,18 @@ $(function() {
 <h2 class="search">Sökning: {{ $searchQuery }}</h2>
 <h2 id="inline">Sortera efter: 
 	<ul class="sortby">
+		<!--{{-- If statements for each sorting method...--}}-->
+		@if ($order == 'score')
 		<li><a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'alphabetical'))}}">Namn</a></li>
 		<li><a href="#">Mest sedda</a></li>
 		<li class="active"><a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'score'))}}">Relevans</a></li>
 		<li><a href="#">Senast uppdaterad</a></li>
+		@else
+		<li class="active"><a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'alphabetical'))}}">Namn</a></li>
+		<li><a href="#">Mest sedda</a></li>
+		<li><a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'score'))}}">Relevans</a></li>
+		<li><a href="#">Senast uppdaterad</a></li>
+		@endif
 	</ul>
 </h2>
 <ul class="result">
