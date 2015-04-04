@@ -51,7 +51,7 @@
 	@endforeach
 </div>
 @stop
-{{--
+<!--{{--
 	<strong>
 	Detta är en lista med alla kategorier och under kategorier från head kategorien som defineras i urlen.
 
@@ -69,5 +69,5 @@
 	
 	PM_LISTA
 
-	 if (isset($pms)) { var_dump($pms); }--}}
+	 if (isset($pms)) { var_dump($pms); }--}}-->
 
