@@ -58,12 +58,22 @@
 	<hr>
 	{{-- TODO: Remove duplicates --}}
 	@foreach ($pms as $pm)
-		<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a><br>
+		<div id="pmListing" onclick="location.href='{{ URL::route('pm-show', $pm['token']) }}';">
+			<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a>
+			<div id="pmInfo">
+				<b>Författare:</b> {{ $pm['created_by'] }}
+				<br>
+				<b>Skapad:</b> {{ $pm['created_at'] }}
+			</div>
+			<div id="catDescription">
+				{{ substr(trim(strip_tags($pm['content'])), 0, 200) }}...
+			</div>
+		</div>
 	@endforeach
 </div>
 @stop
 
-<!--{{--
+<!--
 	<strong>
 	Detta är en lista med alla kategorier och under kategorier från head kategorien som defineras i urlen.
 
@@ -81,6 +91,7 @@
 	
 	PM_LISTA
 
-	 if (isset($pms)) { var_dump($pms); }--}}-->
+	 if (isset($pms)) { var_dump($pms); }
+	-->
 
 
