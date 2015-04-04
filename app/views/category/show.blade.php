@@ -3,6 +3,7 @@
 @section('head-title')
     Visa category: 
     <?php if (isset($token)) { echo $token; } ?>
+
 @stop
 
 @section('head-extra')
@@ -20,7 +21,6 @@
 @stop
 
 @section('body')
-
 <div class="" id="currentCat">
 	@if (Route::currentRouteName() == 'category-show')
 		@foreach($categories as $currentCat)
@@ -61,10 +61,18 @@
 <div class="clear" id="category-output">
 	<h2 id="inline">Sortera efter: 
 		<ul class="sortby">
-			<li><a href="#">Namn</a></li>
-			<li><a href="#">Popularitet</a></li>
-			<li class="active"><a href="#">Relevans</a></li>
-			<li><a href="#">Senast uppdaterad</a></li>
+			@if(!isset($token))
+				
+			@else
+			<li <?php if ($order == 'alphabetical') echo "class='active'"?> >
+			<a href="{{ URL::route('category-show', array('token' => $token, 'order' => 'alphabetical') )}}">Namn</a></li>
+			<li <?php if ($order == 'view_count') echo "class='active'"?> >
+			<a href="{{ URL::route('category-show', array('token' => $token /* TODO , 'order' => 'view_count' */) )}}">Popularitet</a></li>
+			<li <?php if ($order == 'score') echo "class='active'"?> >
+			<a href="{{ URL::route('category-show', array('token' => $token, 'order' => 'score') )}}">Relevans</a></li>
+			<li <?php if ($order == 'revision_date') echo "class='active'"?> >
+			<a href="{{ URL::route('category-show', array('token' => $token /* TODO , 'order' => 'revision_date' */) )}}">Senast uppdaterad</a></li>
+			@endif
 		</ul>
 	</h2>
 	<h2>PM</h2>

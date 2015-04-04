@@ -7,18 +7,22 @@ class CategoryController extends BaseController {
 	 */
 	public function showAllCategories($order = 'alphabetical', $page = 1) 
 	{
-		$head = Category::where('parent',  '=', 0)->get();
+		try {
+			$page = intval($page);
+		} catch(Exception $e) {
+			$page = 1;
+		}
 
-		
-		$order = 'score';
-		$page = 1;
+		$head = Category::where('parent',  '=', 0)->get();
 
 		$search = new Search('ALL');
 		$search->findAllPms();
+		$search->sortSearchResult($order);
+		$returnResult = $search->getPage($page);
 
 		return View::make('category.show')
 			->with('categories', $head)
-			->with('pms', $search->getResult())
+			->with('pms', $returnResult)
 			->with('order', $order)
 			->with('page', $page);
 	}
@@ -28,17 +32,25 @@ class CategoryController extends BaseController {
 	 */ 
 	public function showCategory($token, $order = 'alphabetical', $page = 1) 
 	{
+		try {
+			$page = intval($page);
+		} catch(Exception $e) {
+			$page = 1;
+		}
+
 		$category = Category::where('token',  '=', $token)->first();
 
 		$categories[$category->id] = $category->allChilds();
 
 		$search = new Search('category');
 		$search->categorySearch($category);
+		$search->sortSearchResult($order);
+		$returnResult = $search->getPage($page);
 
 		return View::make('category.show')
 			->with('token', $token)
 			->with('categories', array(0 => $category))
-			->with('pms', $search->getResult())
+			->with('pms', $returnResult)
 			->with('order', $order)
 			->with('page', $page);
 	}
