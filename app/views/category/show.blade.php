@@ -24,22 +24,27 @@
 <div class="" id="currentCat">
 	@if (Route::currentRouteName() == 'category-show')
 		@foreach($categories as $currentCat)
-			
+
+
+			<a href="{{ URL::route('category-showAll')}}" class="btn">Root</a> >
+
 			@foreach($currentCat->allParents() as $a)
-				{{ $a->id }}
+				<a href="{{ URL::route('category-show', Category::where('parent', '=', $a->parent)->where('id', '=', $a->id)->first()->token)}}" class="btn">{{ $a->name }}</a> >
 			@endforeach
 
+			<a href="{{ URL::route('category-show', $currentCat->token)}}" class="btn">{{ $currentCat->name }}</a>
+
+{{--
 			@if ($currentCat->parent != 0)
-				@foreach($currentCat->allParents() as $a)
-					<a href="{{ URL::route('category-show', Category::find($a->id)->token)}}" class="btn">{{ $a->name }}</a>
-				@endforeach
+				<a href="{{ URL::route('category-show', Category::find($currentCat->parent)->token)}}" class="btn">{{ $currentCat->name }}</a>>
 			@else
-				<a href="{{ URL::route('category-showAll')}}" class="btn">{{ $currentCat->name }}</a>
+				<a href="{{ URL::route('category-showAll')}}" class="btn">{{ $currentCat->name }}</a>>
 			@endif
+			--}}
+		
 		@endforeach
 	@endif 
 </div>
-<h2>Välj kategori:</h2>
 <div class="" id="categories">
 	@if (Route::currentRouteName() == 'category-showAll')
 		@foreach($categories as $category1)
@@ -67,15 +72,13 @@
 	{{-- TODO: Remove duplicates --}}
 	@foreach ($pms as $pm)
 		<div id="pmListing" onclick="location.href='{{ URL::route('pm-show', $pm['token']) }}';">
-		<div id="pmTitle">
+			<div id="adriansskit">
 			<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a>
 		</div>
 			<div id="pmInfo">
 				<b>Författare:</b> {{ $pm['created_by'] }}
 				<br>
 				<b>Skapad:</b> {{ substr($pm['created_at'], 0, 11) }}
-				<br>
-				<b>Reviderades:</b> 1333-03-7 <!-- TODO: Lägg in i dbas -->
 			</div>
 			<div id="catDescription">
 				{{ substr(trim(strip_tags($pm['content'])), 0, 200) }}...
