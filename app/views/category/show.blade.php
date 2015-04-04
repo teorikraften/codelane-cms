@@ -43,6 +43,15 @@
 			<li><a href="#">Senast uppdaterad</a></li>
 		</ul>
 	</h2>
+	<h2>PM</h2>
+	<hr>
+	{{-- TODO: Remove duplicates --}}
+	@foreach ($pms as $pm)
+		<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a><br>
+	@endforeach
+</div>
+@stop
+{{--
 	<strong>
 	Detta är en lista med alla kategorier och under kategorier från head kategorien som defineras i urlen.
 
@@ -53,17 +62,12 @@
 	Author - Johan Jonasson
 	<br>
 	</strong>
-{{-- TODO: Remove duplicates --}}
-@foreach ($pms as $pm)
-	<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a><br>
-@endforeach
-</div>
-    {{ var_dump($category) }}
+
+     var_dump($category) 
 
 
 	
 	PM_LISTA
 
-	<?php if (isset($pms)) { var_dump($pms); } ?>
+	 if (isset($pms)) { var_dump($pms); }--}}
 
-@stop
