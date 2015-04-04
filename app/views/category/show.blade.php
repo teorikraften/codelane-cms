@@ -63,7 +63,7 @@
 			<div id="pmInfo">
 				<b>Författare:</b> {{ $pm['created_by'] }}
 				<br>
-				<b>Skapad:</b> {{ $pm['created_at'] }}
+				<b>Skapad:</b> {{ substr($pm['created_at'], 0, 11) }}
 			</div>
 			<div id="catDescription">
 				{{ substr(trim(strip_tags($pm['content'])), 0, 200) }}...
