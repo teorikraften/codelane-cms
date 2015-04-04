@@ -35,7 +35,6 @@ class CategoryController extends BaseController {
 
 		$categories[$head[0]->id] = $head[0]->allChilds();
 
-
 		return View::make('category.show')
 			->with('category', $categories)
 			->with('token', $token)
