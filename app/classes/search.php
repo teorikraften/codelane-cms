@@ -303,6 +303,17 @@ class Search {
 		}
 		return $this->result;
 	}
+
+	public function categorySearch($category) {
+	$childcategories = $category->getAllChilds();
+
+	foreach ($childcategories as $key => $cat) {
+		$categoryPms = $cat->pms;
+		foreach ($categoryPms as $key => $pm) {
+			$this->result[$pm->id] = $pm;
+		}
+	}
+}
 }
 
 /**
@@ -391,3 +402,5 @@ function cmpRevision($res1, $res2)
 		throw new Exception('Unknown compare ' . $res1['operator'] . ' ' . $res2['operator']);
 	}
 }
+
+

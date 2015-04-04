@@ -24,6 +24,11 @@
 <div class="" id="currentCat">
 	@if (Route::currentRouteName() == 'category-show')
 		@foreach($categories as $currentCat)
+
+			@foreach($currentCat->getAllChilds() as $a)
+				{{ $a->id }}
+			@endforeach
+
 			@if ($currentCat->parent != 0)
 			<a href="{{ URL::route('category-show', Category::find($currentCat->parent)->token)}}" class="btn">{{ $currentCat->name }}</a>
 			@else

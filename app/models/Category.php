@@ -30,6 +30,34 @@ class Category extends Eloquent {
 		return $this->hasMany('Category', 'parent', 'id');
 	}
 
+	public function getParent() 
+	{
+		return $this->belongsTo('Category', 'parent');
+	}
+
+
+	/**
+	 * @return a flat list of all childs for this category
+	 */
+	public function getAllChilds() 
+	{
+		return $this->recChilds(array());
+	}
+
+	private function recChilds($list) {
+		$children = $this->childs;
+
+		foreach ($children as $key => $value) {
+			$list[] = $value;
+			$list = $value->recChilds($list);
+		}
+
+		return $list;
+	}
+
+	/**
+	 * @deprecated
+	 */
 	public function allChilds() 
 	{
 		$children = array();
@@ -44,16 +72,19 @@ class Category extends Eloquent {
 		return $list;
 	}
 
-	public function allPms() {
+	/**
+	 * Find all parents to the current category
+	 */
+	public function allParents() {
+		return $this->recParents(array());
+	}
 
-		$listofPms = $this->pms->toArray();
-
-		foreach ($this->childs as $value) {
-			foreach ($value->pms->toArray() as $pm) {
-				array_push($listofPms, $pm);
-			}
+	private function recParents($list) {
+		$parent = $this->getParent;
+		if (!is_null($parent)) {
+			array_push($list, $parent);
+			$list = $parent->recParents($list);
 		}
-
-		return $listofPms;
+		return $list;
 	}
 }
