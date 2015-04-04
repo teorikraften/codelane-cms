@@ -838,7 +838,7 @@ div#category-output {
 div#categories {
 	max-width: 100%;
 	margin: 20px 0 20px 0;
-	float: left;
+	overflow: hidden;
 }
 
 .centrator #categories > a {
