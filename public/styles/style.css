@@ -808,7 +808,8 @@ ul.ui-autocomplete li.ui-state-focus {
 
 .sortby li {
 	display: inline-block;
-	background: #008472;  
+	background: #008472;
+	margin: 0 0 5px 0;  
 }
 
 .sortby a {
@@ -836,7 +837,8 @@ div#category-output {
 
 div#categories {
 	max-width: 100%;
-	margin: 0 0 20px 0;
+	margin: 20px 0 20px 0;
+	float: left;
 }
 
 .centrator #categories > a {
