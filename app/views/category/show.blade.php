@@ -59,7 +59,9 @@
 	{{-- TODO: Remove duplicates --}}
 	@foreach ($pms as $pm)
 		<div id="pmListing" onclick="location.href='{{ URL::route('pm-show', $pm['token']) }}';">
+			<div id="adriansskit">
 			<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a>
+		</div>
 			<div id="pmInfo">
 				<b>Författare:</b> {{ $pm['created_by'] }}
 				<br>

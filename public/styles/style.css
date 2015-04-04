@@ -897,8 +897,13 @@ div#pmListing a{
 	font-size: 18px;
 	font-family: 'Muli', sans-serif;
 	font-weight: bold;
-    overflow: hidden;
-    max-width: 80%;
+}
+
+div#adriansskit {
+	margin: 0;
+	float: left;
+	width: 60%;
+	overflow: hidden;
 }
 
 div#catDescription{
@@ -906,15 +911,14 @@ div#catDescription{
 	font-family: 'Muli', sans-serif;
 	float: left;
 	width: 70%;
-	max-height: 60%;
 	overflow: hidden;
 }
 
 div#pmInfo{
+
 	height: 100%;
-	max-width: 30%;
+	width: 30%;
 	float: right;
-	overflow: hidden;
 }
 /*==========  Color stylings for category buttons  ==========*/
 
