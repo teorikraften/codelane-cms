@@ -33,15 +33,6 @@
 			@endforeach
 
 			<a href="{{ URL::route('category-show', $currentCat->token)}}" class="btn">{{ $currentCat->name }}</a>
-
-{{--
-			@if ($currentCat->parent != 0)
-				<a href="{{ URL::route('category-show', Category::find($currentCat->parent)->token)}}" class="btn">{{ $currentCat->name }}</a>>
-			@else
-				<a href="{{ URL::route('category-showAll')}}" class="btn">{{ $currentCat->name }}</a>>
-			@endif
-			--}}
-		
 		@endforeach
 	@endif 
 </div>
@@ -77,7 +68,6 @@
 	</h2>
 	<h2>PM</h2>
 	<hr>
-	{{-- TODO: Remove duplicates --}}
 	@foreach ($pms as $pm)
 		<div id="pmListing" onclick="location.href='{{ URL::route('pm-show', $pm['pm']->token) }}';">
 
