@@ -21,6 +21,13 @@
 
 @section('body')
 
+<div class="" id="currentCat">
+	@if (Route::currentRouteName() == 'category-show')
+		@foreach($categories as $currentCat)
+			<a href="{{ URL::route('category-show', $token) }}" class="btn">{{ $currentCat->name }}</a> > 
+		@endforeach
+	@endif 
+</div>
 <div class="" id="categories">
 	@if (Route::currentRouteName() == 'category-showAll')
 		@foreach($categories as $category1)
@@ -51,6 +58,7 @@
 	@endforeach
 </div>
 @stop
+
 <!--{{--
 	<strong>
 	Detta är en lista med alla kategorier och under kategorier från head kategorien som defineras i urlen.
@@ -70,4 +78,5 @@
 	PM_LISTA
 
 	 if (isset($pms)) { var_dump($pms); }--}}-->
+
 
