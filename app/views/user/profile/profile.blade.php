@@ -9,6 +9,8 @@
 @stop
 
 @section('body') 
+<script type="text/javascript" src="js/infoWindow.js"></script>
+
     <h1>Ditt konto, {{ Auth::user()->real_name }}</h1>
     <table>
         <tr>
@@ -25,4 +27,12 @@
         </tr>
     </table>
     <p>Du kan <a href="{{ URL::route('user-edit') }}" class="inline-action">ändra informationen</a>.</p>
+
+<!--infoWindow-->    
+    <div id="infoWindow" style="display:none;">
+        <a href="#" onclick="show('infoWindow')" class="inline-action">X</a>
+        <p>Det här är profilsidan, du kan se vad du har för information och ändra information.</p>
+    </div>  
+  <a href="#" onclick="show('infoWindow')" class="inline-action">?</a>
+<!-- end of infoWindow-->     
 @stop
