@@ -22,7 +22,7 @@ function window_pos(infoWindow) {
 	window_width=window_width/2-150;// center the window.
 	infoWindow.style.left = window_width + 'px';
 }
-
+function show(windowname) {
 	window_pos(windowname);
 	toggle(windowname);		
 }
