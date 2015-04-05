@@ -83,7 +83,12 @@
 			<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>
 		</div>
 			<div id="pmInfo">
-				<b>Författare:</b> {{ $pm['pm']->created_by }}
+				<b>Författare:</b> 
+				@foreach ($pm['pm']->users as $role) 
+					@if ($role->pivot->assignment == 'author')
+					{{ $role->real_name }}
+					@endif
+				@endforeach
 				<br>
 				<b>Skapad:</b> {{ substr($pm['pm']->created_at, 0, 11) }}
 			</div>
