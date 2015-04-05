@@ -1,8 +1,8 @@
 @extends('master')
 
 @section('head-title')
-    Visa category: 
-    <?php if (isset($token)) { echo $token; } ?>
+    Visa kategori: @if (isset($token)) {{ $categories[0]->name}} @endif 
+
 @stop
 
 @section('head-extra')
@@ -20,26 +20,21 @@
 @stop
 
 @section('body')
-
 <div class="" id="currentCat">
 	@if (Route::currentRouteName() == 'category-show')
 		@foreach($categories as $currentCat)
-			
+
+
+			<a href="{{ URL::route('category-showAll')}}" class="btn">Root</a> >
+
 			@foreach($currentCat->allParents() as $a)
-				{{ $a->id }}
+				<a href="{{ URL::route('category-show', Category::where('parent', '=', $a->parent)->where('id', '=', $a->id)->first()->token)}}" class="btn">{{ $a->name }}</a> >
 			@endforeach
 
-			@if ($currentCat->parent != 0)
-				@foreach($currentCat->allParents() as $a)
-					<a href="{{ URL::route('category-show', Category::find($a->id)->token)}}" class="btn">{{ $a->name }}</a>
-				@endforeach
-			@else
-				<a href="{{ URL::route('category-showAll')}}" class="btn">{{ $currentCat->name }}</a>
-			@endif
+			<a href="{{ URL::route('category-show', $currentCat->token)}}" class="btn">{{ $currentCat->name }}</a>
 		@endforeach
 	@endif 
 </div>
-<h2>Välj kategori:</h2>
 <div class="" id="categories">
 	@if (Route::currentRouteName() == 'category-showAll')
 		@foreach($categories as $category1)
@@ -56,54 +51,52 @@
 <div class="clear" id="category-output">
 	<h2 id="inline">Sortera efter: 
 		<ul class="sortby">
-			<li><a href="#">Namn</a></li>
-			<li><a href="#">Popularitet</a></li>
-			<li class="active"><a href="#">Relevans</a></li>
-			<li><a href="#">Senast uppdaterad</a></li>
+			@if(!isset($token))
+
+			<li <?php if ($order == 'alphabetical') echo "class='active'"?> >
+			<a href="{{ URL::route('category-showAllSorted', array('order' => 'alphabetical') )}}">Namn</a></li>
+			<li <?php if ($order == 'view_count') echo "class='active'"?> >
+			<a href="{{ URL::route('category-showAllSorted', array(/* TODO , 'order' => 'view_count' */) )}}">Popularitet</a></li>
+			<li <?php if ($order == 'score') echo "class='active'"?> >
+			<a href="{{ URL::route('category-showAllSorted', array('order' => 'score') )}}">Relevans</a></li>
+			<li <?php if ($order == 'revision_date') echo "class='active'"?> >
+			<a href="{{ URL::route('category-showAllSorted', array(/* TODO , 'order' => 'revision_date' */) )}}">Senast uppdaterad</a>
+				
+			@else
+			<li <?php if ($order == 'alphabetical') echo "class='active'"?> >
+			<a href="{{ URL::route('category-show', array('token' => $token, 'order' => 'alphabetical') )}}">Namn</a></li>
+			<li <?php if ($order == 'view_count') echo "class='active'"?> >
+			<a href="{{ URL::route('category-show', array('token' => $token /* TODO , 'order' => 'view_count' */) )}}">Popularitet</a></li>
+			<li <?php if ($order == 'score') echo "class='active'"?> >
+			<a href="{{ URL::route('category-show', array('token' => $token, 'order' => 'score') )}}">Relevans</a></li>
+			<li <?php if ($order == 'revision_date') echo "class='active'"?> >
+			<a href="{{ URL::route('category-show', array('token' => $token /* TODO , 'order' => 'revision_date' */) )}}">Senast uppdaterad</a></li>
+			@endif
 		</ul>
 	</h2>
 	<h2>PM</h2>
 	<hr>
-	{{-- TODO: Remove duplicates --}}
 	@foreach ($pms as $pm)
-		<div id="pmListing" onclick="location.href='{{ URL::route('pm-show', $pm['token']) }}';">
-		<div id="pmTitle">
-			<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a>
+		<div id="pmListing" onclick="location.href='{{ URL::route('pm-show', $pm['pm']->token) }}';">
+
+			<div id="adriansskit">
+			<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>
 		</div>
 			<div id="pmInfo">
-				<b>Författare:</b> {{ $pm['created_by'] }}
+				<b>Författare:</b> 
+				@foreach ($pm['pm']->users as $role) 
+					@if ($role->pivot->assignment == 'author')
+					{{ $role->real_name }}
+					@endif
+				@endforeach
 				<br>
-				<b>Skapad:</b> {{ substr($pm['created_at'], 0, 11) }}
-				<br>
-				<b>Reviderades:</b> 1333-03-7 <!-- TODO: Lägg in i dbas -->
+				<b>Skapad:</b> {{ substr($pm['pm']->created_at, 0, 11) }}
 			</div>
 			<div id="catDescription">
-				{{ substr(trim(strip_tags($pm['content'])), 0, 200) }}...
+				{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...
 			</div>
 		</div>
 	@endforeach
 </div>
 @stop
-
-<!--
-	<strong>
-	Detta är en lista med alla kategorier och under kategorier från head kategorien som defineras i urlen.
-
-	OBS förstå hur listan är uppbyggd innan du försöker använda den. (rekursion krävs). Jag hjälper dig om du säger vad du vill ha.
-	<br>
-	Lägre ner kommer alla om som ligger i denna kategori eller en underkategori
-	<br>
-	Author - Johan Jonasson
-	<br>
-	</strong>
-
-     var_dump($category) 
-
-
-	
-	PM_LISTA
-
-	 if (isset($pms)) { var_dump($pms); }
-	-->
-
 

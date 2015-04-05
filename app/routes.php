@@ -69,6 +69,9 @@ Route::post('/person/andra-losenord', ['as' => 'post-change-password', 'uses' =>
 | Signed in admin functionality.
 |
 */
+/*
+| Admin tags.
+*/
 Route::get('/admin/taggar', ['as' => 'admin-tags', 'uses' => 'TagController@showTagsListPage'])
 	->before('auth.admin');
 Route::get('/admin/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'TagController@showAddTagPage'])
@@ -84,7 +87,9 @@ Route::get('/admin/taggar/andra/{token}', ['as' => 'admin-tags-edit', 'uses' => 
 Route::post('/admin/taggar/andra', ['as' => 'post-admin-tags-edit', 'uses' => 'TagController@editTag'])
 	->before('auth.admin');
 
-
+/*
+| Admin categories.
+*/
 Route::get('/admin/kategorier', ['as' => 'admin-categories', 'uses' => 'CategoryController@showCategoriesListPage'])
 	->before('auth.admin');
 Route::get('/admin/kategorier/ny', ['as' => 'admin-categories-new', 'uses' => 'CategoryController@showAddCategoryPage'])
@@ -100,7 +105,9 @@ Route::get('/admin/kategorier/andra/{token}', ['as' => 'admin-categories-edit', 
 Route::post('/admin/kategorier/andra', ['as' => 'post-admin-categories-edit', 'uses' => 'CategoryController@editCategory'])
 	->before('auth.admin');
 
-
+/*
+| Admin roles.
+*/
 Route::get('/admin/roller', ['as' => 'admin-roles', 'uses' => 'RoleController@showRolesListPage'])
 	->before('auth.admin');
 Route::get('/admin/roller/ny', ['as' => 'admin-roles-new', 'uses' => 'RoleController@showAddRolePage'])
@@ -118,7 +125,9 @@ Route::get('/admin/roller/andra/{id}', ['as' => 'admin-roles-edit', 'uses' => 'R
 Route::post('/admin/roller/andra', ['as' => 'post-admin-roles-edit', 'uses' => 'RoleController@editRole'])
 	->before('auth.admin');
 
-
+/*
+| Admin users.
+*/
 Route::get('/admin/personer', ['as' => 'admin-users', 'uses' => 'UserAdminController@showUsersListPage'])
 	->before('auth.admin');
 Route::get('/admin/personer/ny', ['as' => 'admin-users-new', 'uses' => 'UserAdminController@showAddUserPage'])
@@ -141,7 +150,9 @@ Route::post('/admin/personer/verifiera', ['as' => 'post-admin-users-verify', 'us
 Route::post('/admin/personer/andra', ['as' => 'post-admin-users-edit', 'uses' => 'UserAdminController@editUser'])
 	->before('auth.admin');
 
-
+/*
+| Admin pms.
+*/
 Route::get('/admin/pm', ['as' => 'admin-pm', 'uses' => 'PMController@showPMListPage'])
 	->before('auth.admin');
 Route::get('/admin/pm/ta-bort/{token}', ['as' => 'admin-pm-delete', 'uses' => 'PMController@showDeletePMPage'])
@@ -164,7 +175,8 @@ Route::get('/sok', ['as' => 'search-form', function() {
 }]);
 Route::post('/sok', ['as' => 'post-search', 'uses' => 'SearchController@search']);
 Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'uses' => 'SearchController@showSearchResultPage'])
-	->where('page', '[0-9]*');
+	->where('page', '[0-9]*')
+	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)');
 
 
 /*
@@ -247,6 +259,14 @@ Route::get('/kategori', ['as' => 'category-show-all', 'uses' => 'CategoryControl
 	->before('auth');
 Route::get('/kategori/{token}', ['as' => 'category-show', 'uses' => 'CategoryController@showCategory'])
 	->before('auth');
+Route::get('/kategori/top/{order?}/{page?}', ['as' => 'category-showAllSorted', 'uses' => 'CategoryController@showAllCategories'])
+	->before('auth')
+	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)')
+	->where('page', '[0-9]*');
+Route::get('/kategori/{token}/{order?}/{page?}', ['as' => 'category-show', 'uses' => 'CategoryController@showCategory'])
+	->before('auth')
+	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)')
+	->where('page', '[0-9]*');
 
 /*
 |

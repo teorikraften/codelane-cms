@@ -5,42 +5,54 @@ class CategoryController extends BaseController {
 	/**
 	 * Display all categories
 	 */
-	public function showAllCategories() 
+	public function showAllCategories($order = 'alphabetical', $page = 1) 
 	{
+		try {
+			$page = intval($page);
+		} catch(Exception $e) {
+			$page = 1;
+		}
+
 		$head = Category::where('parent',  '=', 0)->get();
 
-		$list = array();
-		$pms = array();
-		foreach ($head as $key => $value) {
-			$list[$value->id] = $value->allChilds();
-			$pms = array_merge($pms, $head[$key]->allPms());
-		}
+		$search = new Search('ALL');
+		$search->findAllPms();
+		$search->sortSearchResult($order);
+		$returnResult = $search->getPage($page);
 
 		return View::make('category.show')
 			->with('categories', $head)
-			->with('pms', $pms);
+			->with('pms', $returnResult)
+			->with('order', $order)
+			->with('page', $page);
 	}
 
 	/**
 	 * Show the category with id parentID and all children.
 	 */ 
-	public function showCategory($token) 
+	public function showCategory($token, $order = 'alphabetical', $page = 1) 
 	{
-		$head = Category::where('token',  '=', $token)->get();
+		try {
+			$page = intval($page);
+		} catch(Exception $e) {
+			$page = 1;
+		}
 
-		// get pm connected to the category
-		//$pms = $head[0]->allPms();//->where('verified', '=' , 1)->whereNotNull('deleted_at')->where('expiration_date', '<' , 'NOW()');
+		$category = Category::where('token',  '=', $token)->first();
 
-
-		$categories[$head[0]->id] = $head[0]->allChilds();
+		$categories[$category->id] = $category->allChilds();
 
 		$search = new Search('category');
-		$search->categorySearch($head[0]);
+		$search->categorySearch($category);
+		$search->sortSearchResult($order);
+		$returnResult = $search->getPage($page);
 
 		return View::make('category.show')
 			->with('token', $token)
-			->with('pms', $search->getResult())
-			->with('categories', $head);
+			->with('categories', array(0 => $category))
+			->with('pms', $returnResult)
+			->with('order', $order)
+			->with('page', $page);
 	}
 
 	/**

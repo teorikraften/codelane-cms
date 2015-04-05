@@ -305,15 +305,27 @@ class Search {
 	}
 
 	public function categorySearch($category) {
-	$childcategories = $category->getAllChilds();
+		$childcategories = $category->getAllChilds();
 
-	foreach ($childcategories as $key => $cat) {
-		$categoryPms = $cat->pms;
-		foreach ($categoryPms as $key => $pm) {
-			$this->result[$pm->id] = $pm;
+		foreach ($childcategories as $key => $cat) {
+			$categoryPms = $cat->pms()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+			foreach ($categoryPms as $key => $pm) {
+				$this->result[$pm->id]['pm'] = $pm;
+				$this->result[$pm->id]['score'] = 1;
+				$this->result[$pm->id]['operator'] = self::defaultOperator; 
+			}
+		// -------------------------------------------------------------------------------
 		}
 	}
-}
+
+	public function findAllPms() {
+		$allpms = PM::where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		foreach ( $allpms as $key => $pm) {
+			$this->result[$pm->id]['pm'] = $pm;
+			$this->result[$pm->id]['score'] = 1;
+			$this->result[$pm->id]['operator'] = self::defaultOperator; 
+		}
+	}
 }
 
 /**

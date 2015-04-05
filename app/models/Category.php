@@ -76,7 +76,7 @@ class Category extends Eloquent {
 	 * Find all parents to the current category
 	 */
 	public function allParents() {
-		return $this->recParents(array());
+		return array_reverse($this->recParents(array()));
 	}
 
 	private function recParents($list) {
