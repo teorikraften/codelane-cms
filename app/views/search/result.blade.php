@@ -13,11 +13,11 @@ $(function() {
 	});
 });
 $(function() {
-    $(".sortby li").on('click', function() {
-    	if(!$(this).hasClass('active')) {
-    		$(this).siblings('li').removeClass('active');
-    		$(this).addClass('active');
-	    }
+	$(".sortby li").on('click', function() {
+		if(!$(this).hasClass('active')) {
+			$(this).siblings('li').removeClass('active');
+			$(this).addClass('active');
+		}
 	});
 });
 </script>
@@ -39,10 +39,16 @@ $(function() {
 <h2 class="search">Sökning: {{ $searchQuery }}</h2>
 <h2 id="inline">Sortera efter: 
 	<ul class="sortby">
-		<li><a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'alphabetical'))}}">Namn</a></li>
-		<li><a href="#">Mest sedda</a></li>
-		<li class="active"><a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'score'))}}">Relevans</a></li>
-		<li><a href="#">Senast uppdaterad</a></li>
+		<li <?php if ($order == 'score') echo "class='active'"?> >
+			<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'score'))}}">Relevans</a></li>
+		<li <?php if ($order == 'alphabetical') echo "class='active'"?> >
+			<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'alphabetical'))}}">Namn</a></li>
+		<li <?php if ($order == 'view_count') echo "class='active'"?> >
+			<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, /* TODO  'order' => 'view_count' */))}}">Mest sedda</a></li>
+		<li <?php if ($order == 'revision_date') echo "class='active'"?> >
+			<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, /* TODO 'order' => 'revision_date' */))}}">Senast uppdaterad</a></li>
+
+
 	</ul>
 </h2>
 <ul class="result">
@@ -63,17 +69,17 @@ $(function() {
 
 				<td>
 					@if ($page > 1)
-					<a href="{{ URL::route('search-result', $searchQuery.'/'. $order .'/'. ($page-1) ) }}">Föregående</a>
+					<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => $order, 'page' => ($page-1) ) ) }}">Föregående</a>
 					@endif
 				</td>
 				@for($pageNumber = 1; $pageNumber <= $maxPage; $pageNumber++)
 				<td>
-					<a href="{{ URL::route('search-result', $searchQuery.'/'. $order .'/'. ($pageNumber ) )}}"> {{ $pageNumber }} </a>
+					<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => $order , 'page' => $pageNumber ) )}}"> {{ $pageNumber }} </a>
 				</td>
 				@endfor
 				<td>
 					@if ($page < $maxPage)
-					<a href="{{ URL::route('search-result', $searchQuery.'/'. $order .'/'. ($page+1) ) }}">Nästa</a>
+					<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => $order , 'page' => ($page+1) ) ) }}">Nästa</a>
 					@endif
 				</td>
 			</tr>

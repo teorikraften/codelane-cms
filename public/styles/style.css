@@ -198,7 +198,7 @@ ul.menu {
 	float: left;
     margin: 0;
     padding-right: 40px;
-    width: 550px; /* Changed from 350px to make room for categories */
+    width: 500px; /* Changed from 350px to make room for categories */
     height: 60px;
     font-size: 0;
 }
@@ -261,12 +261,12 @@ ul.menu {
 	display: none !important;
 }
 /* Changed responsive limit to fit advanced search */
-@media (min-width: 977px){
+@media (min-width: 927px){
 	.responsive-menu{
 		display: block !important;
 	}
 }
-@media (max-width: 976px){
+@media (max-width: 926px){
 	ul.menu {
 		position: relative;
 		display: block;
@@ -804,11 +804,13 @@ ul.ui-autocomplete li.ui-state-focus {
 .sortby {
 	display: inline-block;
 	list-style: none;
+	margin: 0;
 }
 
 .sortby li {
 	display: inline-block;
-	background: #008472;  
+	background: #008472;
+	margin: 0 0 5px 0;  
 }
 
 .sortby a {
@@ -836,13 +838,18 @@ div#category-output {
 
 div#categories {
 	max-width: 100%;
-	margin: 0 0 20px 0;
+	margin: 20px 0 20px 0;
+	overflow: hidden;
+}
+
+div#currentCat {
+	max-width: 100%;
 }
 
 .centrator #categories > a {
 	display: inline-block;
-	width: 100px;
-	height: 40px;
+	padding: 40px;
+	width: 28.33%;
     float: left;
     word-wrap: break-word;
     background: #008472;   
@@ -851,17 +858,67 @@ div#categories {
 .centrator #categories > a.btn {
 	text-decoration: none;
 	text-align: center;
-	vertical-align: center;
+	vertical-align: middle;
 	line-height: 20px;
-	padding: 10px 5px 0 5px;
 	color: #fff;
 	font-family: 'Muli', sans-serif;
 	font-weight: normal;
 	font-size: 14px;
 	border: 0;
+	margin: 5px 5px 0 0;
 	float: left;
 	display: inline-block;
 	color: #fff;
+}
+
+div#pmListing {
+	width: 100%;
+	height: 70px;
+	background-color: #ECF8FF;
+	padding: 4px;
+	border: ridge 1px;
+	margin-bottom: 2px;
+	overflow: hidden;
+}
+
+div#pmListing:hover{
+	width: 100%;
+	height: 70px;
+	background-color: #ECF8FF;
+	padding: 4px;
+	border: ridge 1px;
+	margin-bottom: 2px;
+	overflow: hidden;
+	cursor: pointer;
+}
+
+
+div#pmListing a{
+	font-size: 2vh;
+	font-family: 'Muli', sans-serif;
+	font-weight: bold;
+}
+
+div#pmTitle {
+	margin: 0;
+	float: left;
+	width: 60%;
+	overflow: hidden;
+}
+
+div#catDescription{
+	font-size: 12px;
+	font-family: 'Muli', sans-serif;
+	float: left;
+	width: 70%;
+	overflow: hidden;
+}
+
+div#pmInfo{
+
+	height: 100%;
+	width: 30%;
+	float: right;
 }
 /*==========  Color stylings for category buttons  ==========*/
 
@@ -878,5 +935,16 @@ div#categories {
 }
 
 
+
+
+#infoWindow {
+	position:absolute;
+	background: #008472;
+	color: #FFFFFF;
+	width:300px;
+	height:100px;
+	border:5px solid #000;
+	z-index: 9002;
+}
 
 
