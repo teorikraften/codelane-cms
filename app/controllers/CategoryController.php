@@ -10,11 +10,16 @@ class CategoryController extends BaseController {
 	 * @return the colors as an array of strings (array('000', 'fb0', 'fff'))
 	 */
 	public function createColors($num) {
+		if ($num <= 0) {
+			return array();
+		}
 		// Start value
-		$r = 0xf; $g = 0; $b = 0;
+		$r = 0xd; $g = 2; $b = 0;
 
 		// Calculate the step
-		$step = $num / 16;
+		$step = 11 / $num;
+
+		$color = array();
 		for ($i = 0; $i < intval($num); $i++) {
 			$r -= $step; $g += $step; // Update var
 			$color[$i] = dechex(intval($r)) . dechex(intval($g)) . dechex(intval($b)); // The actual color
@@ -94,6 +99,9 @@ class CategoryController extends BaseController {
 			return Redirect::route('category-show-all')->with('message', 'Kategorin du försökte nå finns inte.');
 		}
 
+		// Get the children of the category
+		$children = Category::where('parent', '=', $category->id)->get();
+
 		// Create background colors
 		$colors = $this->createColors($children->count());
 
@@ -107,7 +115,7 @@ class CategoryController extends BaseController {
 			->with('color', $colors)
 			->with('breadcrumb', $this->createBreadcrumb($category))
 			->with('token', $token)
-			->with('children', Category::where('parent', '=', $category->id)->get())
+			->with('children', $children)
 			->with('pms', $searchResult)
 			->with('order', $order)
 			->with('page', $page);

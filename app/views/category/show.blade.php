@@ -17,7 +17,7 @@
 	<div class="" id="categories">
 		<?php $i = 0; ?>
 		@foreach ($children as $child)
-			<a href="{{ URL::route('category-show', $child->token) }}" class="btn" style="background: #{{ $color[$i++] or '008472' }};">
+			<a href="{{ URL::route('category-show', $child->token) }}" class="btn" style="background: #{{ $color[$i++] }};">
 				{{ $child->name }}
 			</a>
 		@endforeach

@@ -877,12 +877,12 @@ div#currentCat {
 
 .centrator #categories > a {
 	display: inline-block;
-	padding: 40px;
-	width: 28.33%;
+	padding: 40px 0;
+	width: 12.5%;
+	margin: 0;
     float: left;
     word-wrap: break-word;
-    background: #008472;   
-    margin: 4px;
+    background: #008472; 
 }
 .centrator #categories > a.btn {
 	text-decoration: none;
@@ -894,7 +894,6 @@ div#currentCat {
 	font-weight: normal;
 	font-size: 14px;
 	border: 0;
-	margin: 5px 5px 0 0;
 	float: left;
 	display: inline-block;
 	color: #fff;
