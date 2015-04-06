@@ -228,6 +228,7 @@ ul.menu {
 	background: #ddd;
 }
 
+
 /* Sub menu */
 .submenu {
 	width: 100%;
@@ -251,6 +252,22 @@ ul.menu {
 }
 .submenu ul li a:hover {
 	background: #ddd;
+}
+.submenu li.notif {
+}
+.submenu li.notif a {
+	display: inline-block;
+	background: #d22;
+	border-radius: 50px; /* TODO Browser comp */
+	color: #fee;
+	height: 10px;
+	padding: 6px 13px 12px;
+	margin: 5px 0 3px 5px;
+	font-weight: bold;
+}
+.submenu li.notif a:hover {
+	background: #f66;
+	color: #fff;
 }
 
 /* Responsive menu */
@@ -381,6 +398,9 @@ ul.pop {
 div.form {
 	max-width: 400px;
 }
+div.form.wide {
+	max-width: none;
+}
 div.form input.text, div.form textarea {
 	background: #fff;
 	width: 100%;
@@ -389,6 +409,15 @@ div.form input.text, div.form textarea {
 	border-radius: 0px; /* TODO Fix browser comp */
 	font-size: 15px;
 	font-family: 'Muli', sans-serif; /* TODO Change if change font */
+}
+div.form input.text.short {
+	max-width: 60px;
+}
+div.form input.text.middle {
+	max-width: 120px;
+}
+div.form input.text.long {
+	max-width: 240px;
 }
 div.form textarea {
 	height: 700px;

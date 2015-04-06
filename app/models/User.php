@@ -57,8 +57,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	/**
 	 * Actions made by the user.
 	 */
-	public function assignment() 
-	{
+	public function assignment() {
 		return $this->hasMany('Assignment', 'user');
 	}
 
@@ -94,6 +93,20 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
+	 * Returns user's privileges as an integer.
+	 * @return 10 (admin), 8 (pm-admin), 2 (verifierad), 0 (overifierad)
+	 */
+	public function privilegesNum() {
+		if ($this->privileges == 'admin') 
+			return 10;
+		if ($this->privileges == 'pm-admin') 
+			return 8;
+		if ($this->privileges == 'verified') 
+			return 2;
+		return 0;
+	}
+
+	/**
 	 * Returns user's privileges as a nice string word.
 	 */
 	public static function assignmentString($assignment) {
@@ -104,5 +117,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		if ($assignment == 'reviewer') 
 			return "granskare";
 		return "medlem";
+	}
+
+	/**
+	 * Gets all events connected to this user.
+	 */
+	public static function allEvents() {
+		return array('Skriva PM:et "Vård inom skola".');
 	}
 }
