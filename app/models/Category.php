@@ -30,7 +30,7 @@ class Category extends Eloquent {
 		return $this->hasMany('Category', 'parent', 'id');
 	}
 
-	public function getParent() 
+	public function parent() 
 	{
 		return $this->belongsTo('Category', 'parent');
 	}
@@ -57,6 +57,7 @@ class Category extends Eloquent {
 
 	/**
 	 * @deprecated
+	 * TODO JOHAN DET HETER CHILDREN!!!! :D <3
 	 */
 	public function allChilds() 
 	{

@@ -1,59 +1,121 @@
 <?php 
 
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+
 class CategoryController extends BaseController {
 
 	/**
-	 * Display all categories
+	 * Creates $num colors between red and green
+	 * @param num, the number of colors
+	 * @return the colors as an array of strings (array('000', 'fb0', 'fff'))
 	 */
-	public function showAllCategories($order = 'alphabetical', $page = 1) 
-	{
-		try {
-			$page = intval($page);
-		} catch(Exception $e) {
-			$page = 1;
+	public function createColors($num) {
+		// Start value
+		$r = 0xf; $g = 0; $b = 0;
+
+		// Calculate the step
+		$step = $num / 16;
+		for ($i = 0; $i < intval($num); $i++) {
+			$r -= $step; $g += $step; // Update var
+			$color[$i] = dechex(intval($r)) . dechex(intval($g)) . dechex(intval($b)); // The actual color
 		}
 
-		$head = Category::where('parent',  '=', 0)->get();
+		return $color;
+	}
 
+	/**
+	 * Recursive function that creates a breadcrumb text over categories.
+	 * @param category, the category where we are now
+	 * @return the breadcrumb to the actual category
+	 */
+	public function createBreadcrumb($category) {
+		if ($category->parent == 0) {
+			return '<a href="' . URL::route('category-show-all') . '">Start</a> &gt; ' . 
+				'<a href="' . URL::route('category-show', $category->token) . '">' . 
+					$category->name . 
+				'</a> ';
+		}
+
+		$parent = Category::where('id', '=', $category->parent)->firstOrFail();
+		return $this->createBreadcrumb($parent) . 
+			' &gt; <a href="' . URL::route('category-show', $category->token) . '">' . 
+				$category->name . 
+			'</a> ';
+	}
+
+	/**
+	 * Display all categories
+	 * @param order, the sorting order, alphabetical is default
+	 * @param page, the result page, default is 1
+	 * @return response, the view with category page
+	 */
+	public function showAllCategories($order = 'alphabetical', $page = 1) {
+		// TODO Funkar det här? Behövs try-catch?
+		$page = intval($page);
+
+		// Get first level of categories
+		$children = Category::where('parent',  '=', 0)->get();
+
+		// Create background colors
+		$colors = $this->createColors($children->count());
+
+		// Init search and find PMs
 		$search = new Search('ALL');
 		$search->findAllPms();
 		$search->sortSearchResult($order);
-		$returnResult = $search->getPage($page);
+		$searchResult = $search->getPage($page);
 
+		// Return the view with correct values
 		return View::make('category.show')
-			->with('categories', $head)
-			->with('pms', $returnResult)
+			->with('color', $colors)
+			->with('token', NULL)
+			->with('pms', $searchResult)
+			->with('children', $children)
 			->with('order', $order)
 			->with('page', $page);
 	}
 
 	/**
-	 * Show the category with id parentID and all children.
+	 * Show the category with token $token and all children.
+	 * @param token, the token of the category to show
+	 * @param order, the sorting order of the pms on the page, alphabetical is default
+	 * @param page, the result page, default is 1
+	 * @return response, the view with the category page
 	 */ 
-	public function showCategory($token, $order = 'alphabetical', $page = 1) 
-	{
+	public function showCategory($token, $order = 'alphabetical', $page = 1) {
+		// TODO try-catch istället?
+		$page = intval($page);
+
+		// Find the PM we want
 		try {
-			$page = intval($page);
-		} catch(Exception $e) {
-			$page = 1;
+			$category = Category::where('token',  '=', $token)->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			// On fail, redirect user to show-all page with message
+			return Redirect::route('category-show-all')->with('message', 'Kategorin du försökte nå finns inte.');
 		}
 
-		$category = Category::where('token',  '=', $token)->first();
+		// Create background colors
+		$colors = $this->createColors($children->count());
 
-		$categories[$category->id] = $category->allChilds();
-
+		// Init search and get result
 		$search = new Search('category');
 		$search->categorySearch($category);
 		$search->sortSearchResult($order);
-		$returnResult = $search->getPage($page);
+		$searchResult = $search->getPage($page);
 
 		return View::make('category.show')
+			->with('color', $colors)
+			->with('breadcrumb', $this->createBreadcrumb($category))
 			->with('token', $token)
-			->with('categories', array(0 => $category))
-			->with('pms', $returnResult)
+			->with('children', Category::where('parent', '=', $category->id)->get())
+			->with('pms', $searchResult)
 			->with('order', $order)
 			->with('page', $page);
 	}
+
+
+
+
 
 	/**
 	 * Displays the categories for admin.	 
