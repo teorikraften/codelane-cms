@@ -14,10 +14,10 @@ class CategoryController extends BaseController {
 			return array();
 		}
 		// Start value
-		$r = 0xd; $g = 2; $b = 0;
+		$r = 0xb; $g = 4; $b = 0;
 
 		// Calculate the step
-		$step = 11 / $num;
+		$step = 7 / $num;
 
 		$color = array();
 		for ($i = 0; $i < intval($num); $i++) {
