@@ -641,7 +641,7 @@ a.action {
 	color: #fff;
 	text-decoration: none;
 	max-width: 400px;
-	margin: 5px 1px 5px 0;
+	margin: 5px 1px 10px 0;
 }
 a.inline-action {
 	display: inline-block; 
@@ -975,4 +975,42 @@ div#pmInfo{
 	z-index: 9002;
 }
 
-
+table.list {
+	margin-top: 10px;
+	width: 100%;
+    border-spacing: 0;
+    border-collapse: separate;
+}
+table.list th.filter {
+	text-align: right;
+}
+table.list td, table.list th {
+	padding: 7px 1px 0px 11px;
+	margin: 0;
+	vertical-align: center;
+}
+table.list th {
+	background: #ddd;
+	font-size: 1.1em;
+	padding: 10px 1px 10px 11px;
+}
+table.list th.action {
+	width: 20px;
+}
+table.list tr:nth-child(even) {
+	background: #fff;
+}
+table.list tr:nth-child(odd) {
+	background: #f6f6f6;
+}
+table.list tr:hover {
+	background: #cdcdcd;
+}
+table.list a img {
+	border: 0;
+	height: 16px;
+	padding: 5px;
+}
+table.list a img:hover {
+	background: #eee;
+}
