@@ -19,6 +19,7 @@ Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
 Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
 Route::get('/keywords', ['as' => 'search-autocomplete', 'uses' => 'SearchController@searchAutocomplete']);
 Route::get('/personer', ['as' => 'persons-autocomplete', 'uses' => 'UserController@personsAutocomplete']);
+Route::get('/roller', ['as' => 'roles-autocomplete', 'uses' => 'RoleController@rolesAutocomplete']);
 Route::post('/spara-kommentar', ['as' => 'save-comment', 'uses' => 'PMController@saveComment'])
 	->before('csrf');
 Route::post('/pm-filter', ['as' => 'pm-filter', 'uses' => 'PMController@postFilter'])
@@ -78,6 +79,8 @@ Route::post('/person/andra-losenord', ['as' => 'post-change-password', 'uses' =>
 | Admin tags.
 */
 Route::get('/admin/taggar', ['as' => 'admin-tags', 'uses' => 'TagController@showTagsListPage'])
+	->before('auth.admin');
+Route::get('/admin/tagg/{token}', ['as' => 'admin-tag-show', 'uses' => 'TagController@showTagWithToken'])
 	->before('auth.admin');
 Route::get('/admin/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'TagController@showAddTagPage'])
 	->before('auth.admin');

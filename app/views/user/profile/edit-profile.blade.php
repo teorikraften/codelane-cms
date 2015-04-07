@@ -4,8 +4,26 @@
     Ändra användare: {{ Auth::user()->real_name }}
 @stop
 
-@section('submenu')
-    @include('includes.admin-menu')
+@section('head-extra')
+	<script type="text/javascript" src="/js/jquery.tokeninput.js"></script>
+    <link rel="stylesheet" href="/styles/token-input.css" type="text/css" />
+    <link rel="stylesheet" href="/styles/token-input-facebook.css" type="text/css" />
+
+    <script type="text/javascript">
+	    $(document).ready(function() {
+	        $("#roles_").tokenInput("/roller", {
+	        	'prePopulate' : [
+	        		@foreach($userRoles as $userRole)
+	        		{
+	        			'id' : {{ $userRole->id }}, 
+	        			'name' : '{{ $userRole->name }}'
+	        		},
+	        		@endforeach
+	        	],
+	        	'preventDuplicates' : true,
+	        });
+	    });
+    </script>
 @stop
 
 @section('body') 
@@ -27,6 +45,10 @@
 		<div class="row">
 			<div class="description">{{ Form::label('email', 'E-postadress') }}</div>
 			<div class="input">{{ Form::text('email', NULL, array('class' => 'text')) }}</div>
+		</div>
+		<div class="row">
+			<div class="description">{{ Form::label('roles_', 'Roller') }}</div>
+			<div class="input">{{ Form::text('roles_', NULL, array('class' => 'text')) }}</div>
 		</div>
 		<div class="submit">
 			{{ Form::submit('Spara', array('class' => 'submit')) }}

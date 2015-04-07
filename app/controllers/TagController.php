@@ -8,7 +8,21 @@ class TagController extends BaseController {
 	 * Displays the tags for admin.	 
 	 */
 	public function showTagsListPage() {
-		return View::make('user.admin.tags.index')->with('tags', Tag::take(100)->get());
+		return View::make('user.admin.tags.index')
+			->with('tags', Tag::take(100)->get());
+	}
+
+	public function showTagWithToken($token) {
+		try {
+			$tag = Tag::where('token', '=', $token)->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-tags')->with('error', 'Kunde inte hitta taggen.');
+		}
+		$pms = $tag->pm;
+
+		return View::make('user.admin.tags.show')
+			->with('pms', $pms)
+			->with('tag', $tag);
 	}
 
 	/**

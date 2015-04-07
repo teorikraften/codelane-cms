@@ -25,6 +25,14 @@
             <th>E-postadress:</th>
             <td>{{ Auth::user()->email }}</td>
         </tr>
+        <tr>
+            <th>Dina roller:</th>
+            <td>
+                @foreach(Auth::user()->roles as $role)
+                    <a href="{{ URL::route('search-result', array('searchQuery' => $role->name)) }}" class="action">{{ $role->name }}</a>
+                @endforeach
+            </td>
+        </tr>
     </table>
     <p>Du kan <a href="{{ URL::route('user-edit') }}" class="inline-action">ändra informationen</a>.</p>
 

@@ -149,4 +149,19 @@ class RoleController extends BaseController {
 		return $clean;
 	}
 
+	/**
+	 * Returns list of roles matching the query in json.
+	 */
+	public function rolesAutocomplete() {
+		$searchQuery = Input::get('q');
+		$tags = Role::where('name', 'LIKE', '%' . $searchQuery . '%')->take(7)->get();
+		$result = array();
+		foreach($tags as $tag) {
+			$obj = new stdClass();
+			$obj->id = $tag->id;
+			$obj->name = $tag->name;
+			$result[] = $obj;
+		}
+		return json_encode($result);
+	}
 }

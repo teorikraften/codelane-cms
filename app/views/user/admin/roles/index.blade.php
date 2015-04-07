@@ -20,8 +20,9 @@
     <table class="list sortable">
 		<tr>
 			<th class="action sorttable_nosort"></th>
-			<th class="action sorttable_nosort"></th>
-			<th>Roll</th>
+            <th class="action sorttable_nosort"></th>
+            <th>Roll</th>
+            <th>Antal användare</th>
 		</tr>
     	@foreach($roles as $role)
     		<tr>
@@ -35,7 +36,8 @@
                         {{ HTML::image('images/delete.png', 'Ta bort') }}
                     </a>
                 </td>
-    			<td>{{ $role->name }}</td>
+                <td>{{ $role->name }}</td>
+                <td>{{ count($role->users) }}</td>
     		</tr>
     	@endforeach
     </table>
