@@ -28,6 +28,7 @@ class Search {
 	 * $result['id'] = PM
 	 * $result['score'] = score
 	 * $result['operator'] = operator (require, default, remove)
+	 * $result['roles'] = roles matching the current user (only exsists if there is a matching role)
 	 * @return array with PMs and their search score.
 	 */
 	public function getResult() {
@@ -198,9 +199,6 @@ class Search {
 			$this->error[] = $e->getMessage();
 		}
 
-		// ->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')
-
-		// ->whereRaw('deleted_at IS NULL AND verified = 1 AND expiration_date < CURDATE()')
 		foreach ($fullTextSearchResult as $key => $pm) {
 			$id = $pm->id;
 

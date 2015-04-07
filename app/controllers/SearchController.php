@@ -34,6 +34,10 @@ class SearchController extends BaseController {
 			Cache::put($searchQuery, $search, 5);
 		}
 
+		//$a = explode(" ", $searchQuery);
+		//$her = end($a);
+		//echo $her;
+		//exit;
 
 		$search->sortSearchResult($order);
 
@@ -57,6 +61,10 @@ class SearchController extends BaseController {
 
 	public function searchAutocomplete() {
 		$searchQuery = Input::get('term');
+
+		$list = explode(' ', $searchQuery);
+		$searchQuery = end($list);
+
 		$tags = Tag::where('name', 'LIKE', '%' . $searchQuery . '%')->take(7)->get();
 		$result = array();
 		foreach($tags as $tag) {
