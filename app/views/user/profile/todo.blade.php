@@ -10,15 +10,24 @@
 
 @section('body') 
 <script type="text/javascript" src="js/infoWindow.js"></script>
-
     <h1>Dina aktuella uppgifter</h1>
-    <p>
-        Du ska:
-        <ul>
-            @foreach(Auth::user()->allEvents() as $event)
-                <li><a href="">{{ $event->verb }} "{{ $event->pm->title }}"</a>.</li>
-            @endforeach
-        </ul>
-    </p>
-
+        <table class="list">
+            <tr>
+                    <th>Typ</th>
+                    <th>Nummer</th>
+                    <th>Rubrik</th>
+                    <th>Uppgift</th>
+                    <th>Skapad</th>
+            </tr>
+        @foreach(Auth::user()->allEvents() as $event)
+            <tr>
+                <td></td> <!-- TODO: Add PM document type -->
+                <td></td> <!-- TODO: Add PM number -->
+                <td>"{{ $event->pm->title }}"</td>
+                <td>{{ $event->verb }}</td>
+                <td></td> <!-- TODO: Add PM creation date -->
+                <!-- Add something to manage the given task -->
+            </tr>
+        @endforeach
+        </table>
 @stop
