@@ -17,12 +17,7 @@ class SearchController extends BaseController {
 	 */ 
 	public function showSearchResultPage($searchQuery, $order = 'score', $page = 1) 
 	{
-		try {
-			$page = intval($page);
-		} catch(Exception $e) {
-			$page = 1;
-		}
-
+		$page = intval($page);
 
 		if ($searchQuery == '') {
 			return View::make('search.index')->with('error', 'Empty searchQuery');
@@ -32,17 +27,15 @@ class SearchController extends BaseController {
 
 			$search = Cache::get($searchQuery);
 
-			//echo 'Det finns något i cachen. HURRA!';
-			//exit;
 		} else {
 			$search = new Search($searchQuery);
 			$search->pmSearch();
+			$search->findRoles();
 			Cache::put($searchQuery, $search, 5);
 		}
 
 
 		$search->sortSearchResult($order);
-		$search->findRoles();
 
 		$returnResult = $search->getPage($page);
 

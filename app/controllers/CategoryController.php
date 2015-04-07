@@ -55,7 +55,6 @@ class CategoryController extends BaseController {
 	 * @return response, the view with category page
 	 */
 	public function showAllCategories($order = 'alphabetical', $page = 1) {
-		// TODO Funkar det här? Behövs try-catch?
 		$page = intval($page);
 
 		// Get first level of categories
@@ -67,9 +66,9 @@ class CategoryController extends BaseController {
 		// Init search and find PMs
 		$search = new Search('ALL');
 		$search->findAllPms();
-		$search->sortSearchResult($order);
 		$search->findroles();
-		
+		$search->sortSearchResult($order);
+
 		$searchResult = $search->getPage($page);
 
 		// Return the view with correct values
@@ -90,7 +89,6 @@ class CategoryController extends BaseController {
 	 * @return response, the view with the category page
 	 */ 
 	public function showCategory($token, $order = 'alphabetical', $page = 1) {
-		// TODO try-catch istället?
 		$page = intval($page);
 
 		// Find the PM we want
@@ -134,8 +132,19 @@ class CategoryController extends BaseController {
 	 * Displays the categories for admin.	 
 	 */
 	public function showCategoriesListPage() {
+
+		$allcat = array();
+
+		$categories = Category::where('parent', '=', 0)->get();
+
+		foreach ($categories as $key => $category) {
+			$children = $category->getAllChildren();
+			$allcat[] = $category;
+			$allcat = array_merge($allcat, $children);
+		}
+
 		return View::make('user.admin.categories.index')
-			->with('categories', Category::take(100)->get()); // TODO Inte bara 100
+			->with('categories', $allcat); // TODO Inte bara 100
 	}
 
 	/**

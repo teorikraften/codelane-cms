@@ -25,7 +25,7 @@ class Category extends Eloquent {
 		return $this->belongsToMany('Pm', 'pm_categories', 'category', 'pm');
 	}
 
-	public function childs() 
+	public function children() 
 	{
 		return $this->hasMany('Category', 'parent', 'id');
 	}
@@ -39,17 +39,17 @@ class Category extends Eloquent {
 	/**
 	 * @return a flat list of all childs for this category
 	 */
-	public function getAllChilds() 
+	public function getAllChildren() 
 	{
-		return $this->recChilds(array());
+		return $this->recChildren(array());
 	}
 
-	private function recChilds($list) {
-		$children = $this->childs;
+	private function recChildren($list) {
+		$children = $this->children;
 
 		foreach ($children as $key => $value) {
 			$list[] = $value;
-			$list = $value->recChilds($list);
+			$list = $value->recChildren($list);
 		}
 
 		return $list;
@@ -57,13 +57,12 @@ class Category extends Eloquent {
 
 	/**
 	 * @deprecated
-	 * TODO JOHAN DET HETER CHILDREN!!!! :D <3
 	 */
-	public function allChilds() 
+	public function allChildren() 
 	{
 		$children = array();
 		foreach ($this->childs as $key => $value) {
-			$children[$value->id] = $value->allChilds();
+			$children[$value->id] = $value->allChildren();
 		}
 		
 		$list = array();

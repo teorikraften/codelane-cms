@@ -97,6 +97,7 @@ class Search {
 	 * Searches and returns the highest rated search results from the $searchQuery
 	 */
 	public function pmSearch() {
+		
 		// TODO keep improving
 		// TODO fungerar inte med ÅÄÖ
 		$searchQuery = $this->query;
@@ -322,7 +323,7 @@ class Search {
 	}
 
 	public function categorySearch($category) {
-		$childcategories = $category->getAllChilds();
+		$childcategories = $category->getAllChildren();
 
 		foreach ($childcategories as $key => $cat) {
 			$categoryPms = $cat->pms()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
