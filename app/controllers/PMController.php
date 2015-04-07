@@ -435,18 +435,19 @@ class PMController extends BaseController {
 	}
 
 	public function showPMListPage() {
-		$userPms = Auth::user()->pms;
-		foreach ($userPms as $pm) {
-			if (strtotime($pm->expiration_date) < time() && $pm->verified) {
-				$pm->status = 'utgånget';
-			} elseif (strtotime($pm->first_published_date) < time() && $pm->verified) {
-				$pm->status = 'publicerat';
-			} else {
-				$pm->status = 'ej veriferat';
+		$userAssignments = Auth::user()->pms;
+
+		$userPms = $assignments = array();
+		foreach($userAssignments as $ua) {
+			if (!array_key_exists($ua->id, $userPms)) {
+				$userPms[$ua->id] = $ua;
 			}
+			$assignments[$ua->id][] = $ua->pivot->assignment;
 		}
+
 		return View::make('user.admin.pm.index')
 			->with('pms', PM::orderBy('id', 'ASC')->get())
+			->with('userAssignments', $assignments)
 			->with('userPms', $userPms); // TODO Pagination
 	}
 

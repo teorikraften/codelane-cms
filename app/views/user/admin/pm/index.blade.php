@@ -30,8 +30,9 @@
                 <th class="action"></th>
                 <th class="action"></th>
                 <th class="action"></th>
+                <th class="action"></th>
                 <th>Rubrik</th>
-                <th>Din uppgift</th>
+                <th>Dina uppgifter</th>
                 <th>Status</th>
             </tr>
             @foreach($userPms as $pm)
@@ -42,24 +43,39 @@
                         </a>
                     </td>
                     <td>
-                        @if (Auth::user()->privilegesNum() > 2 /* More than verified */) 
+                        @if (in_array('author', $userAssignments[$pm->id])) 
+                            <a href="{{ URL::route('pm-edit', $pm->token) }}" title="Ändra">
+                                {{ HTML::image('images/edit.png', 'Ändra') }}
+                            </a>
+                        @endif
+                    </td>
+                    <td>
+                        @if (in_array('reminder', $userAssignments[$pm->id]) || Auth::user()->privilegesNum() > 2 /* More than verified */) 
                             <a href="{{ URL::route('pm-edit-assignments', $pm->token) }}" title="Ändra personer">
                                 {{ HTML::image('images/persons.png', 'Ändra personer') }}
                             </a>
                         @endif
                     </td>
                     <td>
-                        @if ($pm->pivot->assignment == 'author') 
-                            <a href="{{ URL::route('pm-edit', $pm->token) }}" title="Ändra">{{ HTML::image('images/edit.png', 'Ändra') }}</a>
+                        @if (in_array('reviewer', $userAssignments[$pm->id])) 
+                            <a href="{{ URL::route('pm-review', $pm->token) }}" title="Granska">
+                                {{ HTML::image('images/review.png', 'Granska') }}
+                            </a>
                         @endif
                     </td>
                     <td>
-                        @if ($pm->pivot->assignment == 'reviewer') 
-                            <a href="{{ URL::route('pm-review', $pm->token) }}" title="Granska">{{ HTML::image('images/review.png', 'Granska') }}</a>
+                        @if (in_array('settler', $userAssignments[$pm->id])) 
+                            <a href="{{ URL::route('pm-review', $pm->token) }}" title="Fastställ">
+                                {{ HTML::image('images/settle.png', 'Fastställ') }}
+                            </a>
                         @endif
                     </td>
                     <td>{{ $pm->title }}</td>
-                    <td>{{ ucfirst(User::assignmentString($pm->pivot->assignment)) }}</td>
+                    <td>
+                        @foreach($userAssignments[$pm->id] as $ua)<?php
+                            echo $ua === reset($userAssignments[$pm->id]) ? ucfirst(User::assignmentString($ua)) : ($ua === end($userAssignments[$pm->id]) ? ', ' . User::assignmentString($ua) : ', ' . User::assignmentString($ua));
+                        ?>@endforeach
+                    </td>
                     <td>{{ $pm->status }}</td>
                 </tr>
             @endforeach
