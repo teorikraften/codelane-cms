@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('head-title')
-Kategori {{ $category->name or '' }}
+Kategori {{ $category or '' }}
 @stop
 
 @section('head-extra')
@@ -25,6 +25,18 @@ Kategori {{ $category->name or '' }}
 
 <div class="clear" id="category-output">
 	<div id="inline">
+		@if (isset($token))
+		<ul class="sortby">
+			<li{{ $order == 'alphabetical' ? " class='active'" : '' }} >
+			<a href="{{ URL::route('category-show', array('token' => $token, 'order' => 'alphabetical') )}}">Namn</a></li>
+			<li{{ $order == 'view_count' ? " class='active'" : '' }}>
+			<a href="{{ URL::route('category-show', array('token' => $token/* TODO , 'order' => 'view_count' */) )}}">Popularitet</a></li>
+			<li{{ $order == 'score' ? " class='active'" : '' }}>
+			<a href="{{ URL::route('category-show', array('token' => $token, 'order' => 'score') )}}">Relevans</a></li>
+			<li{{ $order == 'revision_date' ? " class='active'" : '' }}>
+			<a href="{{ URL::route('category-show', array('token' => $token/* TODO , 'order' => 'revision_date' */) )}}">Senast uppdaterad</a>
+		</ul>
+		@else
 		<ul class="sortby">
 			<li{{ $order == 'alphabetical' ? " class='active'" : '' }} >
 			<a href="{{ URL::route('category-show-all-sorted', array('token' => $token, 'order' => 'alphabetical') )}}">Namn</a></li>
@@ -35,6 +47,7 @@ Kategori {{ $category->name or '' }}
 			<li{{ $order == 'revision_date' ? " class='active'" : '' }}>
 			<a href="{{ URL::route('category-show-all-sorted', array('token' => $token/* TODO , 'order' => 'revision_date' */) )}}">Senast uppdaterad</a>
 		</ul>
+		@endif
 	</div>
 	<h2>PM</h2>
 	<hr>
@@ -67,6 +80,51 @@ Kategori {{ $category->name or '' }}
 		</div>
 	</div>
 	@endforeach
+</div>
+<div class="search_page_selector">
+	<table cellspacing="0" cellpadding="0">
+		@if (isset($token))
+		<tbody>
+			<tr>
+				<td>
+					@if ($page > 1)
+					<a href="{{ URL::route('category-show', array('token' => $token, 'order' => $order, 'page' => ($page-1) ) ) }}">Föregående</a>
+					@endif
+				</td>
+				@for($pageNumber = 1; $pageNumber <= $maxPage; $pageNumber++)
+				<td>
+					<a href="{{ URL::route('category-show', array('token' => $token, 'order' => $order , 'page' => $pageNumber ) )}}"> {{ $pageNumber }} </a>
+				</td>
+				@endfor
+				<td>
+					@if ($page < $maxPage)
+					<a href="{{ URL::route('category-show', array('token' => $token, 'order' => $order , 'page' => ($page+1) ) ) }}">Nästa</a>
+					@endif
+				</td>
+			</tr>
+		</tbody>
+		@else
+		<tbody>
+			<tr>
+				<td>
+					@if ($page > 1)
+					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token, 'order' => $order, 'page' => ($page-1) ) ) }}">Föregående</a>
+					@endif
+				</td>
+				@for($pageNumber = 1; $pageNumber <= $maxPage; $pageNumber++)
+				<td>
+					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token, 'order' => $order , 'page' => $pageNumber ) )}}"> {{ $pageNumber }} </a>
+				</td>
+				@endfor
+				<td>
+					@if ($page < $maxPage)
+					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token, 'order' => $order , 'page' => ($page+1) ) ) }}">Nästa</a>
+					@endif
+				</td>
+			</tr>
+		</tbody>
+		@endif
+	</table>
 </div>
 @stop
 

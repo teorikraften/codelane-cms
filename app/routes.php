@@ -265,8 +265,6 @@ Route::get('/statistik/pm/{token}', ['as' => 'statistics-pm', 'uses' => 'Statist
 */
 Route::get('/kategori', ['as' => 'category-show-all', 'uses' => 'CategoryController@showAllCategories'])
 	->before('auth');
-Route::get('/kategori/{token}', ['as' => 'category-show', 'uses' => 'CategoryController@showCategory'])
-	->before('auth');
 Route::get('/kategori/top/{order?}/{page?}', ['as' => 'category-show-all-sorted', 'uses' => 'CategoryController@showAllCategories'])
 	->before('auth')
 	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)')

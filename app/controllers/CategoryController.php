@@ -78,7 +78,8 @@ class CategoryController extends BaseController {
 			->with('pms', $searchResult)
 			->with('children', $children)
 			->with('order', $order)
-			->with('page', $page);
+			->with('page', $page)
+			->with('maxPage', $search->maximumPage());
 	}
 
 	/**
@@ -121,7 +122,9 @@ class CategoryController extends BaseController {
 			->with('children', $children)
 			->with('pms', $searchResult)
 			->with('order', $order)
-			->with('page', $page);
+			->with('page', $page)
+			->with('maxPage', $search->maximumPage())
+			->with('category', $category->name);
 	}
 
 
