@@ -24,7 +24,7 @@ Kategori {{ $category->name or '' }}
 </div>
 
 <div class="clear" id="category-output">
-	<div id="inline">Sortera efter: 
+	<div id="inline">
 		<ul class="sortby">
 			<li{{ $order == 'alphabetical' ? " class='active'" : '' }} >
 			<a href="{{ URL::route('category-show-all-sorted', array('token' => $token, 'order' => 'alphabetical') )}}">Namn</a></li>

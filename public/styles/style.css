@@ -643,6 +643,9 @@ a.action {
 	max-width: 400px;
 	margin: 5px 1px 10px 0;
 }
+
+
+
 a.inline-action {
 	display: inline-block; 
 	background: #008472; 
@@ -857,6 +860,10 @@ ul.ui-autocomplete li.ui-state-focus {
 	background: #004038;
 }
 
+div#inline{
+	float: right;
+}
+
 /*==================================
 =            Categories            =
 ==================================*/
@@ -877,8 +884,8 @@ div#currentCat {
 
 .centrator #categories > a {
 	display: inline-block;
-	padding: 40px 0;
-	width: 12.5%;
+	padding: 50px 0;
+	width: 33.33%;
 	margin: 0;
     float: left;
     word-wrap: break-word;
@@ -902,7 +909,7 @@ div#currentCat {
 div#pmListing {
 	width: 100%;
 	height: 70px;
-	background-color: #ECF8FF;
+	background-color: #FFFFFF;
 	padding: 4px;
 	border: ridge 1px;
 	margin-bottom: 2px;
@@ -912,7 +919,7 @@ div#pmListing {
 div#pmListing:hover{
 	width: 100%;
 	height: 70px;
-	background-color: #ECF8FF;
+	background-color: #FFFFFF;
 	padding: 4px;
 	border: ridge 1px;
 	margin-bottom: 2px;
