@@ -26,6 +26,22 @@ OLIKA STATUSAR FÖR ETT PM I ORDNING
 
 7. Revidering - tilldelat
 		Författaren kan ändra och granskarna kan granska.
-		
+
 8. Revidering - granskat
 		Slutgranskaren ska granska. När så är gjort hamnar den på (4).
+
+
+              ROLLER
+===================================
+Upprättare 		creator 		ansvarar för fakta, metadata och att författa pmet
+Inläggare 		author 			lägger in det upprättaren säger till om, ansvarar även för metadata
+Fastställare 	settler			ansvarar för upprättare, val av fastställare är en ledningsfråga
+Granskare 		reviewer		antal granskare varierar, det finns inget minimikrav så länge innehållet säkerställs, 
+								oftast finns det inofficiella granskare (får frågor från granskaren), får ej redigera 
+								i dokumentet
+Slutgranskare 	end-reviewer	korrekturläser men har inte hand om faktakorrigeringen
+Påminnare 		reminder		ansvar för att dokumentet revideras på rätt sätt. om någon slutar så går påminnaren in 
+								och ändrar så att rollen tilldelas en ny person. påminnaren får en påminnelse vid revidering.
+
+
+
