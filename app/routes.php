@@ -182,7 +182,7 @@ Route::get('/sok', ['as' => 'search-form', function() {
 	return Redirect::route('search-result', 'Easter Eggs');
 }]);
 Route::post('/sok', ['as' => 'post-search', 'uses' => 'SearchController@search']);
-Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'uses' => 'SearchController@showSearchResultPage'])
+Route::get('/sok/{searchQuery}/{order?}/{page?}/{options?}', ['as' => 'search-result', 'uses' => 'SearchController@showSearchResultPage'])
 	->where('page', '[0-9]*')
 	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)');
 

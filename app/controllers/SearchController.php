@@ -14,8 +14,9 @@ class SearchController extends BaseController {
 	 * @param $searchQuery the query to search for
 	 * @param $order the sorting order, '' by default
 	 * @param $page the page number, 1 by default
+	 * @param $options Array with boolean serach options in the order: tags, roles, text
 	 */ 
-	public function showSearchResultPage($searchQuery, $order = 'score', $page = 1) 
+	public function showSearchResultPage($searchQuery, $order = 'score', $page = 1, $options = NULL) 
 	{
 		$page = intval($page);
 
@@ -27,17 +28,24 @@ class SearchController extends BaseController {
 
 			$search = Cache::get($searchQuery);
 
+			if (isset($options) && !$search->matchingOptions($options)) {
+				$search->setSearchOptions($options);
+				$search->pmSearch();
+				$search->findRoles();
+				Cache::add($searchQuery, $search, 5);
+			}
+
 		} else {
 			$search = new Search($searchQuery);
+
+			if (isset($options)) {
+				$search->setSearchOptions($options);
+			}
+
 			$search->pmSearch();
 			$search->findRoles();
 			Cache::put($searchQuery, $search, 5);
 		}
-
-		//$a = explode(" ", $searchQuery);
-		//$her = end($a);
-		//echo $her;
-		//exit;
 
 		$search->sortSearchResult($order);
 
@@ -62,13 +70,19 @@ class SearchController extends BaseController {
 	public function searchAutocomplete() {
 		$searchQuery = Input::get('term');
 
-		$list = explode(' ', $searchQuery);
-		$searchQuery = end($list);
+		$splitPosition = strrpos($searchQuery, " ");
+		if ($splitPosition != false) {
+			$str1 = substr($searchQuery, 0, $splitPosition+1);
+			$str2 = substr($searchQuery, $splitPosition);
+		} else {
+			$str1 = '';
+			$str2 = $searchQuery;
+		}
 
-		$tags = Tag::where('name', 'LIKE', '%' . $searchQuery . '%')->take(7)->get();
+		$tags = Tag::where('name', 'LIKE', '%' . $str2 . '%')->take(7)->get();
 		$result = array();
 		foreach($tags as $tag) {
-			$result[] = $tag->name;
+			$result[] = $str1 . $tag->name;
 		}
 		return json_encode($result);
 	}

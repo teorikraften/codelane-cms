@@ -29,7 +29,7 @@
             <th>Dina roller:</th>
             <td>
                 @foreach(Auth::user()->roles as $role)
-                    <a href="{{ URL::route('search-result', array('searchQuery' => $role->name)) }}" class="action">{{ $role->name }}</a>
+                    <a href="{{ URL::route('search-result', array('searchQuery' => $role->name, 'order' => 'alphabetical', 'page' => 1, 'options' => '010')) }}" class="action">{{ $role->name }}</a>
                 @endforeach
             </td>
         </tr>

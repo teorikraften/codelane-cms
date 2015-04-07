@@ -6,21 +6,39 @@ class Search {
 	private $error = array();
 	private $query;
 
+	private $searchTags = true;
+	private $searchText = true;
+	private $searchRoles = true;
 
-	// TODO check if correct syntax
-	/*
-	Operator ENUM
-		default			
-		remove
-		require
-	*/
-		const defaultOperator = 0;
-		const requireOperator = 1;
-		const removeOperator = 2;
 
-		function __construct($searchQuery) {
-			$this->query = htmlspecialchars($searchQuery);
+
+	public function setSearchOptions($options) {
+		$this->searchTags = (boolean)$options[0];
+		$this->searchRoles = (boolean)$options[1];
+		$this->searchText = (boolean)$options[2];
+	}
+
+	public function matchingOptions($options) {
+		if ($this->searchTags == (boolean)$options[0] 
+				&& $this->searchRoles == (boolean)$options[1] && $this->searchText == (boolean)$options[2]) {
+			return true;
 		}
+		return false;
+	}
+
+	/**
+	*Operator ENUM
+	*	default			
+	*	remove
+	*	require
+	*/
+	const defaultOperator = 0;
+	const requireOperator = 1;
+	const removeOperator = 2;
+
+	function __construct($searchQuery) {
+		$this->query = htmlspecialchars($searchQuery);
+	}
 
 	/**
 	 * Returns the result array.
@@ -115,7 +133,9 @@ class Search {
 			$error[] = 'Ojämnt antal apostorofer';
 		}
 
-		$this->fulltextsearch($searchQuery, $defaultOperator);
+		if ($this->searchText) {
+			$this->fulltextsearch($searchQuery, $defaultOperator);
+		}
 
 		$splitQuote = explode("'", $searchQuery);
 		foreach ($splitQuote as $key1 => $value2) {
@@ -123,19 +143,15 @@ class Search {
 			// For search terms between ' '
 			if ($key1 % 2 ==  1) { 
 				if (strrpos($splitQuote[$key1 - 1], 1, -1) === '+') {
-					// REQUIRED
 					$score = 10;
 					$operator = self::requireOperator;
 				} else if (strrpos($splitQuote[$key1 - 1], 1, -1) === '-') {
-					// REMOVE
 					$score = -10;
 					$operator = self::removeOperator;
 				} else if (strrpos($splitQuote[$key1 - 1], 1, -1) === '~') {
-					// NEGATIVE
 					$score = -1;
 					$operator = self::defaultOperator;
 				} else {
-					// DEFAULT
 					$score = 1;
 					$operator = self::defaultOperator;
 				}
@@ -224,7 +240,25 @@ class Search {
 		if (preg_match("/(\s)|(^$)/", $query)) {
 			return;
 		}
+		if ($this->searchTags) {
+			$this->searchTag($query, $operator, $score);
+		}
 
+		if ($this->searchRoles) {
+			$this->searchRole($query, $operator, $score);
+		}
+
+		if ($this->searchText) {
+			$this->searchTitle($query, $operator, $score);
+
+			$this->searchContent($query, $operator, $score);
+		}
+	}
+
+	/**
+	* Searches the database for tag matches and adds pm connected to matching tags.
+	*/
+	private function searchTag($query, $operator, $score) {
 		$tag = Tag::where('name', 'like', '%'.$query.'%')->get();
 		foreach ($tag as $key => $value) {
 			$tagpms = $value->pm()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
@@ -232,17 +266,42 @@ class Search {
 				$this->result = $this->updatePMScore($v, 100 * $score, $operator);
 			}
 		}
+	}
 
-		$contentResult = Pm::where('content', 'like', '%'.$query.'%')->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
-		foreach ($contentResult as $key => $v) {
-			$this->result = $this->updatePMScore($v, 1 * $score, $operator);
+	/**
+	* Searches the database for role matches and adds pm connected to matching roles.
+	*/
+	private function searchRole($query, $operator, $score) {
+		$role = Role::where('name', 'like', '%'.$query.'%')->get();
+		foreach ($role as $key => $value) {
+			$rolepms = $value->pms()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+			foreach ($rolepms as $key => $v) {
+				$this->result = $this->updatePMScore($v, 10 * $score, $operator);
+			}
 		}
+	}
 
+	/**
+	* Searches the database for matches from the column title
+	*/
+	private function searchTitle($query, $operator, $score) {
 		$titleResult = PM::where('title', 'like', '%'.$query.'%')->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 		foreach ($titleResult as $key => $v) {
 			$this->result = $this->updatePMScore($v, 15 * $score, $operator);
 		}
-		return;
+	}
+
+	/**
+	* Searches the database for matches from the column content
+	* 
+	* Is this function desireable? TODO remove maybe
+	* 
+	*/
+	private function searchContent($query, $operator, $score) {
+		$contentResult = Pm::where('content', 'like', '%'.$query.'%')->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		foreach ($contentResult as $key => $v) {
+			$this->result = $this->updatePMScore($v, 1 * $score, $operator);
+		}
 	}
 
 	/**
