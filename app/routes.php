@@ -21,6 +21,8 @@ Route::get('/keywords', ['as' => 'search-autocomplete', 'uses' => 'SearchControl
 Route::get('/personer', ['as' => 'persons-autocomplete', 'uses' => 'UserController@personsAutocomplete']);
 Route::post('/spara-kommentar', ['as' => 'save-comment', 'uses' => 'PMController@saveComment'])
 	->before('csrf');
+Route::post('/pm-filter', ['as' => 'pm-filter', 'uses' => 'PMController@postFilter'])
+	;//->before('csrf');
 
 
 Route::get('/taggar', ['as' => 'tags-autocomplete', 'uses' => 'TagController@tagsAutocomplete']);

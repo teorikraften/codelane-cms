@@ -446,7 +446,7 @@ class PMController extends BaseController {
 			}
 		}
 		return View::make('user.admin.pm.index')
-			->with('pms', PM::orderBy('title', 'ASC')->take(200)->get())
+			->with('pms', PM::orderBy('id', 'ASC')->get())
 			->with('userPms', $userPms); // TODO Pagination
 	}
 
@@ -536,5 +536,23 @@ class PMController extends BaseController {
 
 		return Redirect::route('admin-pm')
 			->with('success', 'PM:et togs bort.');
+	}
+
+	public function postFilter() {
+		$pms = PM::select('*');
+
+		if (Input::has('idfilter'))
+			$pms->where('id', 'LIKE', '%' . Input::get('idfilter') . '%');
+
+		if (Input::has('titlefilter'))
+			$pms->where('title', 'LIKE', '%' . Input::get('titlefilter') . '%');
+			
+		$resp = $pms->orderBy('id', 'ASC')->get();
+
+		foreach($resp as $res) {
+			$res->persons = $res->users;
+		}
+
+		return Response::json($resp);
 	}
 }

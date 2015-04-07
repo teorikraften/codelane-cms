@@ -60,19 +60,19 @@
         <div class="form wide">
             <table>
         		<tr style="font-size: 20px">
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                    <th>ID</th>
-        			<th>Rubrik</th>
-                    <th>Personer</th>
+                    <th style="width: 12px"></th>
+                    <th style="width: 12px"></th>
+                    <th style="width: 20px"></th>
+                    <th style="width: 12px"></th>
+                    <th style="width: 80px">ID</th>
+        			<th style="width: 450px">Rubrik</th>
+                    <th style="width: 300px">Personer</th>
         		</tr>
                 <tr>
                     <td colspan="4">Filtrera: </td>
-                    <td>{{ Form::text('id-filter', NULL, array('id' => 'id-filter', 'class' => 'text short')) }}</td>
-                    <td>{{ Form::text('title-filter', NULL, array('id' => 'title-filter', 'class' => 'text long')) }}</td>
-                    <td>{{ Form::text('persons-filter', NULL, array('id' => 'persons-filter', 'class' => 'text middle')) }}</td>
+                    <td>{{ Form::text('id-filter', NULL, array('id' => 'id-filter', 'class' => 'text filter short')) }}</td>
+                    <td>{{ Form::text('title-filter', NULL, array('id' => 'title-filter', 'class' => 'text filter long')) }}</td>
+                    <td>{{ Form::text('persons-filter', NULL, array('id' => 'persons-filter', 'class' => 'text filter middle')) }}</td>
                 </tr>
                 <tbody id="filter-result">
                 	@foreach($pms as $pm)
