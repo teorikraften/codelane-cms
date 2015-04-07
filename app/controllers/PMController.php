@@ -456,17 +456,19 @@ class PMController extends BaseController {
 
 	public function assignPM() {
 		// TODO Validering
-		$owner = explode(',', Input::get('responsible'));
-		$owner = $owner[0];
+		// TODO kolla att användarna verkligen finns
+		// TODO Try-catch på findorfail
+		$creator = intval(Input::get('creator'));
 		$authors = explode(',', Input::get('authors'));
-		$reviewers = explode(',', Input::get('reviewers'));
+		$reviewers = explode(',', Input::get('reviewers'));	
+		$endReviewer = Input::get('end-reviewer');		
+		$reminder = Input::get('reminder');	
 
 		$user = Auth::user();
-
 		$pm = new PM;
 		$pm->title = Input::get('title');
 		$pm->created_by = $user->id;
-		$pm->token = $this->generateToken('pm-' . $pm->title);
+		$pm->token = $this->generateToken($pm->title);
 		$pm->save();
 
 		foreach ($authors as $author) {
@@ -475,7 +477,9 @@ class PMController extends BaseController {
 		foreach ($reviewers as $reviewer) {
 			User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
 		}
-		User::findOrFail($owner)->pms()->attach([$pm->id => ['assignment' => 'owner']]);
+		User::findOrFail($creator)->pms()->attach([$pm->id => ['assignment' => 'creator']]);
+		User::findOrFail($endReviewer)->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
+		User::findOrFail($reminder)->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
 		$user->save();
 		
 		return Redirect::route('admin-pm');

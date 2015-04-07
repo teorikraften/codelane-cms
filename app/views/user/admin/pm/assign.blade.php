@@ -12,11 +12,14 @@
 
     <script type="text/javascript">
 	    $(document).ready(function() {
-	        $("#responsible").tokenInput("/personer", {
+	        $("#creator").tokenInput("/personer", {
 	        	'prePopulate' : [{'id' : '{{ Auth::user()->id }}', 'name' : '{{ Auth::user()->real_name . ' (' . Auth::user()->email . ')' }}'}]
 	        });
 	        $("#authors").tokenInput("/personer");
+	        $("#settler").tokenInput("/personer");
 	        $("#reviewers").tokenInput("/personer");
+	        $("#end-reviewer").tokenInput("/personer");
+	        $("#reminder").tokenInput("/personer");
 	    });
     </script>
 @stop
@@ -35,16 +38,34 @@
 				<div class="input">{{ Form::text('title', NULL, array('class' => 'text')) }}</div>
 			</div>
 			<div class="row">
-				<div class="description">{{ Form::label('responsible', 'Ansvarig') }}</div>
-				<div class="input">{{ Form::text('responsible', Auth::user()->real_name, array('class' => 'text')) }}</div>
+				<div class="description">{{ Form::label('creator', 'Upprättare') }}</div>
+				<div class="input">
+					{{ Form::text('creator', Auth::user()->real_name, array('class' => 'text')) }}
+				</div>
 			</div>
 			<div class="row">
-				<div class="description">{{ Form::label('authors', 'Författare') }}</div>
-				<div class="input">{{ Form::text('authors', NULL, array('class' => 'text')) }}</div>
+				<div class="description">{{ Form::label('authors', 'Inläggare') }}</div>
+				<div class="input">
+					{{ Form::text('authors', NULL, array('class' => 'text')) }}
+				</div>
+			</div>
+			<div class="row">
+				<div class="description">{{ Form::label('settler', 'Fastställare') }}</div>
+				<div class="input">
+					{{ Form::text('settler', NULL, array('class' => 'text')) }}
+				</div>
 			</div>
 			<div class="row">
 				<div class="description">{{ Form::label('reviewers', 'Granskare') }}</div>
 				<div class="input">{{ Form::text('reviewers', NULL, array('class' => 'text')) }}</div>
+			</div>
+			<div class="row">
+				<div class="description">{{ Form::label('end-reviewer', 'Slutgranskare') }}</div>
+				<div class="input">{{ Form::text('end-reviewer', NULL, array('class' => 'text')) }}</div>
+			</div>
+			<div class="row">
+				<div class="description">{{ Form::label('reminder', 'Påminnare') }}</div>
+				<div class="input">{{ Form::text('reminder', NULL, array('class' => 'text')) }}</div>
 			</div>
 			<div class="submit">
 				{{ Form::submit('Lägg till PM', array('class' => 'submit')) }}

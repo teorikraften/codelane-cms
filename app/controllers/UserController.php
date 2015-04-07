@@ -175,4 +175,8 @@ class UserController extends BaseController {
 
 		return Redirect::route('index')->with('success', 'Ditt lösenord har skapats. Testa att logga in!');
 	}
+
+	public function getTodo() {
+		return View::make('user.profile.todo');
+	}
 }
