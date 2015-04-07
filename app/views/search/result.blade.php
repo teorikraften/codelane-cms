@@ -35,8 +35,7 @@ $(function() {
 <div id="search-autocomplete-list"></div>
 <div class="clear"></div>
 
-<h1>Sökresultat</h1>
-<h2 class="search">Sökning: {{ $searchQuery }}</h2>
+<h1>Sökresultat: {{ $searchQuery }}</h1>
 <h2 id="inline">Sortera efter: 
 	<ul class="sortby">
 		<li <?php if ($order == 'score') echo "class='active'"?> >
@@ -51,6 +50,7 @@ $(function() {
 
 	</ul>
 </h2>
+<hr>
 <ul class="result">
 	@foreach($result as $pm)
 		@if (isset($pm['roles']))

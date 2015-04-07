@@ -916,18 +916,6 @@ div#pmListing {
 	overflow: hidden;
 }
 
-div#pmListing:hover{
-	width: 100%;
-	height: 70px;
-	background-color: #FFFFFF;
-	padding: 4px;
-	border: ridge 1px;
-	margin-bottom: 2px;
-	overflow: hidden;
-	cursor: pointer;
-}
-
-
 div#pmListing a{
 	font-size: 2vh;
 	font-family: 'Muli', sans-serif;
@@ -937,7 +925,7 @@ div#pmListing a{
 div#pmTitle {
 	margin: 0;
 	float: left;
-	width: 60%;
+	max-width: 60%;
 	overflow: hidden;
 }
 
@@ -950,11 +938,17 @@ div#catDescription{
 }
 
 div#pmInfo{
-
 	height: 100%;
 	width: 30%;
 	float: right;
+	font-size: 1.8vh;
 }
+
+div#roleRel{
+	float: right;
+	margin-left: 5px;
+}
+
 /*==========  Color stylings for category buttons  ==========*/
 
 .centrator #categories > a#default {

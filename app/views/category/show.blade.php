@@ -53,17 +53,19 @@ Kategori {{ $category or '' }}
 	<hr>
 
 	@foreach ($pms as $pm)
-	@if (isset($pm['roles']))
-	@foreach ($pm['roles'] as $key => $role)
-	{{ "'" . $role->name . "'är en role till pm nedan" }}
-	@endforeach
-	@endif
+	<div id="pmListing">
 
-
-	<div id="pmListing" onclick="location.href='{{ URL::route('pm-show', $pm['pm']->token) }}';">
-
-		<div id="adriansskit">
+		<div id="pmTitle">
 			<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>
+			<div id="roleRel">
+				@if (isset($pm['roles']))
+					<?php $roles = 'Detta PM är relevant till en eller flera av dina roller: '; ?>
+					@foreach ($pm['roles'] as $key => $role)
+						<?php $roles = $roles . $role->name ?>
+					@endforeach
+					{{ HTML::image('images/persons.png', $roles, array('title' => $roles)) }} 
+				@endif
+			</div>
 		</div>
 		<div id="pmInfo">
 			<b>Författare:</b> 
@@ -74,6 +76,7 @@ Kategori {{ $category or '' }}
 			@endforeach
 			<br>
 			<b>Skapad:</b> {{ substr($pm['pm']->created_at, 0, 11) }}
+			
 		</div>
 		<div id="catDescription">
 			{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...
