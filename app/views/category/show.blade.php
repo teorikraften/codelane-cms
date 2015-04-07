@@ -61,7 +61,12 @@ Kategori {{ $category or '' }}
 				@if (isset($pm['roles']))
 					<?php $roles = 'Detta PM är relevant till en eller flera av dina roller: '; ?>
 					@foreach ($pm['roles'] as $key => $role)
-						<?php $roles = $roles . $role->name ?>
+						{{ $key }}
+						@if($key == 0)
+							<?php $roles = $roles . $role->name; ?>
+						@else
+							<?php $roles = $roles . $role->name . ', '; ?>
+						@endif
 					@endforeach
 					{{ HTML::image('images/persons.png', $roles, array('title' => $roles)) }} 
 				@endif
