@@ -8,31 +8,46 @@
 	@include('includes.admin-menu')
 @stop
 
+@section('head-extra')
+    {{ HTML::script('js/sort.js') }}
+@stop
+
 @section('body')
     <h1>Användare</h1>
-    @include('includes.messages')
     <a href="{{ URL::route('admin-users-new') }}" class="action">Lägg till ny</a>
     <div class="clear"></div>
-    <table>
-		<tr>
-			<th></th>
-            <th></th>
-            <th></th>
-            <th>Behörighet</th>
+    @include('includes.messages')
+    <table class="list sortable">
+        <tr>
+            <th class="action sorttable_nosort"></th>
+            <th class="action sorttable_nosort"></th>
+            <th class="action sorttable_nosort"></th>
             <th>Namn</th>
             <th>E-postadress</th>
-		</tr>
+            <th>Behörighet</th>
+        </tr>
     	@foreach($users as $user)
     		<tr>
-    			<td><a href="{{ URL::route('admin-users-edit', $user->id) }}">Ändra</a></td>
-                <td><a href="{{ URL::route('admin-users-delete', $user->id) }}">Ta bort</a></td>
+    			<td>
+                    <a href="{{ URL::route('admin-users-edit', $user->id) }}" title="Ändra">
+                        {{ HTML::image('images/edit.png', 'Ändra') }}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ URL::route('admin-users-delete', $user->id) }}" title="Ta bort">
+                        {{ HTML::image('images/delete.png', 'Ta bort') }}
+                    </a>
+                </td>
                 <td>
                     @if($user->privileges == 'unverified')
-                        <a href="{{ URL::route('admin-users-verify', $user->id) }}">Verifiera</a></td>
+                        <a href="{{ URL::route('admin-users-verify', $user->id) }}" title="Verifiera">
+                            {{ HTML::image('images/check.png', 'Verifiera') }}
+                        </a>
                     @endif
-                <td>{{ ucfirst($user->privileges()) }}</td>
+                </td>
                 <td>{{ $user->real_name }}</td>
                 <td>{{ $user->email }}</td>
+                <td>{{ ucfirst($user->privileges()) }}</td>
     		</tr>
     	@endforeach
     </table>

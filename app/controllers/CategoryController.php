@@ -133,18 +133,10 @@ class CategoryController extends BaseController {
 	 */
 	public function showCategoriesListPage() {
 
-		$allcat = array();
-
-		$categories = Category::where('parent', '=', 0)->get();
-
-		foreach ($categories as $key => $category) {
-			$children = $category->getAllChildren();
-			$allcat[] = $category;
-			$allcat = array_merge($allcat, $children);
-		}
+		$cats = $this->getCategoryTree(0);
 
 		return View::make('user.admin.categories.index')
-			->with('categories', $allcat); // TODO Inte bara 100
+			->with('categories', $cats);
 	}
 
 	/**
@@ -285,7 +277,7 @@ class CategoryController extends BaseController {
 		return $clean;
 	}
 
-	private function getChildrenList($parent, $not, $prefix = '___') {
+	private function getChildrenList($parent, $not = 0, $prefix = '___') {
 		// TODO Do in mysql rather than many requests
 		$children = Category::where('parent', '=', $parent)->get();
 		$res = array();
@@ -293,6 +285,20 @@ class CategoryController extends BaseController {
 			if ($child->id != $not) {
 				$res[$child->id] = $prefix . $child->name;
 				$res += $this->getChildrenList($child->id, $not, '___' . $prefix);
+			}
+		}
+		return $res;
+	}
+
+	private function getCategoryTree($parent, $not = 0, $prefix = '') {
+		// TODO Do in mysql rather than many requests
+		$children = Category::where('parent', '=', $parent)->get();
+		$res = array();
+		foreach ($children as $child) {
+			if ($child->id != $not) {
+				$child->prefix = $prefix;
+				$res[$child->id] = $child;
+				$res += $this->getCategoryTree($child->id, $not, '&nbsp; &nbsp; &nbsp; &nbsp; ' . $prefix);
 			}
 		}
 		return $res;

@@ -136,7 +136,7 @@ class TagController extends BaseController {
 		$clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
 
 		$n = Tag::where('token', '=', $clean)->count();
-		if ($n > 0) {
+		if ($n > 0 || strlen($clean) == 0) {
 			$clean = $this->generateToken($clean . '-' . rand(0, 9), $delimiter);
 		}
 
