@@ -3,8 +3,8 @@
 @elseif(Auth::user()->privileges == 'admin')
 	<div class="submenu">
 	    <ul>
-	    	@if (Auth::user()->assignment->count() > 0)
-				<li class="notif"><a href="{{ URL::route('admin-pm') }}">Uppgifter: {{ Auth::user()->assignment->count() }}</a></li>
+	    	@if (count(Auth::user()->allEvents()))
+				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ count(Auth::user()->allEvents()) }} saker att göra</a></li>
 			@endif
 	        <li><a href="{{ URL::route('user') }}">Dina uppgifter</a></li>
 	        <li><a href="{{ URL::route('pm-import') }}">Importera PM</a></li>

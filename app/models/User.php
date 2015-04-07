@@ -25,10 +25,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	protected $hidden = array('password', 'remember_token');
 
 	protected $fillable = array('email', 'password', 'real_name', 'privileges','remember_token');
-
 	protected $dates = ['deleted_at'];
-
-	// DEFINE RELATIONSHIPS
 
 	/**
 	 * favourite pms of the user.
@@ -69,16 +66,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->belongsToMany('Pm', 'last_read', 'user', 'pm');
 	}
 
-	/**
-	 * Tags created by the user 
-	 
-	public function createdTags() 
-	{
-		return;
-		// TODO thinking if needed and 
-			//how to implement since I atm didn´t created a model for pm_tags
-	}
-*/
 	/**
 	 * Returns user's privileges as a nice string word.
 	 */
@@ -123,6 +110,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 * Gets all events connected to this user.
 	 */
 	public static function allEvents() {
-		return array('Skriva PM:et "Vård inom skola".');
+		$res = array();
+		$obj = new stdClass; $obj->verb = 'skriva'; $obj->pm = PM::find(1); $res[] = $obj;
+		$obj = new stdClass; $obj->verb = 'granska'; $obj->pm = PM::find(2); $res[] = $obj;
+		$obj = new stdClass; $obj->verb = 'revidera'; $obj->pm = PM::find(4); $res[] = $obj;
+		$obj = new stdClass; $obj->verb = 'slutgranska'; $obj->pm = PM::find(3); $res[] = $obj;
+
+		return $res;
 	}
 }

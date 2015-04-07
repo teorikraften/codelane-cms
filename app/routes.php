@@ -33,6 +33,9 @@ Route::post('/aterstall-losenordet', ['as' => 'post-reset-password', 'uses' => '
 Route::get('/skapa-losenord/{token}', ['as' => 'create-password', 'uses' => 'UserController@showCreatePasswordPage']);
 Route::post('/skapa-losenord', ['as' => 'post-create-password', 'uses' => 'UserController@createPassword']);
 
+
+Route::get('/person/uppgifter', ['as' => 'to-do', 'uses' => 'UserController@getTodo']);
+
 /*
 |
 | Signed out user related routes like sign in and sign up.
