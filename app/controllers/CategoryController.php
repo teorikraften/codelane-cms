@@ -68,6 +68,8 @@ class CategoryController extends BaseController {
 		$search = new Search('ALL');
 		$search->findAllPms();
 		$search->sortSearchResult($order);
+		$search->findroles();
+		
 		$searchResult = $search->getPage($page);
 
 		// Return the view with correct values
@@ -109,6 +111,9 @@ class CategoryController extends BaseController {
 		$search = new Search('category');
 		$search->categorySearch($category);
 		$search->sortSearchResult($order);
+
+		$search->findroles();
+
 		$searchResult = $search->getPage($page);
 
 		return View::make('category.show')
