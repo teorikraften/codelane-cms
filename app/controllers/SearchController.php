@@ -42,6 +42,8 @@ class SearchController extends BaseController {
 
 
 		$search->sortSearchResult($order);
+		$search->findRoles();
+
 		$returnResult = $search->getPage($page);
 
 		return View::make('search.result')

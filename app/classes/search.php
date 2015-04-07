@@ -97,7 +97,6 @@ class Search {
 	 * Searches and returns the highest rated search results from the $searchQuery
 	 */
 	public function pmSearch() {
-
 		// TODO keep improving
 		// TODO fungerar inte med ÅÄÖ
 		$searchQuery = $this->query;
@@ -202,7 +201,7 @@ class Search {
 
 		// ->whereRaw('deleted_at IS NULL AND verified = 1 AND expiration_date < CURDATE()')
 		foreach ($fullTextSearchResult as $key => $pm) {
-			$id = $pm['id'];
+			$id = $pm->id;
 
 			$this->result[$id]['pm'] = $pm;
 			$this->result[$id]['score'] = $pm->score;
@@ -274,6 +273,24 @@ class Search {
 				unset($this->result[$key]);
 			} else if ($value['score'] <= 0) {
 				unset($this->result[$key]);
+			}
+		}
+	}
+
+	public function findRoles() {
+		$user = User::find(Auth::user()->id);
+		if (!isset($user)) {
+			return;
+		}
+
+		$roles = $user->roles;
+
+		foreach ($roles as $key => $role) {
+			$pms = $role->pms;
+			foreach ($pms as $key => $pm) {
+				if (isset($this->result[$pm->id])) {
+					$this->result[$pm->id]['roles'][] = $role;
+				}
 			}
 		}
 	}

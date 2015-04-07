@@ -71,14 +71,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 
 	/**
 	 * Tags created by the user 
-	 
-	public function createdTags() 
-	{
-		return;
-		// TODO thinking if needed and 
-			//how to implement since I atm didn´t created a model for pm_tags
-	}
-*/
+	* 
+	*public function createdTags() 
+	*{
+	*	return;
+	*	// TODO thinking if needed and 
+	*		//how to implement since I atm didn´t created a model for pm_tags
+	*}
+	*/
+
 	/**
 	 * Returns user's privileges as a nice string word.
 	 */

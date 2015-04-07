@@ -53,6 +53,11 @@ $(function() {
 </h2>
 <ul class="result">
 	@foreach($result as $pm)
+		@if (isset($pm['roles']))
+		@foreach( $pm['roles'] as $key => $role)
+		{{ 'WE FOUND A ROLE ' . $role->name }}
+		@endforeach
+		@endif
 	<li>
 		<h3><a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a></h3>
 		<p class="description">{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...</p>
