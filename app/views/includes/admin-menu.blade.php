@@ -7,6 +7,7 @@
 				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ count(Auth::user()->allEvents()) }} saker att göra</a></li>
 			@endif
 	        <li><a href="{{ URL::route('user') }}">Din sida</a></li>
+			<li><a href="{{ URL::route('favourites-show') }}">Dina favorit-PM</a></li>
 	        <!--<li><a href="{{ URL::route('pm-import') }}">Importera PM</a></li>-->
 	        <li><a href="{{ URL::route('admin-tags') }}">Taggar</a></li>
 	        <li><a href="{{ URL::route('admin-categories') }}">Kategorier</a></li>
@@ -23,6 +24,7 @@
 				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ count(Auth::user()->allEvents()) }} saker att göra</a></li>
 			@endif
 	        <li><a href="{{ URL::route('user') }}">Din sida</a></li>
+			<li><a href="{{ URL::route('favourites-show') }}">Dina favorit-PM</a></li>
 	        <li><a href="{{ URL::route('pm-import') }}">Importera PM</a></li>
 	        <li><a href="{{ URL::route('admin-pm') }}">PM</a></li>
 	    </ul>
@@ -35,6 +37,7 @@
 				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ count(Auth::user()->allEvents()) }} saker att göra</a></li>
 			@endif
 	        <li><a href="{{ URL::route('user') }}">Din sida</a></li>
+			<li><a href="{{ URL::route('favourites-show') }}">Dina favorit-PM</a></li>
 	        <li><a href="{{ URL::route('admin-pm') }}">PM</a></li>
 	    </ul>
 	    <div class="clear"></div>

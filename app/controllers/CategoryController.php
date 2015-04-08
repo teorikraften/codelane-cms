@@ -5,30 +5,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class CategoryController extends BaseController {
 
 	/**
-	 * Creates $num colors between red and green
-	 * @param num, the number of colors
-	 * @return the colors as an array of strings (array('000', 'fb0', 'fff'))
-	 */
-	public function createColors($num) {
-		if ($num <= 0) {
-			return array();
-		}
-		// Start value
-		$r = 0xb; $g = 4; $b = 0;
-
-		// Calculate the step
-		$step = 7 / $num;
-
-		$color = array();
-		for ($i = 0; $i < intval($num); $i++) {
-			$r -= $step; $g += $step; // Update var
-			$color[$i] = dechex(intval($r)) . dechex(intval($g)) . dechex(intval($b)); // The actual color
-		}
-
-		return $color;
-	}
-
-	/**
 	 * Recursive function that creates a breadcrumb text over categories.
 	 * @param category, the category where we are now
 	 * @return the breadcrumb to the actual category
@@ -60,9 +36,6 @@ class CategoryController extends BaseController {
 		// Get first level of categories
 		$children = Category::where('parent',  '=', 0)->get();
 
-		// Create background colors
-		$colors = $this->createColors($children->count());
-
 		// Init search and find PMs
 		$search = new Search('ALL');
 		$search->findAllPms();
@@ -71,9 +44,12 @@ class CategoryController extends BaseController {
 
 		$searchResult = $search->getPage($page);
 
+		// Create the trivial breadcrumb to start
+		$breadcrumb = '<a href="' . URL::route('category-show-all') . '" title="Gå till översta kategorisidan">Start</a>';
+
 		// Return the view with correct values
 		return View::make('category.show')
-			->with('color', $colors)
+			->with('breadcrumb', $breadcrumb)
 			->with('token', NULL)
 			->with('pms', $searchResult)
 			->with('children', $children)
@@ -103,9 +79,6 @@ class CategoryController extends BaseController {
 		// Get the children of the category
 		$children = Category::where('parent', '=', $category->id)->get();
 
-		// Create background colors
-		$colors = $this->createColors($children->count());
-
 		// Init search and get result
 		$search = new Search('category');
 		$search->categorySearch($category);
@@ -116,7 +89,6 @@ class CategoryController extends BaseController {
 		$searchResult = $search->getPage($page);
 
 		return View::make('category.show')
-			->with('color', $colors)
 			->with('breadcrumb', $this->createBreadcrumb($category))
 			->with('token', $token)
 			->with('children', $children)
