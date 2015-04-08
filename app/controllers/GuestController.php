@@ -1,46 +1,45 @@
 <?php
 
 class GuestController extends BaseController {
-	/**
-	 * Displays the sign in view.
-	 */
-	public function showSignInPage()
-	{
-		return View::make('sign-in.sign-in')->with('error', Session::get('error'));
-	}
 
 	/**
-	 * Handles user sign in.
+	 * Handles user sign in post request.
 	 */
-	public function signIn()
-	{
-		if (Auth::attempt(array('email' => Input::get('email'), 'password' => Input::get('password'))))
-		{
-			return Redirect::intended()->with('message', 'Du loggades in.');
+	public function postSignIn() {	
+		if (Auth::attempt(array('email' => Input::get('email'), 'password' => Input::get('password')))) {
+			// Here we must check if user is verified, or deny
+			if (Auth::user()->privileges == 'unverified') {
+				
+				// Not enough permissions, log out
+				Auth::logout();
+
+				return Redirect::route('index')
+					->withInput()
+					->with('error', 'Ditt konto har inte godkänts av en administratör ännu och du kan därför inte logga in.');
+			}
+
+			// Everything seems fine
+			return Redirect::intended()
+				->with('message', 'Du loggades in.');
 		}
-		return Redirect::route('index')->withInput()->with('error', array('Fel användarnamn eller lösenord.'));
+
+		// Return and display error messages
+		return Redirect::route('index')
+			->withInput()
+			->with('error', 'Fel användarnamn eller lösenord.');
 	}
 
 	/**
-	 * 
+	 * Handles user sign up post request
 	 */	
-	public function signUp()
-	{
-		// TODO Göra "upprepa lösenord"
-		$name = Input::get('name');
-		$email = Input::get('email');
-		$password = Input::get('password');
+	public function postSignUp() {
+		$data = Input::only(array('name', 'email', 'password', 'password_confirmation'));
 
-		$validator = Validator::make(
-		[
-			'name' => $name,
-			'email' => $email,
-			'password' => $password,
-		],
+		$validator = Validator::make($data,
 		[
 			'name' => 'required',
 			'email' => 'required|email|unique:users,email',
-			'password' => 'required|min:7', 
+			'password' => 'required|min:7|confirmed',
 		],
 		[
     		'name.required' => 'Fyll i ditt namn',
@@ -49,51 +48,55 @@ class GuestController extends BaseController {
     		'email.unique' => 'E-postadressen används redan, testa att logga in istället',
     		'password.required' => 'Fyll i ditt önskade lösenord',
     		'password.min' => 'Ditt lösenord är för kort, det måste vara minst 7 tecken',
+    		'password.confirmed' => 'Dina lösenord stämmer inte överens',
 		]);
 
-		$error = array();
-		if ($validator->fails())
-		{
+		// Now do the actual validation
+		if ($validator->fails()) {
 			$messages = $validator->messages();
-			// If not succes set error and ask user to change input
+
+			// If not successful, set error and ask user to change input
 			return Redirect::route('sign-up')
 				->with('error', $messages->all())
 				->withInput();
 		} 
 
 		// Add user to database 
-		$user = User::create(['real_name' => $name, 'email' => $email, 'password' => Hash::make($password)]);
+		$user = User::create([
+			'real_name' => $data['name'], 
+			'email' => $data['email'], 
+			'password' => Hash::make($data['password']), 
+			'privileges' => 'unverified'
+		]);
 
-		// Authenticate user
-		Auth::login($user);
+		// Send email to user
+		Mail::send('emails.welcome-unverified', array('name' => $data['name']), function($message) use($data) {
+		    $message
+		    	->to($data['email'], $data['name'])
+		    	->from('no-reply@ds.se', 'Danderyds Sjukhus')
+		    	->subject('Välkommen!');
+		});
 
-		// TODO if succes redirect to role select
-		return Redirect::route('user', array(Auth::user()->id));
+		return Redirect::route('sign-up')->with('success', 'Ditt konto har skapats. Du kommer få ett mejl när ditt konto godkänts av en administratör.');
 	}
 
 
 	/**
-	 * Displays the sign in view.
+	 * Signs out user.
 	 */
-	public function showSignOutPage()
-	{
+	public function getSignOut() {
 		Auth::logout();
-		return Redirect::route('index');
+		return Redirect::route('index')
+			->with('message', 'Du loggades ut.');
 	}
 
 	/**
 	 * Displays sign up form view.
 	 */ 
-	public function showSignUpPage() 
-	{
-		return View::make('sign-in.sign-up')->with('error', Session::get('error'))->with('input', Session::get('input'));
+	public function getSignUp() {	
+		return View::make('sign-in.sign-up')
+			->with('error', Session::get('error'))
+			->with('input', Session::get('input'));
 	}
 
-	/**
-	 * Displays the reset password view.
-	 */
-	public function showResetPasswordPage() 
-	{
-		return View::make('sign-in.reset-password');
-	}
 }

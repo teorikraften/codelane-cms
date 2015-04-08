@@ -21,7 +21,7 @@ class Role extends Eloquent {
 	 * All users with the role
  	 */
 	public function users() {
-		return $this->belongsToMany('App\User', 'user_roles', 'role', 'user');
+		return $this->belongsToMany('User', 'user_roles', 'role', 'user');
 	}
 
 	/**
@@ -29,6 +29,6 @@ class Role extends Eloquent {
 	 */
 	public function pms() 
 	{
-		return $this->belongsToMany('App\PM', 'pm_roles', 'role', 'pm');
+		return $this->belongsToMany('PM', 'pm_roles', 'role', 'pm');
 	}
 }

@@ -9,7 +9,7 @@ class RoleController extends BaseController {
 	 */
 	public function showRolesListPage() {
 		return View::make('user.admin.roles.index')
-			->with('roles', Role::take(100)->get()); // TODO Not only 100, pagination, fix roles as well
+			->with('roles', Role::orderBy('name', 'ASC')->paginate(20));
 	}
 
 	/**
@@ -142,11 +142,43 @@ class RoleController extends BaseController {
 		$clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
 
 		$n = Role::where('token', '=', $clean)->count();
-		if ($n > 0) {
+		if ($n > 0 || strlen($clean) == 0) {
 			$clean = $this->generateToken($clean . '-' . rand(0, 9), $delimiter);
 		}
 
 		return $clean;
 	}
 
+	/**
+	 * Returns list of roles matching the query in json.
+	 */
+	public function rolesAutocomplete() {
+		$searchQuery = Input::get('q');
+		$tags = Role::where('name', 'LIKE', '%' . $searchQuery . '%')->take(7)->get();
+		$result = array();
+		foreach($tags as $tag) {
+			$obj = new stdClass();
+			$obj->id = $tag->id;
+			$obj->name = $tag->name;
+			$result[] = $obj;
+		}
+		return json_encode($result);
+	}
+
+	public function postFilter() {
+		$users = Role::select('*');
+
+		if (Input::has('filter')) {
+			// Search in id and title to start with
+			$users->where('name', 'LIKE', '%' . Input::get('filter') . '%');
+		}
+			
+		$resp = $users->orderBy('name', 'ASC')->take(100)->get();
+
+		foreach($resp as $res) {
+			$res->persons = $res->users;
+		}
+
+		return Response::json($resp);
+	}
 }

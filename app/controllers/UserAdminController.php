@@ -12,8 +12,7 @@ class UserAdminController extends BaseController {
 			->with('users', 
 				User::orderBy('privileges', 'DESC')
 				->orderBy('real_name', 'ASC')
-				->take(100)
-				->get()
+				->paginate(20)
 			); 
 			// TODO Not only 100, pagination, fix users as well
 	}
@@ -53,6 +52,14 @@ class UserAdminController extends BaseController {
 		
 		$user->privileges = 'verified';
 		$user->save();
+
+		// Send mail to inform user that the account has been created and waiting for verification
+		Mail::send('emails.welcome-verified', array('name' => $user->real_name, 'email' => $user->email), function($message) use($user) {
+		    $message
+		    	->to($user->email, $user->real_name)
+		    	->from('no-reply@ds.se', 'Danderyds Sjukhus')
+		    	->subject('Du är nu godkänd!');
+		});
 
 		return Redirect::route('admin-users')
 			->with('success', 'Användaren verifierades.');
@@ -192,5 +199,27 @@ class UserAdminController extends BaseController {
 		// TODO Send mail to user
 		$user->save();
 		return Redirect::route('admin-users')->with('success', 'Användaren uppdaterades.'); // TODO Show
+	}
+
+	public function postFilter() {
+		$users = User::select('*');
+
+		if (Input::has('filter')) {
+			// Search in id and title to start with
+			$users->where('email', 'LIKE', '%' . Input::get('filter') . '%')
+				->orWhere('real_name', 'LIKE', '%' . Input::get('filter') . '%');
+		}
+			
+		$resp = $users->orderBy('real_name', 'ASC')->take(100)->get();
+
+		foreach($resp as $res) {
+			$res->persons = $res->users;
+		}
+
+		foreach($resp as $r) {
+			$r->privileges = ucfirst($r->privileges());
+		}
+
+		return Response::json($resp);
 	}
 }

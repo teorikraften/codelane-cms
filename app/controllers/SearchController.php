@@ -14,15 +14,49 @@ class SearchController extends BaseController {
 	 * @param $searchQuery the query to search for
 	 * @param $order the sorting order, '' by default
 	 * @param $page the page number, 1 by default
+	 * @param $options Array with boolean serach options in the order: tags, roles, text
 	 */ 
-	public function showSearchResultPage($searchQuery, $order = '', $page = 1) 
+	public function showSearchResultPage($searchQuery, $order = 'score', $page = 1, $options = NULL) 
 	{
-		$search = new Search();
-		$result = $search->pmSearch($searchQuery);
+		$page = intval($page);
+
+		if ($searchQuery == '') {
+			return View::make('search.index')->with('error', 'Empty searchQuery');
+		}
+
+		if (Cache::has($searchQuery)) {
+
+			$search = Cache::get($searchQuery);
+
+			if (isset($options) && !$search->matchingOptions($options)) {
+				$search->setSearchOptions($options);
+				$search->pmSearch();
+				$search->findRoles();
+				Cache::add($searchQuery, $search, 5);
+			}
+
+		} else {
+			$search = new Search($searchQuery);
+
+			if (isset($options)) {
+				$search->setSearchOptions($options);
+			}
+
+			$search->pmSearch();
+			$search->findRoles();
+			Cache::put($searchQuery, $search, 5);
+		}
+
+		$search->sortSearchResult($order);
+
+		$returnResult = $search->getPage($page);
 
 		return View::make('search.result')
 		->with('searchQuery', $searchQuery)
-		->with('result', $result);
+		->with('result', $returnResult)
+		->with('order', $order)
+		->with('page', $page)
+		->with('maxPage', $search->maximumPage());
 	}
 
 	/**
@@ -35,10 +69,20 @@ class SearchController extends BaseController {
 
 	public function searchAutocomplete() {
 		$searchQuery = Input::get('term');
-		$tags = Tag::where('name', 'LIKE', '%' . $searchQuery . '%')->take(7)->get();
+
+		$splitPosition = strrpos($searchQuery, " ");
+		if ($splitPosition != false) {
+			$str1 = substr($searchQuery, 0, $splitPosition+1);
+			$str2 = substr($searchQuery, $splitPosition);
+		} else {
+			$str1 = '';
+			$str2 = $searchQuery;
+		}
+
+		$tags = Tag::where('name', 'LIKE', '%' . $str2 . '%')->take(7)->get();
 		$result = array();
 		foreach($tags as $tag) {
-			$result[] = $tag->name;
+			$result[] = $str1 . $tag->name;
 		}
 		return json_encode($result);
 	}

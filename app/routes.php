@@ -19,8 +19,17 @@ Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
 Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
 Route::get('/keywords', ['as' => 'search-autocomplete', 'uses' => 'SearchController@searchAutocomplete']);
 Route::get('/personer', ['as' => 'persons-autocomplete', 'uses' => 'UserController@personsAutocomplete']);
+Route::get('/roller', ['as' => 'roles-autocomplete', 'uses' => 'RoleController@rolesAutocomplete']);
 Route::post('/spara-kommentar', ['as' => 'save-comment', 'uses' => 'PMController@saveComment'])
 	->before('csrf');
+Route::post('/pm-filter', ['as' => 'pm-filter', 'uses' => 'PMController@postFilter'])
+	;//->before('csrf');
+Route::post('/user-filter', ['as' => 'user-filter', 'uses' => 'UserAdminController@postFilter'])
+	;//->before('csrf');
+Route::post('/role-filter', ['as' => 'role-filter', 'uses' => 'RoleController@postFilter'])
+	;//->before('csrf');
+Route::post('/tag-filter', ['as' => 'tag-filter', 'uses' => 'TagController@postFilter'])
+	;//->before('csrf');
 
 
 Route::get('/taggar', ['as' => 'tags-autocomplete', 'uses' => 'TagController@tagsAutocomplete']);
@@ -31,22 +40,21 @@ Route::post('/aterstall-losenordet', ['as' => 'post-reset-password', 'uses' => '
 Route::get('/skapa-losenord/{token}', ['as' => 'create-password', 'uses' => 'UserController@showCreatePasswordPage']);
 Route::post('/skapa-losenord', ['as' => 'post-create-password', 'uses' => 'UserController@createPassword']);
 
+
+Route::get('/person/uppgifter', ['as' => 'to-do', 'uses' => 'UserController@getTodo']);
+
 /*
 |
 | Signed out user related routes like sign in and sign up.
 |
 */
-Route::get('/logga-in', ['as' => 'sign-in', 'uses' => function() {
-	return Redirect::route('index')->withInput();
-}])
+Route::post('/logga-in', ['as' => 'post-sign-in', 'uses' => 'GuestController@postSignIn'])
 	->before('guest');
-Route::post('/logga-in', ['as' => 'post-sign-in', 'uses' => 'GuestController@signIn'])
-	->before('guest');
-Route::get('/logga-ut', ['as' => 'sign-out', 'uses' => 'GuestController@showSignOutPage'])
+Route::get('/logga-ut', ['as' => 'sign-out', 'uses' => 'GuestController@getSignOut'])
 	->before('auth');
-Route::get('/registrera', ['as' => 'sign-up', 'uses' => 'GuestController@showSignUpPage'])
+Route::get('/registrera', ['as' => 'sign-up', 'uses' => 'GuestController@getSignUp'])
 	->before('guest');
-Route::post('/registrera', ['as' => 'post-sign-up', 'uses' => 'GuestController@signUp'])
+Route::post('/registrera', ['as' => 'post-sign-up', 'uses' => 'GuestController@postSignUp'])
 	->before('/guest');
 
 
@@ -73,7 +81,12 @@ Route::post('/person/andra-losenord', ['as' => 'post-change-password', 'uses' =>
 | Signed in admin functionality.
 |
 */
+/*
+| Admin tags.
+*/
 Route::get('/admin/taggar', ['as' => 'admin-tags', 'uses' => 'TagController@showTagsListPage'])
+	->before('auth.admin');
+Route::get('/admin/tagg/{token}', ['as' => 'admin-tag-show', 'uses' => 'TagController@showTagWithToken'])
 	->before('auth.admin');
 Route::get('/admin/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'TagController@showAddTagPage'])
 	->before('auth.admin');
@@ -88,7 +101,27 @@ Route::get('/admin/taggar/andra/{token}', ['as' => 'admin-tags-edit', 'uses' => 
 Route::post('/admin/taggar/andra', ['as' => 'post-admin-tags-edit', 'uses' => 'TagController@editTag'])
 	->before('auth.admin');
 
+/*
+| Admin categories.
+*/
+Route::get('/admin/kategorier', ['as' => 'admin-categories', 'uses' => 'CategoryController@showCategoriesListPage'])
+	->before('auth.admin');
+Route::get('/admin/kategorier/ny', ['as' => 'admin-categories-new', 'uses' => 'CategoryController@showAddCategoryPage'])
+	->before('auth.admin');
+Route::post('/admin/kategorier/ny', ['as' => 'post-admin-categories-new', 'uses' => 'CategoryController@addCategory'])
+	->before('auth.admin');
+Route::get('/admin/kategorier/ta-bort/{token}', ['as' => 'admin-categories-delete', 'uses' => 'CategoryController@showDeleteCategoryPage'])
+	->before('auth.admin');
+Route::post('/admin/kategorier/ta-bort', ['as' => 'post-admin-categories-delete', 'uses' => 'CategoryController@deleteCategory'])
+	->before('auth.admin');
+Route::get('/admin/kategorier/andra/{token}', ['as' => 'admin-categories-edit', 'uses' => 'CategoryController@showEditCategoryPage'])
+	->before('auth.admin');
+Route::post('/admin/kategorier/andra', ['as' => 'post-admin-categories-edit', 'uses' => 'CategoryController@editCategory'])
+	->before('auth.admin');
 
+/*
+| Admin roles.
+*/
 Route::get('/admin/roller', ['as' => 'admin-roles', 'uses' => 'RoleController@showRolesListPage'])
 	->before('auth.admin');
 Route::get('/admin/roller/ny', ['as' => 'admin-roles-new', 'uses' => 'RoleController@showAddRolePage'])
@@ -106,7 +139,9 @@ Route::get('/admin/roller/andra/{id}', ['as' => 'admin-roles-edit', 'uses' => 'R
 Route::post('/admin/roller/andra', ['as' => 'post-admin-roles-edit', 'uses' => 'RoleController@editRole'])
 	->before('auth.admin');
 
-
+/*
+| Admin users.
+*/
 Route::get('/admin/personer', ['as' => 'admin-users', 'uses' => 'UserAdminController@showUsersListPage'])
 	->before('auth.admin');
 Route::get('/admin/personer/ny', ['as' => 'admin-users-new', 'uses' => 'UserAdminController@showAddUserPage'])
@@ -129,7 +164,9 @@ Route::post('/admin/personer/verifiera', ['as' => 'post-admin-users-verify', 'us
 Route::post('/admin/personer/andra', ['as' => 'post-admin-users-edit', 'uses' => 'UserAdminController@editUser'])
 	->before('auth.admin');
 
-
+/*
+| Admin pms.
+*/
 Route::get('/admin/pm', ['as' => 'admin-pm', 'uses' => 'PMController@showPMListPage'])
 	->before('auth.admin');
 Route::get('/admin/pm/ta-bort/{token}', ['as' => 'admin-pm-delete', 'uses' => 'PMController@showDeletePMPage'])
@@ -151,9 +188,18 @@ Route::get('/sok', ['as' => 'search-form', function() {
 	return Redirect::route('search-result', 'Easter Eggs');
 }]);
 Route::post('/sok', ['as' => 'post-search', 'uses' => 'SearchController@search']);
-Route::get('/sok/{searchQuery}/{order?}/{page?}', ['as' => 'search-result', 'uses' => 'SearchController@showSearchResultPage'])
-	->where('page', '[0-9]*');
+Route::get('/sok/{searchQuery}/{order?}/{page?}/{options?}', ['as' => 'search-result', 'uses' => 'SearchController@showSearchResultPage'])
+	->where('page', '[0-9]*')
+	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)');
 
+
+/*
+|
+| Favorite PM
+| 
+*/
+Route::get('/favoriter', ['as' => 'favourites-show', 'uses' => 'PMController@showFavourites'])
+	->before('auth.verified');
 
 /*
 |
@@ -231,10 +277,16 @@ Route::get('/statistik/pm/{token}', ['as' => 'statistics-pm', 'uses' => 'Statist
 | Category routes.
 |
 */
-Route::get('/kategori', ['as' => 'category-showAll', 'uses' => 'CategoryController@showAllCategories'])
+Route::get('/kategori', ['as' => 'category-show-all', 'uses' => 'CategoryController@showAllCategories'])
 	->before('auth');
-Route::get('/kategori/{token}', ['as' => 'category-show', 'uses' => 'CategoryController@showCategory'])
-	->before('auth');
+Route::get('/kategori/top/{order?}/{page?}', ['as' => 'category-show-all-sorted', 'uses' => 'CategoryController@showAllCategories'])
+	->before('auth')
+	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)')
+	->where('page', '[0-9]*');
+Route::get('/kategori/{token}/{order?}/{page?}', ['as' => 'category-show', 'uses' => 'CategoryController@showCategory'])
+	->before('auth')
+	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)')
+	->where('page', '[0-9]*');
 
 /*
 |

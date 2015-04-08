@@ -1,0 +1,47 @@
+OLIKA STATUSAR FÖR ETT PM I ORDNING
+===================================
+		En administratör eller PM-administratör trycker på tilldela och väljer vilka personer som ska skriva PM:et.
+		Då sätts status till:
+
+1. Tilldelat
+		Den/dem(?) som blivit tilldelade att författa PM:et författar det. Redan nu kan granskarna gå in och kolla.
+		Om något ändras i PM:et av författaren måste samtliga granskningar sättas till "Ej godkänd".
+		När samtliga godkänt texten byts status till:
+
+2. Granskat
+		Nu måste slutgranskaren läsa igenom PM:et. Om slutgranskaren väljer att inte godkänna PM:et sätts status till (1) igen.
+		Om slutgranskaren godkänns byts status automatiskt till:
+
+4. Publicerat fram till YYYY-MM-DD
+		PM:et är publicerat och syns i sökningar.
+		Om författaren går in och ändrar PM:et byts status till (7). 
+		Om en administratör går in och tvingar en revidering av PM:et byts status till (6). 
+
+5. Publicerat fram till YYYY-MM-DD (påminnare påmind)
+		Som (4), fast när status byts från 4 till 5 skickas ett meddelande ut till påminnaren.
+		Om författaren går in och ändrar PM:et byts status till (7).
+
+6. Väntar på att revideras
+		Om tidsgränsen överskridits. PM:et är inte längre publicerat.
+
+7. Revidering - tilldelat
+		Författaren kan ändra och granskarna kan granska.
+
+8. Revidering - granskat
+		Slutgranskaren ska granska. När så är gjort hamnar den på (4).
+
+
+              ROLLER
+===================================
+Upprättare 		creator 		ansvarar för fakta, metadata och att författa pmet
+Inläggare 		author 			lägger in det upprättaren säger till om, ansvarar även för metadata
+Fastställare 	settler			ansvarar för upprättare, val av fastställare är en ledningsfråga
+Granskare 		reviewer		antal granskare varierar, det finns inget minimikrav så länge innehållet säkerställs, 
+								oftast finns det inofficiella granskare (får frågor från granskaren), får ej redigera 
+								i dokumentet
+Slutgranskare 	end-reviewer	korrekturläser men har inte hand om faktakorrigeringen
+Påminnare 		reminder		ansvar för att dokumentet revideras på rätt sätt. om någon slutar så går påminnaren in 
+								och ändrar så att rollen tilldelas en ny person. påminnaren får en påminnelse vid revidering.
+
+
+

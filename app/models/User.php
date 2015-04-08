@@ -24,18 +24,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
-	protected $fillable = array('email', 'password', 'real_name', 'priveleges','remember_token');
-
+	protected $fillable = array('email', 'password', 'real_name', 'privileges','remember_token');
 	protected $dates = ['deleted_at'];
-
-	// DEFINE RELATIONSHIPS
 
 	/**
 	 * favourite pms of the user.
 	 */
-	public function favorites() 
+	public function favourites() 
 	{
-		return $this->belongsToMany('Pm', 'favorites', 'user', 'pm');
+		return $this->belongsToMany('Pm', 'favourites', 'user', 'pm');
 	}
 
 	/**
@@ -57,8 +54,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	/**
 	 * Actions made by the user.
 	 */
-	public function assignment() 
-	{
+	public function assignment() {
 		return $this->hasMany('Assignment', 'user');
 	}
 
@@ -70,16 +66,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->belongsToMany('Pm', 'last_read', 'user', 'pm');
 	}
 
-	/**
-	 * Tags created by the user 
-	 
-	public function createdTags() 
-	{
-		return;
-		// TODO thinking if needed and 
-			//how to implement since I atm didn´t created a model for pm_tags
-	}
-*/
 	/**
 	 * Returns user's privileges as a nice string word.
 	 */
@@ -94,15 +80,48 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
+	 * Returns user's privileges as an integer.
+	 * @return 10 (admin), 8 (pm-admin), 2 (verifierad), 0 (overifierad)
+	 */
+	public function privilegesNum() {
+		if ($this->privileges == 'admin') 
+			return 10;
+		if ($this->privileges == 'pm-admin') 
+			return 8;
+		if ($this->privileges == 'verified') 
+			return 2;
+		return 0;
+	}
+
+	/**
 	 * Returns user's privileges as a nice string word.
 	 */
 	public static function assignmentString($assignment) {
+		if ($assignment == 'creator') 
+			return "upprättare";
 		if ($assignment == 'author') 
-			return "författare";
-		if ($assignment == 'owner') 
-			return "ägare";
+			return "inläggare";
+		if ($assignment == 'settler') 
+			return "fastställare";
 		if ($assignment == 'reviewer') 
 			return "granskare";
+		if ($assignment == 'end-reviewer') 
+			return "slutgranskare";
+		if ($assignment == 'reminder') 
+			return "påminnare";
 		return "medlem";
+	}
+
+	/**
+	 * Gets all events connected to this user.
+	 */
+	public static function allEvents() {
+		$res = array();
+		$obj = new stdClass; $obj->verb = 'skriva'; $obj->pm = PM::find(1); $res[] = $obj;
+		$obj = new stdClass; $obj->verb = 'granska'; $obj->pm = PM::find(2); $res[] = $obj;
+		$obj = new stdClass; $obj->verb = 'revidera'; $obj->pm = PM::find(4); $res[] = $obj;
+		$obj = new stdClass; $obj->verb = 'slutgranska'; $obj->pm = PM::find(3); $res[] = $obj;
+
+		return $res;
 	}
 }

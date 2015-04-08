@@ -24,6 +24,18 @@ class PMController extends BaseController {
 	}
 
 	/**
+	 * Display the users favorite pms
+	 *
+	 */
+	public function showFavourites() {
+		$user = User::find(Auth::user()->id);
+
+		$pms = $user->favourites()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		return View::make('pm.favourites')
+			->with('pms', $pms);
+	}
+
+	/**
 	 * Displays the PM download page view.
 	 * @param $token the PM token
 	 */
@@ -160,6 +172,7 @@ class PMController extends BaseController {
 		}
 		
 		return View::make('pm.edit')
+			->with('categorySelect', $this->getChildrenList(0, NULL))
 			->with('pm', $pm);
 	}
 
@@ -192,6 +205,8 @@ class PMController extends BaseController {
 			}
 		}
 		$pm->title = Input::get('title');
+		$pm->categories()->detach();
+		$pm->categories()->attach([Input::get('category') => ['added_by' => Auth::user()->id]]);
 		$pm->content = Input::get('content');
 		$pm->save();
 
@@ -435,18 +450,19 @@ class PMController extends BaseController {
 	}
 
 	public function showPMListPage() {
-		$userPms = Auth::user()->pms;
-		foreach ($userPms as $pm) {
-			if (strtotime($pm->expiration_date) < time() && $pm->verified) {
-				$pm->status = 'utgånget';
-			} elseif (strtotime($pm->first_published_date) < time() && $pm->verified) {
-				$pm->status = 'publicerat';
-			} else {
-				$pm->status = 'ej veriferat';
+		$userAssignments = Auth::user()->pms;
+
+		$userPms = $assignments = array();
+		foreach($userAssignments as $ua) {
+			if (!array_key_exists($ua->id, $userPms)) {
+				$userPms[$ua->id] = $ua;
 			}
+			$assignments[$ua->id][] = $ua->pivot->assignment;
 		}
+
 		return View::make('user.admin.pm.index')
-			->with('pms', PM::orderBy('title', 'ASC')->take(200)->get())
+			->with('pms', PM::orderBy('id', 'ASC')->paginate(15))
+			->with('userAssignments', $assignments)
 			->with('userPms', $userPms); // TODO Pagination
 	}
 
@@ -456,17 +472,19 @@ class PMController extends BaseController {
 
 	public function assignPM() {
 		// TODO Validering
-		$owner = explode(',', Input::get('responsible'));
-		$owner = $owner[0];
+		// TODO kolla att användarna verkligen finns
+		// TODO Try-catch på findorfail
+		$creator = intval(Input::get('creator'));
 		$authors = explode(',', Input::get('authors'));
-		$reviewers = explode(',', Input::get('reviewers'));
+		$reviewers = explode(',', Input::get('reviewers'));	
+		$endReviewer = Input::get('end-reviewer');		
+		$reminder = Input::get('reminder');	
 
 		$user = Auth::user();
-
 		$pm = new PM;
 		$pm->title = Input::get('title');
 		$pm->created_by = $user->id;
-		$pm->token = $this->generateToken('pm-' . $pm->title);
+		$pm->token = $this->generateToken($pm->title);
 		$pm->save();
 
 		foreach ($authors as $author) {
@@ -475,7 +493,9 @@ class PMController extends BaseController {
 		foreach ($reviewers as $reviewer) {
 			User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
 		}
-		User::findOrFail($owner)->pms()->attach([$pm->id => ['assignment' => 'owner']]);
+		User::findOrFail($creator)->pms()->attach([$pm->id => ['assignment' => 'creator']]);
+		User::findOrFail($endReviewer)->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
+		User::findOrFail($reminder)->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
 		$user->save();
 		
 		return Redirect::route('admin-pm');
@@ -491,8 +511,8 @@ class PMController extends BaseController {
 		$clean = strtolower(trim($clean, '-'));
 		$clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
 
-		$n = Tag::where('token', '=', $clean)->count();
-		if ($n > 0) {
+		$n = PM::where('token', '=', $clean)->count();
+		if ($n > 0 || strlen($clean) == 0) {
 			$clean = $this->generateToken($clean . '-' . rand(0, 9), $delimiter);
 		}
 
@@ -536,5 +556,46 @@ class PMController extends BaseController {
 
 		return Redirect::route('admin-pm')
 			->with('success', 'PM:et togs bort.');
+	}
+
+	public function postFilter() {
+		$pms = PM::select('*');
+
+		if (Input::has('filter')) {
+			// Search in id and title to start with
+			$pms->where('id', 'LIKE', '%' . Input::get('filter') . '%')
+				->orWhere('title', 'LIKE', '%' . Input::get('filter') . '%');
+		}
+			
+		$resp = $pms->orderBy('id', 'ASC')
+			->take(100)
+			->get();
+
+		if ($resp->count() == 0 && Input::has('filter')) {
+			// Search on content if there was no match in title or id
+			$resp = PM::where('content', 'LIKE', '%' . Input::get('filter') . '%')
+				->orderBy('id', 'ASC')
+				->take(100)
+				->get();
+		}
+
+		foreach($resp as $res) {
+			$res->persons = $res->users;
+		}
+
+		return Response::json($resp);
+	}
+
+	private function getChildrenList($parent, $not = 0, $prefix = '___') {
+		// TODO Do in mysql rather than many requests
+		$children = Category::where('parent', '=', $parent)->get();
+		$res = array();
+		foreach ($children as $child) {
+			if ($child->id != $not) {
+				$res[$child->id] = $prefix . $child->name;
+				$res += $this->getChildrenList($child->id, $not, '___' . $prefix);
+			}
+		}
+		return $res;
 	}
 }

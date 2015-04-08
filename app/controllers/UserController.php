@@ -16,9 +16,9 @@ class UserController extends BaseController {
 	 * Displays the edit profile page view for the user.
 	 * @param $userId the user id for the user to be displayed
 	 */ 
-	public function showEditProfilePage() 
-	{
+	public function showEditProfilePage() {
 		return View::make('user.profile.edit-profile')
+			->with('userRoles', Auth::user()->roles)
 			->with('error', Session::get('error'))
 			->with('success', Session::get('success'));
 	}
@@ -82,6 +82,8 @@ class UserController extends BaseController {
 		// TODO Göra "upprepa lösenord"
 		$name = Input::get('real_name');
 		$email = Input::get('email');
+		$roles = Input::get('roles_');
+		$roles = explode(",", $roles);
 
 		$validator = Validator::make(
 		[
@@ -115,6 +117,13 @@ class UserController extends BaseController {
 		$user->real_name = $name;
 		$user->email = $email;
 		$user->save();
+		$user->roles()->detach();
+		
+		foreach ($roles as $role) {
+			// TODO WHAT IF FAIL???
+			if (intval($role) > 0)
+				Role::findOrFail($role)->users()->attach($user->id);
+		}
 
 		return Redirect::route('user-edit')
 			->with('success', 'Informationen uppdaterades!');
@@ -174,5 +183,9 @@ class UserController extends BaseController {
 		$user->save();
 
 		return Redirect::route('index')->with('success', 'Ditt lösenord har skapats. Testa att logga in!');
+	}
+
+	public function getTodo() {
+		return View::make('user.profile.todo');
 	}
 }
