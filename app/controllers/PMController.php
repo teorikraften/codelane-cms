@@ -205,7 +205,8 @@ class PMController extends BaseController {
 			}
 		}
 		$pm->title = Input::get('title');
-		$pm->category = Input::get('category');
+		$pm->categories()->detach();
+		$pm->categories()->attach([Input::get('category') => ['added_by' => Auth::user()->id]]);
 		$pm->content = Input::get('content');
 		$pm->save();
 
