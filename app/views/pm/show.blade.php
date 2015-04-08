@@ -10,13 +10,18 @@ Visa PM "{{ $pm->title }}"
 
 @section('body')
     <div class="pm-inf">
-        <h2>Information</h2>
-
+        <div class="clear" style="margin-top: 20px"></div>
         @include('includes.messages')
 
-        <a href="{{ URL::route('get-favourite-edit', array('goto' => 'pm', 'token' => $pm->token)) }}" title="Favoritmarkera" class={{ $favourite ? 'goldenstar' : 'greystar' }} >
-            &#9733;
-        </a>
+        <div id="pmc" class="pm-content">
+            <h1>
+                {{ $pm->title }}
+                <a href="{{ URL::route('get-favourite-edit', array('goto' => 'pm', 'token' => $pm->token)) }}" title="Favoritmarkera" class={{ $favourite ? 'goldenstar' : 'greystar' }} >
+                    {{ $favourite ? '&#9733;' : '&#9734;' }}
+                </a> 
+            </h1>
+            {{ $pm->content }}
+        </div>
 
         <div id="pmListing">
             <table>
@@ -61,10 +66,6 @@ Visa PM "{{ $pm->title }}"
             @endif
             <a class="action" href="{{ URL::route('pm-download', $pm->token) }}">Ladda ner som .docx</a>
             <div class="clear"></div>
-        </div>
-        <div id="pmc" class="pm-content">
-            <h1>{{ $pm->title }}</h1>
-            {{ $pm->content }}
         </div>
     </div>
 @stop

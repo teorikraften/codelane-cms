@@ -1,5 +1,5 @@
 @import url(http://fonts.googleapis.com/css?family=Oxygen:400,700,400italic,700italic);
-@import url(http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic);
+@import url(http://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic);
 
 /*================================
 =            =Reset   			 =
@@ -440,7 +440,7 @@ div.form textarea {
 	height: 700px;
 	width: 96%;
 	padding: 10px 2%;
-	font-family: 'Lora';
+	font-family: 'Merriweather';
 	line-height: 1.5;
 	font-size: 1.1em;
 }
@@ -554,15 +554,19 @@ ul.result .tags a {
 =           PM-review           =
 ===============================*/
 #pmc {
-	padding: 20px;
+	padding: 10px 30px 30px;
 	background: #fff;
 	font-size: 14px;
-	width: 1000px;
+	line-height: 1.5;
+	border: 1px solid #ccc;
+}
+
+#pmc h1, #pmc h2, #pmc h3 {
+	font-family: 'Oxygen', sans-serif;
 }
 
 #pmc #pmc-text {
 	width: 700px;
-	float: left;
 	float: left;
 }
 
@@ -694,7 +698,7 @@ a.inline-action {
 
 .pm-content {
 	margin: 15px 0;
-	font-family: 'Lora';
+	font-family: 'Merriweather';
 	max-width: 700px;
 	font-size: 1.2em;
 }
@@ -1148,9 +1152,9 @@ ul.pagination li a:hover, ul.pagination li.active span {
 	background: none;
 }
 
-.goldenstar {
+* .goldenstar {
 	color: #fd0;
 }
-.greystar {
+* .greystar {
 	color: #ccc;
 }

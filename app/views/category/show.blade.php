@@ -57,7 +57,7 @@
 				<li>
 					<h3>
 						<a href="{{ URL::route('get-favourite-edit', array('goto' => 'resultat', 'token' => $pm['pm']->token)) }}" title="Favoritmarkera" class="{{ $pm['pm']->favouriteByUser() ? 'goldenstar' : 'greystar' }} small" >
-            				&#9733;
+            				{{ $pm['pm']->favouriteByUser() ? '&#9733;' : '&#9734;' }}
         				</a>
         				<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>
         			</h3>
