@@ -200,7 +200,10 @@ Route::get('/sok/{searchQuery}/{order?}/{page?}/{options?}', ['as' => 'search-re
 */
 Route::get('/favoriter', ['as' => 'favourites-show', 'uses' => 'PMController@showFavourites'])
 	->before('auth.verified');
-
+Route::get('favorit/andra/{token}/{goto}', ['as' => 'get-favourite-edit', 'uses' => 'PMController@favouritePM'])
+	->before('auth.verified');
+Route::post('favorit/andra', ['as' => 'post-favourite-edit', 'uses' => 'PMController@favouritePM'])
+	->before('auth.verified');
 /*
 |
 | Functionality directly connected to PM read/write/edit.
