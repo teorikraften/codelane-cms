@@ -25,6 +25,36 @@ class CategoryController extends BaseController {
 	}
 
 	/**
+	 * Produces the menu tree HTML.
+	 */
+	public function getMenuTree($active = 0, $parentId = 0) {
+		$children = Category::where('parent',  '=', $parentId)
+			->orderBy('name', 'ASC')
+			->get();
+
+		$ab = $active == $parentId;
+		$lis = "";
+		foreach ($children as $child) {
+			list($childIsActive, $children) = $this->getMenuTree($active, $child->id);
+			if ($child->parent == $active || $childIsActive) 
+				$ab = true;
+
+			$lis .= 
+				'<li>' . 
+					'<a href="' . URL::route('category-show', $child->token) . '" class="btn">' .
+						'<span id="' . $child->id . '" class="cat' . ($childIsActive ? ' a' : '') . '">' . ($childIsActive ? '&#9662;' : '&#9656;') . ' </span>' . $child->name .
+					'</a>' . 
+					$children .
+				'</li>';
+		}
+		$res = "";
+		$res .= '<ul' . ($ab ? ' class="active"' : '') . '>';
+		$res .= $lis;
+		$res .= '</ul>';
+		return array($ab, $res);
+	}
+
+	/**
 	 * Display all categories
 	 * @param order, the sorting order, alphabetical is default
 	 * @param page, the result page, default is 1
@@ -47,8 +77,11 @@ class CategoryController extends BaseController {
 		// Create the trivial breadcrumb to start
 		$breadcrumb = '<a href="' . URL::route('category-show-all') . '" title="Gå till översta kategorisidan">Start</a>';
 
+		$catList = $this->getMenuTree()[1];
+
 		// Return the view with correct values
 		return View::make('category.show')
+			->with('catList', $catList)
 			->with('breadcrumb', $breadcrumb)
 			->with('token', NULL)
 			->with('pms', $searchResult)
@@ -88,7 +121,10 @@ class CategoryController extends BaseController {
 
 		$searchResult = $search->getPage($page);
 
+		$catList = $this->getMenuTree($category->id)[1];
+
 		return View::make('category.show')
+			->with('catList', $catList)
 			->with('breadcrumb', $this->createBreadcrumb($category))
 			->with('token', $token)
 			->with('children', $children)

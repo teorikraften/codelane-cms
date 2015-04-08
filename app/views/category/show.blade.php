@@ -19,19 +19,11 @@
 
 	<div id="categories">
 		<h3>Kategorier</h3>
-		<ul>
-			@foreach ($children as $child)
-				<li>
-					<a href="{{ URL::route('category-show', $child->token) }}" class="btn">
-						<span id="{{ $child->id }}" class="cat">&#9658; </span>{{ $child->name }}
-					</a>
-				</li>
-			@endforeach
-		</ul>
+		{{ $catList }}
 	</div>
 
 	<div id="category-output">
-		<div class="result">PM i kategorin
+		<div class="result">
 			@if (isset($token))
 				<ul class="sortby">
 					<li{{ $order == 'alphabetical' ? " class='active'" : '' }} >
