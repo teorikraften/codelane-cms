@@ -6,6 +6,7 @@
 
 @section('head-extra')
 	{{ HTML::script('js/category.js') }}
+    {{ HTML::script('js/infoWindow.js'); }}
 @stop
 
 @section('body')
@@ -23,6 +24,16 @@
 		<h3>Kategorier</h3>
 		{{ $catList }}
 	</div>
+
+<!--infoWindow-->    
+    <div id="infoWindow" style="display:none;"><h3>
+<button onclick="show('infoWindow')">X</button> Hjälp :: Kategori</h3>
+        <p>Du kan 
+        	<b><ins>markera</ins></b> en kategori för att visa de PM som ingår i kategorin och
+        	<b><ins>filtrera</ins></b> resultaten.</p>
+    </div>  
+    <button onclick="show('infoWindow')">?</button>
+<!-- end of infoWindow-->    
 
 	<div id="category-output">
 		<div class="result">

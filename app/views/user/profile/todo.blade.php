@@ -4,13 +4,21 @@
     Användare: {{ Auth::user()->real_name }}
 @stop
 
+@section('head-extra')
+    {{ HTML::script('js/infoWindow.js'); }}
+@stop
+
 @section('submenu')
     @include('includes.admin-menu')
 @stop
 
 @section('body') 
-<script type="text/javascript" src="js/infoWindow.js"></script>
-    <h1>Dina aktuella uppgifter</h1>
+    <h1>Dina aktuella uppgifter</h1> 
+<!--infoWindow-->
+    <div id="infoWindow" style="display:none;"><h3>
+        <p>Här visas en lista med uppgifter där du har tilldelats att utföra.</p>
+    </div>
+<!-- end of infoWindow-->  
         <table class="list">
             <tr>
                     <th>Typ</th>
