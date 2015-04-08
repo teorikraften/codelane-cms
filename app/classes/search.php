@@ -389,7 +389,6 @@ class Search {
 				$this->result[$pm->id]['score'] = 1;
 				$this->result[$pm->id]['operator'] = self::defaultOperator; 
 			}
-		// -------------------------------------------------------------------------------
 		}
 	}
 
