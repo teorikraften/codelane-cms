@@ -382,7 +382,7 @@ class Search {
 	public function categorySearch($category) {
 		$childcategories = $category->getAllChildren();
 
-		foreach ($childcategories as $key => $cat) {
+		foreach (array($category) + $childcategories as $key => $cat) {
 			$categoryPms = $cat->pms()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 			foreach ($categoryPms as $key => $pm) {
 				$this->result[$pm->id]['pm'] = $pm;
