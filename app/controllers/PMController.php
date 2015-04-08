@@ -546,13 +546,18 @@ class PMController extends BaseController {
 	public function postFilter() {
 		$pms = PM::select('*');
 
-		if (Input::has('idfilter'))
-			$pms->where('id', 'LIKE', '%' . Input::get('idfilter') . '%');
-
-		if (Input::has('titlefilter'))
-			$pms->where('title', 'LIKE', '%' . Input::get('titlefilter') . '%');
+		if (Input::has('filter')) {
+			// Search in id and title to start with
+			$pms->where('id', 'LIKE', '%' . Input::get('filter') . '%')
+				->orWhere('title', 'LIKE', '%' . Input::get('filter') . '%');
+		}
 			
 		$resp = $pms->orderBy('id', 'ASC')->get();
+
+		if ($resp->count() == 0 && Input::has('filter')) {
+			// Search on content if there was no match in title or id
+			$resp = PM::where('content', 'LIKE', '%' . Input::get('filter') . '%')->orderBy('id', 'ASC')->get();
+		}
 
 		foreach($resp as $res) {
 			$res->persons = $res->users;

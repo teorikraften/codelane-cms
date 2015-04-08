@@ -33,49 +33,42 @@ App::after(function($request, $response)
 |
 */
 
-Route::filter('auth', function()
-{
-	if (Auth::guest())
-	{
-		if (Request::ajax())
-		{
+Route::filter('auth', function() {
+	if (Auth::guest()) {
+		if (Request::ajax()) {
 			return Response::make('Unauthorized', 401);
 		}
+
 		return Redirect::guest(route('index'))
 			->with('error', 'Du har måste logga in för att komma åt denna sida.');
 	}
 });
 
 
-Route::filter('auth.basic', function()
-{
+Route::filter('auth.basic', function() {
 	return Auth::basic();
 });
 
-Route::filter('auth.verified', function ()
-{
+Route::filter('auth.verified', function () {
 	// TODO
-	if (Auth::guest())
-	{
-		if (Request::ajax())
-		{
+	if (Auth::guest()) {
+		if (Request::ajax()) {
 			return Response::make('Unauthorized', 401);
 		}
+
 		return Redirect::guest(route('index'))
 			->with('error', 'Du har måste vara verifierad för att komma åt denna sida.');
 	}
 });
 
-Route::filter('auth.admin', function()
-{
+Route::filter('auth.admin', function() {
 	// TODO
-	if (Auth::guest())
-	{
-		if (Request::ajax())
-		{
+	if (Auth::guest()) {
+		if (Request::ajax()) {
 			return Response::make('Unauthorized', 401);
 		}
-		return Redirect::guest(route('sign-in'))
+		
+		return Redirect::guest(route('index'))
 			->with('error', 'Du har måste vara administratör för att komma åt denna sida.');
 	}
 });

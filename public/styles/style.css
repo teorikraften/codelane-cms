@@ -29,6 +29,16 @@ body {
 /*================================
 =             General            =
 ================================*/
+
+input.text {
+	background: #fff;
+	width: 300px;
+	border: 1px solid #ccc;
+	padding: 10px 10px;
+	border-radius: 0px; /* TODO Fix browser comp */
+	font-size: 15px;
+	font-family: 'Muli', sans-serif; /* TODO Change if change font */
+}
 .clear {
 	clear: both;
 }
@@ -986,9 +996,9 @@ table.list th.filter {
 	text-align: right;
 }
 table.list td, table.list th {
-	padding: 7px 1px 0px 11px;
+	padding: 10px 1px 0px 11px;
 	margin: 0;
-	vertical-align: center;
+	vertical-align: top;
 }
 table.list th {
 	background: #ddd;
@@ -1011,7 +1021,14 @@ table.list a img {
 	border: 0;
 	height: 16px;
 	padding: 5px;
+	margin-top: -4px;
 }
 table.list a img:hover {
 	background: #eee;
+}
+table.list table {
+	margin-left: -15px;
+}
+table.list table tr:nth-child(odd), table.list table tr:nth-child(even) {
+	background: none;
 }

@@ -1,17 +1,14 @@
 $(function() {
-	$("#id-filter").keyup(function() { fetchData(); });
-	$("#title-filter").keyup(function() { fetchData(); });
-	$("#persons-filter").keyup(function() { fetchData(); });
+	$("#filter-p").show();
+	$("#filter").keyup(function() { fetchData($(this).val()); });
 });
 
-function fetchData() {
+function fetchData(val) {
 	$.ajax({
 		method: "POST",
 	  	url: "/pm-filter",
 	  	data: {
-	  		idfilter: $("#id-filter").val(),
-	  		titlefilter: $("#title-filter").val(),
-	  		personsfilter: $("#persons-filter").val(),
+	  		filter: val,
 	  	},
 	  	datatype: 'json',
 	    _token: $("meta[name='token']").attr('content'),
@@ -27,10 +24,10 @@ function fetchData() {
 			}
 
 			res += '<tr>' + 
-				'<td><a href="/pm/' + data[i].token + '">V</a></td>' +
-				'<td><a href="/pm/' + data[i].token + '/andra">Ä</a></td>' +
-				'<td><a href="/pm/' + data[i].token + '/andra-personer">ÄP</a></td>' +
-				'<td><a href="/admin/pm/ta-bort/' + data[i].token + '">X</a></td>' +
+				'<td><a href="/pm/' + data[i].token + '" title="Visa"><img src="/images/view.png" alt="Visa"></a></td>' +
+				'<td><a href="/pm/' + data[i].token + '/andra" title="Ändra"><img src="/images/edit.png" alt="Ändra"></a></td>' +
+				'<td><a href="/pm/' + data[i].token + '/andra-personer" title="Ändra personer"><img src="/images/persons.png" alt="Ändra personer"></a></td>' +
+				'<td><a href="/admin/pm/ta-bort/' + data[i].token + '" title="Ta bort"><img src="/images/delete.png" alt="Ta bort"></a></td>' +
 				'<td>' + data[i].id + '</td>' + 
 				'<td>' + data[i].title + '</td>' +
 				'<td>' +
@@ -50,5 +47,5 @@ function filter(col, val) {
 }
 
 function setResult(result) {
-	$("#filter-result").html(result);
+	$("#table-fill").html(result);
 }
