@@ -9,7 +9,7 @@ class RoleController extends BaseController {
 	 */
 	public function showRolesListPage() {
 		return View::make('user.admin.roles.index')
-			->with('roles', Role::take(100)->get()); // TODO Not only 100, pagination, fix roles as well
+			->with('roles', Role::orderBy('name', 'ASC')->paginate(20));
 	}
 
 	/**
@@ -163,5 +163,22 @@ class RoleController extends BaseController {
 			$result[] = $obj;
 		}
 		return json_encode($result);
+	}
+
+	public function postFilter() {
+		$users = Role::select('*');
+
+		if (Input::has('filter')) {
+			// Search in id and title to start with
+			$users->where('name', 'LIKE', '%' . Input::get('filter') . '%');
+		}
+			
+		$resp = $users->orderBy('name', 'ASC')->take(100)->get();
+
+		foreach($resp as $res) {
+			$res->persons = $res->users;
+		}
+
+		return Response::json($resp);
 	}
 }

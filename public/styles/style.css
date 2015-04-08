@@ -29,6 +29,16 @@ body {
 /*================================
 =             General            =
 ================================*/
+
+input.text {
+	background: #fff;
+	width: 300px;
+	border: 1px solid #ccc;
+	padding: 10px 10px;
+	border-radius: 0px; /* TODO Fix browser comp */
+	font-size: 15px;
+	font-family: 'Muli', sans-serif; /* TODO Change if change font */
+}
 .clear {
 	clear: both;
 }
@@ -53,6 +63,9 @@ th {
 }
 th, td {
 	padding: 0 5px 0 0;
+}
+th:last-child, td:last-child {
+	padding: 0 5px;
 }
 
 /*================================
@@ -986,9 +999,12 @@ table.list th.filter {
 	text-align: right;
 }
 table.list td, table.list th {
-	padding: 7px 1px 0px 11px;
+	padding: 10px 1px 0px 11px;
 	margin: 0;
-	vertical-align: center;
+	vertical-align: top;
+}
+table.list th:last-child, table.list td:last-child {
+	padding: 10px 11px 0px 11px;
 }
 table.list th {
 	background: #ddd;
@@ -1011,7 +1027,55 @@ table.list a img {
 	border: 0;
 	height: 16px;
 	padding: 5px;
+	margin-top: -4px;
 }
 table.list a img:hover {
 	background: #eee;
+}
+table.list table {
+	margin-left: -15px;
+}
+table.list table tr:nth-child(odd), table.list table tr:nth-child(even) {
+	background: none;
+}
+
+div.pagination {
+	margin: 0 auto;
+	text-align: center;
+}
+ul.pagination, ul.pagination li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    zoom:1; /* For IE, the outcast */
+    *display: inline; /* For IE, the outcast */
+	list-style-type: none;
+}
+ul.pagination {
+	margin: 20px 0;
+}
+ul.pagination li {
+	font-size: 1em;
+	float: left;
+	margin: 0 1px 0 0;
+}
+ul.pagination li a, ul.pagination li span {
+	display: inline-block;
+	padding: 10px 15px;
+	background: #ddd;
+}
+ul.pagination li span {
+	background: #e6e6e6;
+	color: #bbb;
+}
+ul.pagination li a {
+	text-decoration: none;
+}
+ul.pagination li a:hover {
+	background: #008472;
+	color: #ddd;
+}
+ul.pagination li.active span {
+	background: #008472;
+	color: #ddd;
 }

@@ -9,7 +9,7 @@ class TagController extends BaseController {
 	 */
 	public function showTagsListPage() {
 		return View::make('user.admin.tags.index')
-			->with('tags', Tag::take(100)->get());
+			->with('tags', Tag::orderBy('name', 'ASC')->paginate(20));
 	}
 
 	public function showTagWithToken($token) {
@@ -171,5 +171,22 @@ class TagController extends BaseController {
 			$result[] = $obj;
 		}
 		return json_encode($result);
+	}
+
+	public function postFilter() {
+		$users = Tag::select('*');
+
+		if (Input::has('filter')) {
+			// Search in id and title to start with
+			$users->where('name', 'LIKE', '%' . Input::get('filter') . '%');
+		}
+			
+		$resp = $users->orderBy('name', 'ASC')->take(100)->get();
+
+		foreach($resp as $res) {
+			$res->num = count($res->pm);
+		}
+
+		return Response::json($resp);
 	}
 }

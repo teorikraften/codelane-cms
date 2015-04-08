@@ -7,6 +7,14 @@
 @section('head-extra')
     {{ HTML::script('js/admin-filter.js') }}
     {{ HTML::script('js/sort.js') }}
+    <script type="text/javascript">
+        $(function() {
+            $("#filter-p").show();
+            $("#filter").keyup(function() { 
+                fetchData($(this).val(), "/pm-filter", 'pms'); 
+            });
+        });
+    </script>
 @stop
 
 @section('submenu')
@@ -84,55 +92,63 @@
 
     @if(Auth::user()->privileges == 'admin')
         <h2>Alla PM</h2>
+        <p id="filter-p" style="display:none">Filtrera: {{ Form::text('filter', NULL, array('class' => 'text', 'id' => 'filter')) }}</p>
         <div class="form wide">
             <table class="list sortable">
-        		<tr>
-                    <th class="action sorttable_nosort"></th>
-                    <th class="action sorttable_nosort"></th>
-                    <th class="action sorttable_nosort"></th>
-                    <th class="action sorttable_nosort"></th>
-                    <th>ID</th>
-        			<th>Rubrik</th>
-                    <th>Personer</th>
-        		</tr>
-            	@foreach($pms as $pm)
-            		<tr valign="top">
-                        <td>
-                            <a href="{{ URL::route('pm-show', $pm->token) }}" title="Visa">
-                                {{ HTML::image('images/view.png', 'Visa')  }}
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{ URL::route('pm-edit', $pm->token) }}" title="Ändra">
-                                {{ HTML::image('images/edit.png', 'Ändra')  }}
-                            </a>
-                        </td>
-                        <td>
-                            <a href="{{ URL::route('pm-edit-assignments', $pm->token) }}" title="Ändra personer">
-                                {{ HTML::image('images/persons.png', 'Ändra personer')  }}
-                            </a>
-                        </td>
-            			<td>
-                            <a href="{{ URL::route('admin-pm-delete', $pm->token) }}" title="Ta bort">
-                                {{ HTML::image('images/delete.png', 'Ta bort')  }}
-                            </a>
-                        </td>
-                        <td>{{ $pm->id }}</td>
-                        <td>{{ $pm->title }}</td>
-                        <td>
-                            <a href="javascript:void()" onclick="$('#pm{{ $pm->id }}').toggle();">Visa</a>
-                            <table style="display: none" id="pm{{ $pm->id }}">
-                            @foreach ($pm->users as $user)
-                                <tr>
-                                    <td>{{ $user->real_name }}</td>
-                                    <td>({{ $user->pivot->assignment }})</td>
-                                </tr>
-                            @endforeach
-                            </table>
-                        </td>
+        		<thead>
+                    <tr>
+                        <th class="action sorttable_nosort"></th>
+                        <th class="action sorttable_nosort"></th>
+                        <th class="action sorttable_nosort"></th>
+                        <th class="action sorttable_nosort"></th>
+                        <th>ID</th>
+            			<th>Rubrik</th>
+                        <th>Personer</th>
             		</tr>
-            	@endforeach
+                </thead>
+                <tbody id="table-fill">
+                	@foreach($pms as $pm)
+                		<tr valign="top">
+                            <td>
+                                <a href="{{ URL::route('pm-show', $pm->token) }}" title="Visa">
+                                    {{ HTML::image('images/view.png', 'Visa')  }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ URL::route('pm-edit', $pm->token) }}" title="Ändra">
+                                    {{ HTML::image('images/edit.png', 'Ändra')  }}
+                                </a>
+                            </td>
+                            <td>
+                                <a href="{{ URL::route('pm-edit-assignments', $pm->token) }}" title="Ändra personer">
+                                    {{ HTML::image('images/persons.png', 'Ändra personer')  }}
+                                </a>
+                            </td>
+                			<td>
+                                <a href="{{ URL::route('admin-pm-delete', $pm->token) }}" title="Ta bort">
+                                    {{ HTML::image('images/delete.png', 'Ta bort')  }}
+                                </a>
+                            </td>
+                            <td>{{ $pm->id }}</td>
+                            <td>{{ $pm->title }}</td>
+                            <td>
+                                <a href="javascript:void()" onclick="$('#pm{{ $pm->id }}').toggle();">Visa</a>
+                                <table style="display: none" id="pm{{ $pm->id }}">
+                                @foreach ($pm->users as $user)
+                                    <tr>
+                                        <td>{{ $user->real_name }}</td>
+                                        <td>({{ $user->pivot->assignment }})</td>
+                                    </tr>
+                                @endforeach
+                                </table>
+                            </td>
+                		</tr>
+                	@endforeach
+                </tbody>
             </table>
+            <div class="pagination" id="filter-pag">
+                {{ $pms->links() }}
+            </div>
         </div>
     @endif
 @stop
