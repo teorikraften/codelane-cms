@@ -19,7 +19,7 @@ function window_pos(infoWindow) {
 		}
 	}
 	var infoWindow = document.getElementById(infoWindow);
-	window_width=window_width/2-150;// center the window.
+	window_width=window_width/4-150;// TODO: Better and smarter for adaption 
 	infoWindow.style.left = window_width + 'px';
 }
 function show(windowname) {

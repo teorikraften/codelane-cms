@@ -38,9 +38,9 @@
 
 <!--infoWindow-->    
     <div id="infoWindow" style="display:none;">
-        <a href="#" onclick="show('infoWindow')" class="inline-action">X</a>
+    <button onclick="show('infoWindow')"class="inline-action">X</button>
         <p>Det här är profilsidan, du kan se vad du har för information och ändra information.</p>
     </div>  
-  <a href="#" onclick="show('infoWindow')" class="inline-action">?</a>
+    <button onclick="show('infoWindow')"class="inline-action">?</button>
 <!-- end of infoWindow-->     
 @stop
