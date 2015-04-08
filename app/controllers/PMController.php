@@ -185,20 +185,20 @@ class PMController extends BaseController {
    			'style_sheet' => htmltodocx_docs_style(), // This is an array (the "style sheet") - returned by htmltodocx_styles_example() here (in styles.inc) - see this function for an example of how to construct this array.
    			); 
 
-		// Convert the HTML and put it into the PHPWord object
-htmltodocx_insert_html($section, $html_dom_array[0]->nodes, $initial_state);
+			// Convert the HTML and put it into the PHPWord object
+		htmltodocx_insert_html($section, $html_dom_array[0]->nodes, $initial_state);
 
-		// Clear the HTML dom object:
-$html_dom->clear(); 
-unset($html_dom);
+				// Clear the HTML dom object:
+		$html_dom->clear(); 
+		unset($html_dom);
 
-		// Save File
-$h2d_file_uri = tempnam('', 'htd') . '.docx';
-$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpword_object, 'Word2007');
-$objWriter->save($h2d_file_uri);
+				// Save File
+		$h2d_file_uri = tempnam('', 'htd') . '.docx';
+		$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpword_object, 'Word2007');
+		$objWriter->save($h2d_file_uri);
 
-return Response::download($h2d_file_uri);
-}
+		return Response::download($h2d_file_uri);
+	}
 
 	/**
 	 * Displays the PM edit page view.
@@ -211,8 +211,9 @@ return Response::download($h2d_file_uri);
 			return Redirect::back()
 			->with('error', 'PM:et som skulle visas hittades inte.');
 		}
-		
+
 		return View::make('pm.edit')
+		->with('categorySelect', $this->getChildrenList(0, NULL))
 		->with('pm', $pm);
 	}
 
@@ -245,6 +246,8 @@ return Response::download($h2d_file_uri);
 			}
 		}
 		$pm->title = Input::get('title');
+		$pm->categories()->detach();
+		$pm->categories()->attach([Input::get('category') => ['added_by' => Auth::user()->id]]);
 		$pm->content = Input::get('content');
 		$pm->save();
 
@@ -622,5 +625,18 @@ return Response::download($h2d_file_uri);
 		}
 
 		return Response::json($resp);
+	}
+
+	private function getChildrenList($parent, $not = 0, $prefix = '___') {
+		// TODO Do in mysql rather than many requests
+		$children = Category::where('parent', '=', $parent)->get();
+		$res = array();
+		foreach ($children as $child) {
+			if ($child->id != $not) {
+				$res[$child->id] = $prefix . $child->name;
+				$res += $this->getChildrenList($child->id, $not, '___' . $prefix);
+			}
+		}
+		return $res;
 	}
 }

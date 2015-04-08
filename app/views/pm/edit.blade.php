@@ -58,6 +58,12 @@
 				<div class="description">{{ Form::label('tags', 'Taggar') }}</div>
 				<div class="input">{{ Form::text('tags', NULL, array('class' => 'text')) }}</div>
 			</div>
+	        <div class="row">
+	            <div class="description">{{ Form::label('category', 'Kategori') }}</div>
+	            <div class="input">
+	                {{ Form::select('category', array('0' => 'Den översta kategorin') + $categorySelect, $pm->category) }}
+	            </div>
+	        </div>
 			<div class="submit">
 				{{ Form::submit('Spara PM', array('class' => 'submit')) }}
 			</div>
