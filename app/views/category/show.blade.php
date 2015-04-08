@@ -17,6 +17,8 @@
 		<h1>{{ $category }}</h1>
 	@endif
 
+	@include('includes.messages')
+
 	<div id="categories">
 		<h3>Kategorier</h3>
 		{{ $catList }}
@@ -54,7 +56,7 @@
 			@foreach ($pms as $pm)
 				<li>
 					<h3>
-						<a href="{{ URL::route('get-favourite-edit', array('goto' => 'pm', 'token' => $pm['pm']->token)) }}" title="Favoritmarkera" class="{{ $pm['pm']->favouriteByUser() ? 'goldenstar' : 'greystar' }} small" >
+						<a href="{{ URL::route('get-favourite-edit', array('goto' => 'resultat', 'token' => $pm['pm']->token)) }}" title="Favoritmarkera" class="{{ $pm['pm']->favouriteByUser() ? 'goldenstar' : 'greystar' }} small" >
             				&#9733;
         				</a>
         				<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>

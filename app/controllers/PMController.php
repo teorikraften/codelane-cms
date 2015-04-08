@@ -72,8 +72,11 @@ class PMController extends BaseController {
 
 			return Redirect::route('favourites-show')
 				->with('success', $m);
-				
-		} else if ($goto == 'pm') {
+
+		} elseif (isset($_SERVER['HTTP_REFERER'])) {
+			return Redirect::back()
+				->with('success', $message);
+		} elseif ($goto == 'pm') {
 			return Redirect::route('pm-show', array('token' => $token))
 				->with('success', $message);
 		}
