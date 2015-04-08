@@ -195,6 +195,14 @@ Route::get('/sok/{searchQuery}/{order?}/{page?}/{options?}', ['as' => 'search-re
 
 /*
 |
+| Favorite PM
+| 
+*/
+Route::get('/favoriter', ['as' => 'favourites-show', 'uses' => 'PMController@showFavourites'])
+	->before('auth.verified');
+
+/*
+|
 | Functionality directly connected to PM read/write/edit.
 | TODO Check permissions
 |

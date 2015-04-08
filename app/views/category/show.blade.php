@@ -98,11 +98,13 @@ Kategori {{ $category or '' }}
 					<a href="{{ URL::route('category-show', array('token' => $token, 'order' => $order, 'page' => ($page-1) ) ) }}">Föregående</a>
 					@endif
 				</td>
-				@for($pageNumber = 1; $pageNumber <= $maxPage; $pageNumber++)
-				<td>
-					<a href="{{ URL::route('category-show', array('token' => $token, 'order' => $order , 'page' => $pageNumber ) )}}"> {{ $pageNumber }} </a>
-				</td>
-				@endfor
+				@if ($maxPage > 1)
+					@for($pageNumber = 1; $pageNumber <= $maxPage; $pageNumber++)
+					<td>
+						<a {{ $pageNumber == $page ? "class='active'" : '' }} href="{{ URL::route('category-show', array('token' => $token, 'order' => $order , 'page' => $pageNumber ) )}}"> {{ $pageNumber }} </a>
+					</td>
+					@endfor
+				@endif
 				<td>
 					@if ($page < $maxPage)
 					<a href="{{ URL::route('category-show', array('token' => $token, 'order' => $order , 'page' => ($page+1) ) ) }}">Nästa</a>
@@ -118,11 +120,13 @@ Kategori {{ $category or '' }}
 					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token, 'order' => $order, 'page' => ($page-1) ) ) }}">Föregående</a>
 					@endif
 				</td>
-				@for($pageNumber = 1; $pageNumber <= $maxPage; $pageNumber++)
-				<td>
-					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token, 'order' => $order , 'page' => $pageNumber ) )}}"> {{ $pageNumber }} </a>
-				</td>
-				@endfor
+				@if ($maxPage > 1)
+					@for($pageNumber = 1; $pageNumber <= $maxPage; $pageNumber++)
+					<td>
+						<a {{ $pageNumber == $page ? "class='active'" : '' }} href="{{ URL::route('category-show-all-sorted', array('token' => $token, 'order' => $order , 'page' => $pageNumber ) )}}"> {{ $pageNumber }} </a>
+					</td>
+					@endfor
+				@endif
 				<td>
 					@if ($page < $maxPage)
 					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token, 'order' => $order , 'page' => ($page+1) ) ) }}">Nästa</a>
