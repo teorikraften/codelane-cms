@@ -12,8 +12,7 @@ class UserAdminController extends BaseController {
 			->with('users', 
 				User::orderBy('privileges', 'DESC')
 				->orderBy('real_name', 'ASC')
-				->take(100)
-				->get()
+				->paginate(20)
 			); 
 			// TODO Not only 100, pagination, fix users as well
 	}

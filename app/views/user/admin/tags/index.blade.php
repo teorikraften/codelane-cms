@@ -48,4 +48,7 @@
     		</tr>
     	@endforeach
     </table>
+    <div class="pagination">
+        {{ $tags->links() }}
+    </div>
 @stop

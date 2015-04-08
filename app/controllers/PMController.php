@@ -446,7 +446,7 @@ class PMController extends BaseController {
 		}
 
 		return View::make('user.admin.pm.index')
-			->with('pms', PM::orderBy('id', 'ASC')->get())
+			->with('pms', PM::orderBy('id', 'ASC')->paginate(15))
 			->with('userAssignments', $assignments)
 			->with('userPms', $userPms); // TODO Pagination
 	}

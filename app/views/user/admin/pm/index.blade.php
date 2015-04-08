@@ -138,6 +138,9 @@
                 	@endforeach
                 </tbody>
             </table>
+            <div class="pagination" id="filter-pag">
+                {{ $pms->links() }}
+            </div>
         </div>
     @endif
 @stop

@@ -9,7 +9,7 @@ class RoleController extends BaseController {
 	 */
 	public function showRolesListPage() {
 		return View::make('user.admin.roles.index')
-			->with('roles', Role::take(100)->get()); // TODO Not only 100, pagination, fix roles as well
+			->with('roles', Role::orderBy('name', 'ASC')->paginate(20));
 	}
 
 	/**

@@ -48,4 +48,5 @@ function filter(col, val) {
 
 function setResult(result) {
 	$("#table-fill").html(result);
+	$("#filter-pag").hide();
 }

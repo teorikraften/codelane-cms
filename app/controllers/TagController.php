@@ -9,7 +9,7 @@ class TagController extends BaseController {
 	 */
 	public function showTagsListPage() {
 		return View::make('user.admin.tags.index')
-			->with('tags', Tag::take(100)->get());
+			->with('tags', Tag::orderBy('name', 'ASC')->paginate(20));
 	}
 
 	public function showTagWithToken($token) {

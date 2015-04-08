@@ -1032,3 +1032,44 @@ table.list table {
 table.list table tr:nth-child(odd), table.list table tr:nth-child(even) {
 	background: none;
 }
+
+div.pagination {
+	margin: 0 auto;
+	text-align: center;
+}
+ul.pagination, ul.pagination li {
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    zoom:1; /* For IE, the outcast */
+    *display: inline; /* For IE, the outcast */
+	list-style-type: none;
+}
+ul.pagination {
+	margin: 20px 0;
+}
+ul.pagination li {
+	font-size: 1em;
+	float: left;
+	margin: 0 1px 0 0;
+}
+ul.pagination li a, ul.pagination li span {
+	display: inline-block;
+	padding: 10px 15px;
+	background: #ddd;
+}
+ul.pagination li span {
+	background: #e6e6e6;
+	color: #bbb;
+}
+ul.pagination li a {
+	text-decoration: none;
+}
+ul.pagination li a:hover {
+	background: #008472;
+	color: #ddd;
+}
+ul.pagination li.active span {
+	background: #008472;
+	color: #ddd;
+}
