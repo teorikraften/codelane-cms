@@ -50,41 +50,25 @@
 			<div class="clear"></div>
 		</div>
 
-		@foreach ($pms as $pm)
-			<div id="pmListing">
-
-				<div id="pmTitle">
-					<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>
-					<div id="roleRel">
-						@if (isset($pm['roles']))
-							<?php $roles = 'Detta PM är relevant till en eller flera av dina roller: '; ?>
-							@foreach ($pm['roles'] as $key => $role)
-								@if($key == 0)
-									<?php $roles .= $role->name; ?>
-								@else
-									<?php $roles .= ', ' . $role->name; ?>
-								@endif
-							@endforeach
-							{{ HTML::image('images/persons.png', $roles, array('title' => $roles)) }} 
+		<ul class="result">
+			@foreach ($pms as $pm)
+				<li>
+					<h3><a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a></h3>
+					<div class="tags">
+						@if (count($pm['pm']->tags) > 0)
+							<b>Taggar:</b>
 						@endif
+						@foreach($pm['pm']->tags as $tag)
+							<a href="{{ URL::route('tag-show', $tag->token) }}">{{ $tag->name }}</a>
+						@endforeach
+
+						<b>Giltigt till: {{ '2015-06-27'; /* TODO */ }}</b>
+						<div class="clear"></div>
 					</div>
-				</div>
-				<div id="pmInfo">
-					<b>Författare:</b> 
-					@foreach ($pm['pm']->users as $role) 
-					@if ($role->pivot->assignment == 'author')
-					{{ $role->real_name }}
-					@endif
-					@endforeach
-					<br>
-					<b>Skapad:</b> {{ substr($pm['pm']->created_at, 0, 11) }}
-					
-				</div>
-				<div id="catDescription">
-					{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...
-				</div>
-			</div>
-		@endforeach
+					<p class="description">{{ substr(trim(str_replace("&nbsp;", " ", strip_tags($pm['pm']->content))), 0, 200) }}...</p>
+				</li>
+			@endforeach
+		</ul>
 	</div>
 
 	<div class="clear"></div>
