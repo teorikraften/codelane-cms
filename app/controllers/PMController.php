@@ -28,35 +28,32 @@ class PMController extends BaseController {
 	}
 
 	/**
-	 * Display the users favorite pms
-	 *
+	 * Display the user's favorite pms
 	 */
 	public function showFavourites() {
-		$user = User::find(Auth::user()->id);
+		$pms = Auth::user()->favourites()
+			->where('verified', '=' , 1)
+			->whereNull('pms.deleted_at')
+			->where('expiration_date', '<' , 'CURDATE()')
+			->get();
 
-		$pms = $user->favourites()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 		return View::make('pm.favourites')
-		->with('pms', $pms);
+			->with('pms', $pms);
 	}
 
 	/**
 	* Change favourite status of the pm.
 	*/
-	public function favouritePM($token = null, $goto = null) //$token
-	{
-		if (Input::has('token')) {
-			$token = Input::get('token');
-		}
-		if (Input::has('goto')) {
-			$goto = Input::get('goto');
-		}
-		$user = User::find(Auth::user()->id);
-		$pm = PM::where('token', '=', $token)->first();
-
-		if (!isset($pm)) {
-			echo $token . ' hej ';
-			echo $goto;
-			exit;
+	public function favouritePM($token = null, $goto = null) {
+		$token = Input::get('token', $token);
+		$goto = Input::get('goto', $goto);
+		$user = Auth::user();
+		
+		try {
+			$pm = PM::where('token', '=', $token)->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			return Redirect::route('favourites-show')
+				->with('error', 'Kunde inte hitta PM:et som skulle favoritmarkeras.');
 		}
 
 		if (!empty($user->favourites()->where('pm', '=', $pm->id)->first())) {
@@ -68,12 +65,21 @@ class PMController extends BaseController {
 		}
 
 		if ($goto == 'fav') {
-			return Redirect::route('favourites-show')->with('successfav', array('message' => $message, 'token' => $token));
+			$m = $message . 
+				' <a href="' . 
+					URL::route('get-favourite-edit', array('goto' => 'fav', 'token' => $token)) .
+				'">Undo</a>';
+
+			return Redirect::route('favourites-show')
+				->with('success', $m);
+				
 		} else if ($goto == 'pm') {
 			return Redirect::route('pm-show', array('token' => $token))
-			->with('success', $message);
-			
+				->with('success', $message);
 		}
+
+		return Redirect::route('favourites-show')
+			->with('error', 'Ett fel uppstod när PM:et skulle favoritmarkeras.');
 	}
 
 	/**

@@ -68,4 +68,16 @@ class Pm extends Eloquent {
 	{
 		return $this->belongsToMany('User', 'assignments', 'pm', 'user')->withPivot('assignment');
 	}
+
+	public function favouriteUsers() 
+	{
+		return $this->belongsToMany('User', 'favourites', 'pm', 'user');
+	}
+
+	public function favouriteByUser() {
+		if (Auth::guest())
+			return false;
+
+		return count($this->favouriteUsers()->where('user', '=', Auth::user()->id)->get()) > 0;
+	}
 }

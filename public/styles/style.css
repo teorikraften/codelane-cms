@@ -510,6 +510,14 @@ ul.result li h3 a {
 	color: #004231;
 	text-decoration: none;
 }
+ul.result li h3 .goldenstar {
+	font-size: 1em;
+	color: #ec0;
+}
+ul.result li h3 .greystar {
+	font-size: 1em;
+	color: #ccc;
+}
 ul.result li p.description {
 	margin-top: 0;
 	padding-top: 0;

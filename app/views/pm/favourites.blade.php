@@ -1,30 +1,15 @@
 @extends('master')
 
 @section('head-title')
-Favoriter
-@stop
-
-@section('head-extra')
-
+	Favoriter
 @stop
 
 @section('body')
 
 @include('includes.messages')
 
-@if($s = Session::get('successfav'))
-	<p class="pop success">
-			{{ $s['message'] }} <a href="{{ URL::route('get-favourite-edit', array('goto' => 'fav', 'token' => $s['token'])) }}" >Undo</a>
-		</p>
-@endif
-
 @foreach($pms as $key => $pm)
-<a href="{{ URL::route('get-favourite-edit', array('goto' => 'fav', 'token' => $pm->token)) }}" title="Favorit" class="goldenstar">&#9733</a>
-
-{{ Form::model($pm, array('action' => 'post-favourite-edit', 'method' => 'post'))}}
-{{ Form::hidden('token') }}
-{{ Form::hidden('goto', 'fav')}}
-{{ Form::submit('&#9733', array('class' => 'goldenstar'))}}
+<a href="{{ URL::route('get-favourite-edit', array('goto' => 'fav', 'token' => $pm->token)) }}" title="Favorit" class="goldenstar">&#9733;</a>
 
 <div id="pmListing">
 
