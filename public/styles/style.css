@@ -493,9 +493,11 @@ ul.result {
 	list-style-type: none;
 	margin: 0;
 	padding: 0;
+	border-bottom: 3px solid #ccc;
 }
 ul.result li {
 	margin: 15px 0;
+	max-width: 600px;
 }
 ul.result li a {
 	color: #008472;
@@ -507,6 +509,12 @@ ul.result li h3 {
 ul.result li p.description {
 	margin-top: 0;
 	padding-top: 0;
+}
+ul.result .tags a {
+	display: inline-block;
+	padding: 2px 5px;
+	background: #ddd;
+	text-decoration: none;
 }
 
 /*===============================
@@ -845,34 +853,48 @@ ul.ui-autocomplete li.ui-state-focus {
 /*=====================================================
 =            Search result sorting options            =
 =====================================================*/
-
+div.result {
+	display: block;
+	width: 100%;
+	border-bottom: 3px solid #ccc;
+	margin-top: 10px;
+	text-align: left;
+	font-size: 1.3em;
+}
 .sortby {
 	display: inline-block;
 	list-style: none;
 	margin: 0;
+	float: right;
+	font-size: 0.76em;
 }
 
 .sortby li {
 	display: inline-block;
 	background: #008472;
 	margin: 0 0 5px 0;  
+	text-align: center;
 }
 
 .sortby a {
+	background: #ddd;
 	display: inline-block;
 	text-decoration: none;
-	color: #fff;
-	width: 100%;
+	color: #000;
 	height: 100%;
-	padding: 5px;
+	padding: 5px 10px;
+	color: #008472;
 	font-family: 'Muli', sans-serif;
 	font-weight: normal;
-	font-size: 14px;
 }
-.sortby .active {
-	background: #004038;
+.sortby .active a {
+	color: #eee;
+	background: #008472;
 }
-
+.sortby a:hover { 
+	color: #eee;
+	background: #119482;
+}
 div#inline{
 	float: right;
 }
@@ -1071,11 +1093,14 @@ ul.pagination li span {
 ul.pagination li a {
 	text-decoration: none;
 }
-ul.pagination li a:hover {
+ul.pagination li a:hover, ul.pagination li.active span {
 	background: #008472;
 	color: #ddd;
 }
-ul.pagination li.active span {
-	background: #008472;
-	color: #ddd;
+
+.goldenstar {
+	color: #fd0;
+}
+.greystar {
+	color: #ccc;
 }
