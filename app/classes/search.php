@@ -348,6 +348,7 @@ class Search {
 			foreach ($pms as $key => $pm) {
 				if (isset($this->result[$pm->id])) {
 					$this->result[$pm->id]['roles'][] = $role;
+					$this->updatePmScore($pm, 100);
 				}
 			}
 		}
