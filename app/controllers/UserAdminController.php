@@ -200,4 +200,26 @@ class UserAdminController extends BaseController {
 		$user->save();
 		return Redirect::route('admin-users')->with('success', 'Användaren uppdaterades.'); // TODO Show
 	}
+
+	public function postFilter() {
+		$users = User::select('*');
+
+		if (Input::has('filter')) {
+			// Search in id and title to start with
+			$users->where('email', 'LIKE', '%' . Input::get('filter') . '%')
+				->orWhere('real_name', 'LIKE', '%' . Input::get('filter') . '%');
+		}
+			
+		$resp = $users->orderBy('real_name', 'ASC')->take(100)->get();
+
+		foreach($resp as $res) {
+			$res->persons = $res->users;
+		}
+
+		foreach($resp as $r) {
+			$r->privileges = ucfirst($r->privileges());
+		}
+
+		return Response::json($resp);
+	}
 }

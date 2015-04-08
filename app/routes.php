@@ -24,6 +24,12 @@ Route::post('/spara-kommentar', ['as' => 'save-comment', 'uses' => 'PMController
 	->before('csrf');
 Route::post('/pm-filter', ['as' => 'pm-filter', 'uses' => 'PMController@postFilter'])
 	;//->before('csrf');
+Route::post('/user-filter', ['as' => 'user-filter', 'uses' => 'UserAdminController@postFilter'])
+	;//->before('csrf');
+Route::post('/role-filter', ['as' => 'role-filter', 'uses' => 'RoleController@postFilter'])
+	;//->before('csrf');
+Route::post('/tag-filter', ['as' => 'tag-filter', 'uses' => 'TagController@postFilter'])
+	;//->before('csrf');
 
 
 Route::get('/taggar', ['as' => 'tags-autocomplete', 'uses' => 'TagController@tagsAutocomplete']);

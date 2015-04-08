@@ -552,11 +552,16 @@ class PMController extends BaseController {
 				->orWhere('title', 'LIKE', '%' . Input::get('filter') . '%');
 		}
 			
-		$resp = $pms->orderBy('id', 'ASC')->get();
+		$resp = $pms->orderBy('id', 'ASC')
+			->take(100)
+			->get();
 
 		if ($resp->count() == 0 && Input::has('filter')) {
 			// Search on content if there was no match in title or id
-			$resp = PM::where('content', 'LIKE', '%' . Input::get('filter') . '%')->orderBy('id', 'ASC')->get();
+			$resp = PM::where('content', 'LIKE', '%' . Input::get('filter') . '%')
+				->orderBy('id', 'ASC')
+				->take(100)
+				->get();
 		}
 
 		foreach($resp as $res) {

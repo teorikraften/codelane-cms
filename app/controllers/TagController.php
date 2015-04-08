@@ -172,4 +172,21 @@ class TagController extends BaseController {
 		}
 		return json_encode($result);
 	}
+
+	public function postFilter() {
+		$users = Tag::select('*');
+
+		if (Input::has('filter')) {
+			// Search in id and title to start with
+			$users->where('name', 'LIKE', '%' . Input::get('filter') . '%');
+		}
+			
+		$resp = $users->orderBy('name', 'ASC')->take(100)->get();
+
+		foreach($resp as $res) {
+			$res->num = count($res->pm);
+		}
+
+		return Response::json($resp);
+	}
 }

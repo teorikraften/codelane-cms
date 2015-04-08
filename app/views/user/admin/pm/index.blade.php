@@ -7,6 +7,14 @@
 @section('head-extra')
     {{ HTML::script('js/admin-filter.js') }}
     {{ HTML::script('js/sort.js') }}
+    <script type="text/javascript">
+        $(function() {
+            $("#filter-p").show();
+            $("#filter").keyup(function() { 
+                fetchData($(this).val(), "/pm-filter", 'pms'); 
+            });
+        });
+    </script>
 @stop
 
 @section('submenu')
