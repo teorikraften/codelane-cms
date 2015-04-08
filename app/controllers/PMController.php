@@ -172,6 +172,7 @@ class PMController extends BaseController {
 		}
 		
 		return View::make('pm.edit')
+			->with('categorySelect', $this->getChildrenList(0, NULL))
 			->with('pm', $pm);
 	}
 
@@ -204,6 +205,7 @@ class PMController extends BaseController {
 			}
 		}
 		$pm->title = Input::get('title');
+		$pm->category = Input::get('category');
 		$pm->content = Input::get('content');
 		$pm->save();
 
@@ -581,5 +583,18 @@ class PMController extends BaseController {
 		}
 
 		return Response::json($resp);
+	}
+
+	private function getChildrenList($parent, $not = 0, $prefix = '___') {
+		// TODO Do in mysql rather than many requests
+		$children = Category::where('parent', '=', $parent)->get();
+		$res = array();
+		foreach ($children as $child) {
+			if ($child->id != $not) {
+				$res[$child->id] = $prefix . $child->name;
+				$res += $this->getChildrenList($child->id, $not, '___' . $prefix);
+			}
+		}
+		return $res;
 	}
 }

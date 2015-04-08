@@ -51,39 +51,39 @@
 		</div>
 
 		@foreach ($pms as $pm)
-		<div id="pmListing">
+			<div id="pmListing">
 
-			<div id="pmTitle">
-				<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>
-				<div id="roleRel">
-					@if (isset($pm['roles']))
-						<?php $roles = 'Detta PM är relevant till en eller flera av dina roller: '; ?>
-						@foreach ($pm['roles'] as $key => $role)
-							@if($key == 0)
-								<?php $roles .= $role->name; ?>
-							@else
-								<?php $roles .= ', ' . $role->name; ?>
-							@endif
-						@endforeach
-						{{ HTML::image('images/persons.png', $roles, array('title' => $roles)) }} 
+				<div id="pmTitle">
+					<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>
+					<div id="roleRel">
+						@if (isset($pm['roles']))
+							<?php $roles = 'Detta PM är relevant till en eller flera av dina roller: '; ?>
+							@foreach ($pm['roles'] as $key => $role)
+								@if($key == 0)
+									<?php $roles .= $role->name; ?>
+								@else
+									<?php $roles .= ', ' . $role->name; ?>
+								@endif
+							@endforeach
+							{{ HTML::image('images/persons.png', $roles, array('title' => $roles)) }} 
+						@endif
+					</div>
+				</div>
+				<div id="pmInfo">
+					<b>Författare:</b> 
+					@foreach ($pm['pm']->users as $role) 
+					@if ($role->pivot->assignment == 'author')
+					{{ $role->real_name }}
 					@endif
+					@endforeach
+					<br>
+					<b>Skapad:</b> {{ substr($pm['pm']->created_at, 0, 11) }}
+					
+				</div>
+				<div id="catDescription">
+					{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...
 				</div>
 			</div>
-			<div id="pmInfo">
-				<b>Författare:</b> 
-				@foreach ($pm['pm']->users as $role) 
-				@if ($role->pivot->assignment == 'author')
-				{{ $role->real_name }}
-				@endif
-				@endforeach
-				<br>
-				<b>Skapad:</b> {{ substr($pm['pm']->created_at, 0, 11) }}
-				
-			</div>
-			<div id="catDescription">
-				{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...
-			</div>
-		</div>
 		@endforeach
 	</div>
 
