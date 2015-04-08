@@ -211,7 +211,7 @@ ul.menu {
 	float: left;
     margin: 0;
     padding-right: 40px;
-    width: 500px; /* Changed from 350px to make room for categories */
+    width: 550px; /* Changed from 350px to make room for categories */
     height: 60px;
     font-size: 0;
 }
