@@ -64,6 +64,9 @@ th {
 th, td {
 	padding: 0 5px 0 0;
 }
+th:last-child, td:last-child {
+	padding: 0 5px;
+}
 
 /*================================
 =             Footer             =
@@ -999,6 +1002,9 @@ table.list td, table.list th {
 	padding: 10px 1px 0px 11px;
 	margin: 0;
 	vertical-align: top;
+}
+table.list th:last-child, table.list td:last-child {
+	padding: 10px 11px 0px 11px;
 }
 table.list th {
 	background: #ddd;
