@@ -24,6 +24,18 @@ class PMController extends BaseController {
 	}
 
 	/**
+	 * Display the users favorite pms
+	 *
+	 */
+	public function showFavourites() {
+		$user = User::find(Auth::user()->id);
+
+		$pms = $user->favourites()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		return View::make('pm.favourites')
+			->with('pms', $pms);
+	}
+
+	/**
 	 * Displays the PM download page view.
 	 * @param $token the PM token
 	 */
