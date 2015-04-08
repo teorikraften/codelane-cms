@@ -16,8 +16,10 @@
     <h1>Dina aktuella uppgifter</h1> 
 <!--infoWindow-->
     <div id="infoWindow" style="display:none;"><h3>
+<button onclick="show('infoWindow')">X</button> Hjälp :: Uppgifter</h3>
         <p>Här visas en lista med uppgifter där du har tilldelats att utföra.</p>
     </div>
+    <button onclick="show('infoWindow')">?</button>
 <!-- end of infoWindow-->  
         <table class="list">
             <tr>
