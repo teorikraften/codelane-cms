@@ -842,6 +842,10 @@ ul.ui-autocomplete li.ui-state-focus {
 	background-color: #fff;
 }
 
+.search_page_selector .active {
+	background: #95A7A7;
+}
+
 /*=====================================================
 =            Search result sorting options            =
 =====================================================*/
