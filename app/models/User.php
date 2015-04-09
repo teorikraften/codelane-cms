@@ -141,70 +141,61 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function allEvents() {
 		$res = array();
-		/*
+
+		// TODO FirstO Continue on deleted PMS
 
 		// 'creator'
 		$creatorAss = $this->assignment()->where('assignment', '=', 'creator')->whereNull('done_at')->get();
 		foreach ($creatorAss as $key => $ass) {
-			$pm = $ass->pmGet;
-			var_dump($pm);
-			exit;
+			$pm = $ass->assignedPm;
 			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written') {
-				$res['verb'] = $this->assignmentString($ass->assignment);
-				$res['pm'] = $pm;
+				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
 			}
 		}
-		/*
 
 		// 'author'
 		$writeAss = $this->assignment()->where('assignment', '=', 'author')->whereNull('done_at')->get();
 		foreach ($writeAss as $key => $ass) {
-			$pm = $ass->pm;
+			$pm = $ass->assignedPm;
 			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written')
-				$res['verb'] = $this->assignmentString($ass->assignment);
-			$res['pm'] = $pm;
+				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
 		}
 
 		// 'settler'
 		$settlerAss = $this->assignment()->where('assignment', '=', 'settler')->whereNull('done_at')->get();
 		foreach ($settlerAss as $key => $ass) {
-			$pm = $ass->pm;
+			$pm = $ass->assignedPm;
 			if ($pm->status == 'end-reviewed' || $pm->status == 'revision-end-reviewed') {
-			$res['verb'] = $this->assignmentString($ass->assignment);
-			$res['pm'] = $pm;
+			$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
 			}
 		}
 
 		// 'reviewer'
 		$reviewAss = $this->assignment()->where('assignment', '=', 'reviewer')->whereNull('done_at')->get();
 		foreach ($reviewAss as $key => $ass) {
-			$pm = $ass->pm;
+			$pm = $ass->assignedPm;
 			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written') {
-				$res['verb'] = $this->assignmentString($ass->assignment);
-				$res['pm'] = $pm;
+				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
 			}
 		}
 
 		// 'end-reviewer'
 		$LastReviewAss = $this->assignment()->where('assignment', '=', 'end-reviewer')->whereNull('done_at')->get();
 		foreach ($LastReviewAss as $key => $ass) {
-			$pm = $ass->pm;
+			$pm = $ass->assignedPm;
 			if ($pm->status == 'reviewed' || $pm->status == 'revision-reviewed'	|| $pm->status == 'written' || $pm->status == 'revision-written' || $pm->status == 'reviewed' || $pm->status == 'revision-reviewed') {
-				$res['verb'] = $this->assignmentString($ass->assignment);
-				$res['pm'] = $pm;
+				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
 			}
 		}
 
 		// 'reminder'
 		$RevidAss = $this->assignment()->where('assignment', '=', 'reminder')->whereNull('done_at')->get();
 		foreach ($RevidAss as $key => $ass) {
-			$pm = $ass->pm;
+			$pm = $ass->assignedPm;
 			if ( $pm->status == 'revision-waiting' || $pm->status == 'published-reminded') { // TODO jämför dates $pm->expiration_date < Carbon::now() ||
-				$res['verb'] = $this->assignmentString($ass->assignment);
-				$res['pm'] = $pm;
+				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
 			}
 		}
-		*/
 		return $res;
 	}
 }

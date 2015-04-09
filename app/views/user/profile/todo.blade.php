@@ -33,8 +33,8 @@
             <tr>
                 <td></td> <!-- TODO: Add PM document type -->
                 <td></td> <!-- TODO: Add PM number -->
-                <td>"{{ $event->pm->title }}"</td>
-                <td>{{ $event->verb }}</td>
+                <td>"{{ $event['pm']->title }}"</td>
+                <td>{{ $event['verb'] }}</td>
                 <td></td> <!-- TODO: Add PM creation date -->
                 <!-- Add something to manage the given task -->
             </tr>

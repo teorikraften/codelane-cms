@@ -21,8 +21,8 @@ class Assignment extends Eloquent {
 	 * 
 	 * @return Relation
 	 */
-	public function pmGet() {
-		return $this->hasOne('Pm');
+	public function assignedPm() {
+		return $this->hasOne('Pm', 'id', 'pm');
 	}
 
 	/**
@@ -30,7 +30,7 @@ class Assignment extends Eloquent {
 	 * 
 	 * @return Relation
 	 */
-	public function user() {
-		return $this->hasOne('User');
+	public function assignedUser() {
+		return $this->hasOne('User', 'id', 'pm');
 	}
 }
