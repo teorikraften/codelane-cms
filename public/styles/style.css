@@ -1076,6 +1076,7 @@ table.list th {
 }
 table.list th.action {
 	width: 20px;
+	height: 25px;
 }
 table.list tr:nth-child(even) {
 	background: #fff;
