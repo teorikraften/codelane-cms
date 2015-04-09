@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: localhost
--- Tid vid skapande: 09 apr 2015 kl 11:15
+-- Tid vid skapande: 09 apr 2015 kl 11:54
 -- Serverversion: 5.6.22
 -- PHP-version: 5.5.14
 
@@ -139,6 +139,7 @@ CREATE TABLE IF NOT EXISTS `pms` (
   `expiration_date` date NOT NULL,
   `first_published_date` date NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
+  `update_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `deleted_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
@@ -253,14 +254,17 @@ CREATE TABLE IF NOT EXISTS `users` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `deleted_at` timestamp NULL DEFAULT NULL,
   `remember_token` varchar(100) COLLATE utf8_unicode_ci DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumpning av Data i tabell `users`
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `name`, `privileges`, `tooltips_on`, `created_at`, `updated_at`, `deleted_at`, `remember_token`) VALUES
-(1, 'admin@jdahl.se', '$2y$10$td8xXkka1O8a3pZEZ/tfsOAkJ3N/WLY0yN9WSgtwbOiEHtgyGb0Ta', 'Admin Adminsson', 'admin', 1, '2015-04-09 08:00:00', '2015-04-09 07:56:17', NULL, 'SeWbgPwm2JMy5ba26Fp2sxEYSJAixKIKOCw2gdzed99ZBAYUwB2gH0ahw0UA');
+(1, 'admin@jdahl.se', '$2y$10$td8xXkka1O8a3pZEZ/tfsOAkJ3N/WLY0yN9WSgtwbOiEHtgyGb0Ta', 'Admin Adminsson', 'admin', 1, '2015-04-09 08:00:00', '2015-04-09 09:28:47', NULL, 'jjTjC6enNffj8Ud6bDwXEG0vP4D3IaxTx2WEvpBxRcUEpTVCHnYTRWVrphX8'),
+(2, 'pmadmin@jdahl.se', '$2y$10$IbVArhuXxDtRwDYXWyCZT.CEpMsycIX4Z3MZIK.Y3b1xeQEZKilw2', 'PM-Admin Sara', 'pm-admin', 0, '2015-04-09 09:27:23', '2015-04-09 09:29:07', NULL, 'ii8iN3nr2tW68VfmnVB6oDozm8ilFNwZXVSN44UoVuhcbmFoz53iGc9Blrxg'),
+(3, 'verifierad@jdahl.se', '$2y$10$p662Xn2plUUber.FrLSfwO.kMkaweZAUT6n3VjiTB2LSqlG5KEWOi', 'Verifierad Mats', 'verified', 0, '2015-04-09 09:27:51', '2015-04-09 09:30:21', NULL, '3OoDvICJowfzzf3NpjX1Ca4oU5WZMA5wttDqLHsv7YcFLzRgoxtBV1s3c6Qa'),
+(4, 'overifierad@jdahl.se', '$2y$10$9FQLuh5FrCj91EiLniU5JuDJP4Qm2ld57r/62YUjSSOBAOZrVAFnG', 'Overifierad Hasse', 'unverified', 0, '2015-04-09 09:28:12', '2015-04-09 09:30:45', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -438,7 +442,7 @@ ALTER TABLE `templates`
 -- AUTO_INCREMENT för tabell `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=2;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT för tabell `user_roles`
 --
