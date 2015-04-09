@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('head-title')
-    Ändra användare: {{ Auth::user()->real_name }}
+    Ändra användare: {{ Auth::user()->name }}
 @stop
 
 @section('head-extra')
@@ -36,11 +36,11 @@
 	@include("includes.success")
 	@include("includes.message")
 
-    {{ Form::model(Auth::user(), array('action' => array('UserController@editProfile', Auth::user()->id))) }}
+    {{ Form::model(Auth::user(), array('action' => array('UserController@postEditProfile', Auth::user()->id))) }}
     <div class="form">
 		<div class="row">
-			<div class="description">{{ Form::label('real_name', 'Namn') }}</div>
-			<div class="input">{{ Form::text('real_name', NULL, array('class' => 'text')) }}</div>
+			<div class="description">{{ Form::label('name', 'Namn') }}</div>
+			<div class="input">{{ Form::text('name', NULL, array('class' => 'text')) }}</div>
 		</div>
 		<div class="row">
 			<div class="description">{{ Form::label('email', 'E-postadress') }}</div>
@@ -62,7 +62,7 @@
     @if(Session::get('errorType') == 'password')
 		@include("includes.error")
 	@endif
-    {{ Form::open(array('action' => array('UserController@changePassword', Auth::user()->id))) }}
+    {{ Form::open(array('action' => array('UserController@postChangePassword', Auth::user()->id))) }}
     <div class="form">
 		<div class="row">
 			<div class="description">{{ Form::label('old_password', 'Gammalt lösenord') }}</div>

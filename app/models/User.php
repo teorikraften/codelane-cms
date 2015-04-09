@@ -24,52 +24,71 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
-	protected $fillable = array('email', 'password', 'real_name', 'privileges','remember_token');
-	protected $dates = ['deleted_at'];
+	/**
+	 * The mass assignable fields for the model.
+	 *
+	 * @var array(string)
+	 */
+	protected $fillable = ['email', 'password', 'name', 'privileges', 'remember_token'];
 
 	/**
-	 * favourite pms of the user.
+	 * The deleted_at is protected.
+	 *
+	 * @var array(string)
 	 */
-	public function favourites() 
-	{
-		return $this->belongsToMany('Pm', 'favourites', 'user', 'pm');
+	protected $dates = ['deleted_at'];
+
+
+
+
+
+	/**
+	 * Defines relation to all the PM the user has favourited.
+	 *
+	 * @return Relation
+	 */
+	public function favourites() {
+		return $this->belongsToMany('PM', 'favourites', 'user', 'pm');
 	}
 
 	/**
-	 * Roles of the user.
+	 * Defines relation to all roles the user has.
+	 *
+	 * @return Relation
 	 */
-	public function roles() 
-	{
+	public function roles() {
 		return $this->belongsToMany('Role', 'user_roles', 'user', 'role');
 	}
 
 	/**
-	 * Roles of the user.
+	 * Defines relation to all the PM:s (via assignment) the user is working with.
+	 *
+	 * @return Relation
 	 */
-	public function pms() 
-	{
+	public function pms() {
 		return $this->belongsToMany('Pm', 'assignments', 'user', 'pm')->withPivot('assignment');
 	}
 
 	/**
-	 * Actions made by the user.
+	 * Defines relation to all the assignment the user has.
+	 *
+	 * @return Relation
 	 */
 	public function assignment() {
 		return $this->hasMany('Assignment', 'user');
 	}
 
-	/**
-	 * The users last read pms
-	 */
-	public function lastReadPms() 
-	{
-		return $this->belongsToMany('Pm', 'last_read', 'user', 'pm');
-	}
+
+
+
+
 
 	/**
-	 * Returns user's privileges as a nice string word.
+	 * Get a nice, Swedish, string of user privilege.
+	 *
+	 * @return string
 	 */
-	public function privileges() {
+	public function privilegesString() {
 		if ($this->privileges == 'admin') 
 			return "systemadministatör";
 		if ($this->privileges == 'pm-admin') 
@@ -80,7 +99,8 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
-	 * Returns user's privileges as an integer.
+	 * Get user's privileges as an integer.
+	 *
 	 * @return 10 (admin), 8 (pm-admin), 2 (verifierad), 0 (overifierad)
 	 */
 	public function privilegesNum() {
@@ -94,7 +114,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
-	 * Returns user's privileges as a nice string word.
+	 * Get a nice, Swedish, string of user assignment.
+	 *
+	 * @return string
 	 */
 	public static function assignmentString($assignment) {
 		if ($assignment == 'creator') 
@@ -113,15 +135,72 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
-	 * Gets all events connected to this user.
+	 * Gets all events that this user has to finish.
+	 *
+	 * @return array of events - array({ 'verb':string, 'pm':PM })
 	 */
-	public static function allEvents() {
+	public function allEvents() {
 		$res = array();
-		$obj = new stdClass; $obj->verb = 'skriva'; $obj->pm = PM::find(1); $res[] = $obj;
-		$obj = new stdClass; $obj->verb = 'granska'; $obj->pm = PM::find(2); $res[] = $obj;
-		$obj = new stdClass; $obj->verb = 'revidera'; $obj->pm = PM::find(4); $res[] = $obj;
-		$obj = new stdClass; $obj->verb = 'slutgranska'; $obj->pm = PM::find(3); $res[] = $obj;
 
+		// TODO FirstO Continue on deleted PMS
+
+		// 'creator'
+		$creatorAss = $this->assignment()->where('assignment', '=', 'creator')->whereNull('done_at')->get();
+		foreach ($creatorAss as $key => $ass) {
+			$pm = $ass->assignedPm;
+			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written') {
+				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
+			}
+		}
+
+		// 'author'
+		$writeAss = $this->assignment()->where('assignment', '=', 'author')->whereNull('done_at')->get();
+		foreach ($writeAss as $key => $ass) {
+			$pm = $ass->assignedPm;
+			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written')
+				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
+		}
+
+		// 'settler'
+		$settlerAss = $this->assignment()->where('assignment', '=', 'settler')->whereNull('done_at')->get();
+		foreach ($settlerAss as $key => $ass) {
+			$pm = $ass->assignedPm;
+			if ($pm->status == 'end-reviewed' || $pm->status == 'revision-end-reviewed') {
+			$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
+			}
+		}
+
+		// 'reviewer'
+		$reviewAss = $this->assignment()->where('assignment', '=', 'reviewer')->whereNull('done_at')->get();
+		foreach ($reviewAss as $key => $ass) {
+			$pm = $ass->assignedPm;
+			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written') {
+				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
+			}
+		}
+
+		// 'end-reviewer'
+		$LastReviewAss = $this->assignment()->where('assignment', '=', 'end-reviewer')->whereNull('done_at')->get();
+		foreach ($LastReviewAss as $key => $ass) {
+			$pm = $ass->assignedPm;
+			if ($pm->status == 'reviewed' || $pm->status == 'revision-reviewed'	|| $pm->status == 'written' || $pm->status == 'revision-written' || $pm->status == 'reviewed' || $pm->status == 'revision-reviewed') {
+				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
+			}
+		}
+
+		// 'reminder'
+		$RevidAss = $this->assignment()->where('assignment', '=', 'reminder')->whereNull('done_at')->get();
+		foreach ($RevidAss as $key => $ass) {
+			$pm = $ass->assignedPm;
+			if ( $pm->status == 'revision-waiting' || $pm->status == 'published-reminded') { // TODO jämför dates $pm->expiration_date < Carbon::now() ||
+				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
+			}
+		}
 		return $res;
 	}
 }
+
+/*
+'assigned','written','reviewed','end-reviewed','published','published-reminded'
+,'revision-waiting','revision-assigned','revision-reviewed','revision-end-reviewed','revision-written'
+*/

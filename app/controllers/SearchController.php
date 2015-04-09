@@ -4,8 +4,8 @@ class SearchController extends BaseController {
 	/**
 	 * Displays the search page view.
 	 */
-	public function showSearchPage()
-	{
+	public function getSearch() {
+		// TODO Används den här? @deprecated
 		return View::make('search.index');
 	}
 
@@ -16,8 +16,7 @@ class SearchController extends BaseController {
 	 * @param $page the page number, 1 by default
 	 * @param $options Array with boolean serach options in the order: tags, roles, text
 	 */ 
-	public function showSearchResultPage($searchQuery, $order = 'score', $page = 1, $options = NULL) 
-	{
+	public function getResult($searchQuery, $order = 'score', $page = 1, $options = NULL) {
 		$page = intval($page);
 
 		if ($searchQuery == '') {
@@ -60,14 +59,31 @@ class SearchController extends BaseController {
 	}
 
 	/**
+	 * 
+	 */
+	public function getLatest() {
+		$search = new Search('latestAddedPms');
+
+		$search->latestUpdatedPMs();
+		$returnResult = $search->getPage(1);
+
+		return View::make('search.result')
+		->with('searchQuery', "")
+		->with('result', $returnResult)
+		->with('order', $order)
+		->with('page', $page)
+		->with('maxPage', $search->maximumPage());
+	}
+
+	/**
 	 * Performs search with search request in POST.
 	 * @return a redirect to search result view
 	 */
-	public function search() {
+	public function postSearch() {
 		return Redirect::route('search-result', Input::get('search-query'));
 	}
 
-	public function searchAutocomplete() {
+	public function getSearchAutocomplete() {
 		$searchQuery = Input::get('term');
 
 		$splitPosition = strrpos($searchQuery, " ");

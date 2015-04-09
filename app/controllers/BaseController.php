@@ -7,12 +7,19 @@ class BaseController extends Controller {
 	 *
 	 * @return void
 	 */
-	protected function setupLayout()
-	{
-		if ( ! is_null($this->layout))
-		{
+	protected function setupLayout() {
+		if ( ! is_null($this->layout)) {
 			$this->layout = View::make($this->layout);
 		}
 	}
 
+	/**
+	 * Displays the index page view.
+	 * 
+	 * @return Response
+	 */
+	public function getIndex() {
+		return View::make('index')
+			->withInput(Input::all());
+	}
 }

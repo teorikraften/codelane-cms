@@ -56,7 +56,7 @@
 @stop
 
 @section('body')
-    <h1>Granska "{{ $pm->title }}"</h1>
+    <h1>Slutgranska "{{ $pm->title }}"</h1>
     @include('includes.messages')
     <div style="width: 750px">
         <h2>Information</h2>
@@ -66,7 +66,7 @@
             Författare är 
             <ul>
                 @foreach ($assignments as $ass)
-                    @if ($ass->pivot->ass == 'author')
+                    @if ($ass->pivot->assignment == 'author')
                         <li>{{ $ass->name }} ({{ $ass->email }})</li>
                     @endif
                 @endforeach
@@ -99,7 +99,7 @@
     <div class="clear" style="height: 100px"></div>
     <h2>Övergripande kommentar</h2>
     <p>Här kan du skriva en övergripande kommentar om texten som författaren kan se och förbättra texten efter. Om du godkänner PM:et måste du klicka i rutan längst ner och sedan trycka på "Spara".</p>
-    {{ Form::model($assignment, array('action' => 'post-save-review', 'method' => 'post')) }}
+    {{ Form::model($assignment, array('action' => 'post-save-end-review', 'method' => 'post')) }}
     {{ Form::hidden('pm-id', $pm->id) }}
     <div class="form" style="width: 100%; max-width: none;">
         <div class="row">

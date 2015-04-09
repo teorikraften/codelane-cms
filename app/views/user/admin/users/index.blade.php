@@ -56,9 +56,9 @@
                             </a>
                         @endif
                     </td>
-                    <td>{{ $user->real_name }}</td>
+                    <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
-                    <td>{{ ucfirst($user->privileges()) }}</td>
+                    <td>{{ ucfirst($user->privilegesString()) }}</td>
         		</tr>
         	@endforeach
         </tbody>

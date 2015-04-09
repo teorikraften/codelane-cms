@@ -1,5 +1,5 @@
-@import url(http://fonts.googleapis.com/css?family=Muli:400,700,400italic,700italic);
-@import url(http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic);
+@import url(http://fonts.googleapis.com/css?family=Oxygen:400,700,400italic,700italic);
+@import url(http://fonts.googleapis.com/css?family=Merriweather:400,700,400italic,700italic);
 
 /*================================
 =            =Reset   			 =
@@ -9,6 +9,10 @@ body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,
     padding:0;
 }
 
+ol {
+	margin-left: 25px;
+}
+
 /*================================
 =           htlm, body           =
 ================================*/
@@ -16,7 +20,7 @@ html,body, #container {
     margin: 0;
     padding: 0;
     height: 100%;
-    font-family: 'Muli', sans-serif;
+    font-family: 'Oxygen', sans-serif;
     font-size: 15px;
 }
 html {
@@ -37,7 +41,7 @@ input.text {
 	padding: 10px 10px;
 	border-radius: 0px; /* TODO Fix browser comp */
 	font-size: 15px;
-	font-family: 'Muli', sans-serif; /* TODO Change if change font */
+	font-family: 'Oxygen', sans-serif; /* TODO Change if change font */
 }
 .clear {
 	clear: both;
@@ -62,7 +66,7 @@ th {
 	text-align: left;
 }
 th, td {
-	padding: 0 5px 0 0;
+	padding: 0 5px 0px 0;
 }
 th:last-child, td:last-child {
 	padding: 0 5px;
@@ -183,12 +187,12 @@ th:last-child, td:last-child {
 	width: 250px;
 	float: left;
 	display: inline-block;
-	font-family: 'Muli', sans-serif;
+	font-family: 'Oxygen', sans-serif;
 }
 
 /* Searchbutton */
 .search-form .btn {
-	font-family: 'Muli', sans-serif;
+	font-family: 'Oxygen', sans-serif;
 	font-weight: normal;
 	padding: 8px;
 	font-size: 14px;
@@ -421,7 +425,7 @@ div.form input.text, div.form textarea {
 	padding: 10px 10px;
 	border-radius: 0px; /* TODO Fix browser comp */
 	font-size: 15px;
-	font-family: 'Muli', sans-serif; /* TODO Change if change font */
+	font-family: 'Oxygen', sans-serif; /* TODO Change if change font */
 }
 div.form input.text.short {
 	max-width: 60px;
@@ -436,7 +440,7 @@ div.form textarea {
 	height: 700px;
 	width: 96%;
 	padding: 10px 2%;
-	font-family: 'Lora';
+	font-family: 'Merriweather';
 	line-height: 1.5;
 	font-size: 1.1em;
 }
@@ -448,7 +452,7 @@ div.form input.submit {
 	margin: 15px 0 10px;
 	background: #008472;
 	font-size: 15px;
-	font-family: 'Muli', sans-serif; /* TODO Change if change font */
+	font-family: 'Oxygen', sans-serif; /* TODO Change if change font */
 }
 div.form input.submit.no {
 	color: #008472;
@@ -469,6 +473,7 @@ div.form .row.same {
 	padding: 1px;
 }
 div.form .row .description {
+	font-weight: bold;
 	font-size: 15px;
 	padding: 10px 0 0px;
 }
@@ -484,6 +489,31 @@ div.form .row.same .input {
 	text-align: right;
 	float: left;
 	display: block;
+}
+
+div.form.wide {
+	max-width: none;
+	margin: 0 40px 0 20px;
+}
+div.form.wide .row .description {
+	width: 20%;
+	float: left;
+	padding: 18px 10px;
+	margin-left: -20px;
+	display: block;
+	text-align: right;
+}
+div.form.wide .row .input {
+	width: 80%;
+	float: left;
+	padding: 10px 0;
+}
+div.form.wide .row {
+	display: block;
+	clear: both;
+}
+div.form.wide .submit input {
+	margin-left: 20%;
 }
 
 /*===============================
@@ -506,9 +536,22 @@ ul.result li h3 {
 	margin-bottom: 0;
 	padding-bottom: 0;
 }
+ul.result li h3 a {
+	color: #004231;
+	text-decoration: none;
+}
+ul.result li h3 .goldenstar {
+	font-size: 1em;
+	color: #ec0;
+}
+ul.result li h3 .greystar {
+	font-size: 1em;
+	color: #ccc;
+}
 ul.result li p.description {
 	margin-top: 0;
 	padding-top: 0;
+	font-size: 0.9em;
 }
 ul.result .tags a {
 	display: inline-block;
@@ -537,15 +580,19 @@ ul.result .tags a {
 =           PM-review           =
 ===============================*/
 #pmc {
-	padding: 20px;
+	padding: 10px 30px 30px;
 	background: #fff;
 	font-size: 14px;
-	width: 1000px;
+	line-height: 1.5;
+	border: 1px solid #ccc;
+}
+
+#pmc h1, #pmc h2, #pmc h3 {
+	font-family: 'Oxygen', sans-serif;
 }
 
 #pmc #pmc-text {
 	width: 700px;
-	float: left;
 	float: left;
 }
 
@@ -569,7 +616,7 @@ div.comment-box {
 	border: 1px solid #ccc;
 	background: #fff;
 	display: block;
-	font-family: 'Muli', sans-serif;
+	font-family: 'Oxygen', sans-serif;
 	float: left;
 	z-index: 50;
 	position: relative;
@@ -605,7 +652,7 @@ div.comment-box input.text {
 	padding: 10px 10px;
 	border-radius: 0px; /* TODO Fix browser comp */
 	font-size: 15px;
-	font-family: 'Muli', sans-serif; /* TODO Change if change font */
+	font-family: 'Oxygen', sans-serif; /* TODO Change if change font */
 	transition: border .1s;
 }
 
@@ -614,7 +661,7 @@ div.comment-box button {
 	border: 0;
 	color: #fff;
 	font-weight: bold;
-	font-family: 'Muli', sans-serif;
+	font-family: 'Oxygen', sans-serif;
 	font-size: 14px;
 	margin: 3px 0 0 0;
 	padding: 5px 10px;
@@ -677,7 +724,7 @@ a.inline-action {
 
 .pm-content {
 	margin: 15px 0;
-	font-family: 'Lora';
+	font-family: 'Merriweather';
 	max-width: 700px;
 	font-size: 1.2em;
 }
@@ -888,7 +935,7 @@ div.result {
 	height: 100%;
 	padding: 5px 10px;
 	color: #008472;
-	font-family: 'Muli', sans-serif;
+	font-family: 'Oxygen', sans-serif;
 	font-weight: normal;
 }
 .sortby .active a {
@@ -976,7 +1023,8 @@ div#categories ul li a:hover {
 }
 
 div.breadcrumb {
-	margin: 10px 0;
+	margin: 15px 0;
+	font-size: .9em;
 }
 
 .centrator #categories > a {
@@ -994,55 +1042,16 @@ div.breadcrumb {
 	vertical-align: middle;
 	line-height: 20px;
 	color: #fff;
-	font-family: 'Muli', sans-serif;
+	font-family: 'Oxygen', sans-serif;
 	font-weight: normal;
-	font-size: 14px;
 	border: 0;
 	float: left;
 	display: inline-block;
 	color: #fff;
 }
 
-div#pmListing {
-	width: 100%;
-	height: 70px;
-	padding: 4px;
-	border: ridge 1px;
-	margin-bottom: 2px;
-	overflow: hidden;
-}
-
-div#pmListing a{
-	font-size: 2vh;
-	font-family: 'Muli', sans-serif;
-	font-weight: bold;
-}
-
-div#pmTitle {
-	margin: 0;
-	float: left;
-	max-width: 60%;
-	overflow: hidden;
-}
-
-div#catDescription{
-	font-size: 12px;
-	font-family: 'Muli', sans-serif;
-	float: left;
-	width: 70%;
-	overflow: hidden;
-}
-
-div#pmInfo{
-	height: 100%;
-	width: 30%;
-	float: right;
-	font-size: 1.8vh;
-}
-
-div#roleRel{
-	float: right;
-	margin-left: 5px;
+.result .tags {
+	font-size: .8em;
 }
 
 /*==========  Color stylings for category buttons  ==========*/
@@ -1059,16 +1068,13 @@ div#roleRel{
 	padding: 10px;
 }
 
-
-
-
-#infoWindow {
+#infoWindow { /* TODO: Making it more prettier */
 	position:absolute;
 	background: #008472;
 	color: #FFFFFF;
 	width:300px;
 	height:100px;
-	border:5px solid #000;
+	border:5px solid #DDDDDD;
 	z-index: 9002;
 }
 
@@ -1096,6 +1102,7 @@ table.list th {
 }
 table.list th.action {
 	width: 20px;
+	height: 25px;
 }
 table.list tr:nth-child(even) {
 	background: #fff;
@@ -1159,9 +1166,19 @@ ul.pagination li a:hover, ul.pagination li.active span {
 	color: #ddd;
 }
 
-.goldenstar {
+.goldenstar, .greystar {
+	text-decoration: none;
+	font-size: 1.3em;
+	display: inline-block;
+	padding: 0 0 5px 0;
+	margin-top: -5px;
+	border: none;
+	background: none;
+}
+
+* .goldenstar {
 	color: #fd0;
 }
-.greystar {
+* .greystar {
 	color: #ccc;
 }

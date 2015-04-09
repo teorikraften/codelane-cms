@@ -38,7 +38,7 @@ function createResultPMs(data) {
 		var persons = "";
 		if (data[i].persons != undefined) {
 			for (var j = 0; j < data[i].persons.length; j++) {
-				persons += '<tr><td>' + data[i].persons[j].real_name + '</td><td>' + data[i].persons[j].pivot.assignment + '</td></tr>';
+				persons += '<tr><td>' + data[i].persons[j].name + '</td><td>' + data[i].persons[j].pivot.assignment + '</td></tr>';
 			}
 		}
 
@@ -67,7 +67,7 @@ function createResultUsers(data) {
 			'<td><a href="/admin/personer/andra/' + data[i].id + '" title="Ändra"><img src="/images/edit.png" alt="Ändra"></a></td>' +
 			'<td><a href="/admin/personer/ta-bort/' + data[i].id + '" title="Ta bort"><img src="/images/delete.png" alt="Ta bort"></a></td>' +
 			'<td><a href="/admin/personer/verifiera/' + data[i].id + '" title="Verifiera"><img src="/images/check.png" alt="Verifiera"></a></td>' + 
-			'<td>' + data[i].real_name + '</td>' +
+			'<td>' + data[i].name + '</td>' +
 			'<td>' + data[i].email + '</td>' +
 			'<td>' + data[i].privileges + '</td>' +
 		'</tr>';

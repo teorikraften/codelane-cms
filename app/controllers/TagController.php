@@ -7,12 +7,12 @@ class TagController extends BaseController {
 	/**
 	 * Displays the tags for admin.	 
 	 */
-	public function showTagsListPage() {
+	public function getList() {
 		return View::make('user.admin.tags.index')
 			->with('tags', Tag::orderBy('name', 'ASC')->paginate(20));
 	}
 
-	public function showTagWithToken($token) {
+	public function getShow($token) {
 		try {
 			$tag = Tag::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -28,14 +28,14 @@ class TagController extends BaseController {
 	/**
 	 * Displays a page to add tag for admin.
 	 */
-	public function showAddTagPage() {
+	public function getAdd() {
 		return View::make('user.admin.tags.new');
 	}
 
 	/**
 	 * Handles a post request of add tag.
 	 */
-	public function addTag() {
+	public function postAdd() {
 		$name = Input::get('name', '');
 		if (!(strlen($name) > 0))
 			return Redirect::back()
@@ -58,7 +58,7 @@ class TagController extends BaseController {
 	/**
 	 * Displays a page to add tag for admin.
 	 */
-	public function showDeleteTagPage($token) 
+	public function getDelete($token) 
 	{
 		try {
 			$tag = Tag::where('token', '=', $token)->firstOrFail();
@@ -73,7 +73,7 @@ class TagController extends BaseController {
 	/**
 	 * Handles a post request of delete tag.
 	 */
-	public function deleteTag() 
+	public function postDelete() 
 	{
 		// Check which button was pressed, only 'yes' should continue
 		if (!Input::get('yes'))
@@ -87,7 +87,7 @@ class TagController extends BaseController {
 	/**
 	 * Displays a page to edit tag for admin.
 	 */
-	public function showEditTagPage($token) 
+	public function getEdit($token) 
 	{
 		try {
 			$tag = Tag::where('token', '=', $token)->firstOrFail();
@@ -101,7 +101,7 @@ class TagController extends BaseController {
 	/**
 	 * Handles a post request of edit tag.
 	 */
-	public function editTag() 
+	public function postEdit() 
 	{
 		$token = Input::get('token');
 		try {
@@ -129,7 +129,7 @@ class TagController extends BaseController {
 	 * @param $tag the tag
 	 * @param $page the page, 1 by deafult
 	 */
-	public function showTagPMListPage($tag, $page = 1)
+	public function getPMList($tag, $page = 1)
 	{
 		return View::make('tag.show')
 			->with('tag', $tag)
@@ -160,7 +160,7 @@ class TagController extends BaseController {
 	/**
 	 * Returns list of tags matching the query in json.
 	 */
-	public function tagsAutocomplete() {
+	public function getTagsAutocomplete() {
 		$searchQuery = Input::get('q');
 		$tags = Tag::where('name', 'LIKE', '%' . $searchQuery . '%')->take(7)->get();
 		$result = array();

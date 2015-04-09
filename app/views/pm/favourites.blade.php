@@ -1,36 +1,51 @@
 @extends('master')
 
 @section('head-title')
-    Favoriter
+	Dina favoriter
 @stop
 
 @section('head-extra')
-
+	{{ HTML::script('js/sort.js') }}
 @stop
 
 @section('body')
+	
+	<h1>Dina favoriter</h1>
 
-    @foreach($pms as $key => $pm)
-        
-       <div id="pmListing">
+	@include('includes.messages')
 
-		<div id="pmTitle">
-			<a href="{{ URL::route('pm-show', $pm->token) }}">{{ $pm->title }}</a>
-		</div>
-		<div id="pmInfo">
-			<b>Författare:</b> 
-			@foreach ($pm->users as $role) 
-			@if ($role->pivot->assignment == 'author')
-			{{ $role->real_name }}
-			@endif
-			@endforeach
-			<br>
-			<b>Skapad:</b> {{ substr($pm->created_at, 0, 11) }}
-			
-		</div>
-		<div id="catDescription">
-			{{ substr(trim(strip_tags($pm->content)), 0, 200) }}...
-		</div>
-	</div>
-	@endforeach
+	@if(count($pms) == 0)
+
+		<p>Du har inte favoritmarkerat några PM ännu. Så här gör du för att göra det:</p>
+		<ol>
+			<li>Gå in på det PM du vill favoritmarkera</li>
+			<li>Tryck på den gråa stjärnan</li>
+			<li>När den gråa stjärnan har blivit gul är du klar</li>
+			<li>Nästa gång du kommer hit kommer PM:et synas här</li>
+		</ol>
+
+	@else
+		<table class="list sortable">
+			<thead>
+				<tr>
+					<th class="sorttable_nosort action"></th>
+					<th>Rubrik</th>
+				</tr>
+			</thead>
+			<tbody>
+				@foreach($pms as $key => $pm)
+					<tr>
+						<td>
+							<a href="{{ URL::route('get-favourite-edit', array('goto' => 'fav', 'token' => $pm->token)) }}" title="Favorit" class="goldenstar">
+								&#9733;
+							</a>
+						</td>
+						<td>
+							<a href="{{ URL::route('pm-show', $pm->token) }}">{{ $pm->title }}</a>
+						</td>
+					</tr>
+				@endforeach
+			</tbody>
+		</table>
+	@endif
 @stop

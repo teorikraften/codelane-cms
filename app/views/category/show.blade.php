@@ -6,6 +6,7 @@
 
 @section('head-extra')
 	{{ HTML::script('js/category.js') }}
+    {{ HTML::script('js/infoWindow.js'); }}
 @stop
 
 @section('body')
@@ -17,10 +18,22 @@
 		<h1>{{ $category }}</h1>
 	@endif
 
+	@include('includes.messages')
+
 	<div id="categories">
 		<h3>Kategorier</h3>
 		{{ $catList }}
 	</div>
+
+<!--infoWindow-->    
+    <div id="infoWindow" style="display:none;"><h3>
+<button onclick="show('infoWindow')">X</button> Hjälp :: Kategori</h3>
+        <p>Du kan 
+        	<b><ins>markera</ins></b> en kategori för att visa de PM som ingår i kategorin och
+        	<b><ins>filtrera</ins></b> resultaten.</p>
+    </div>  
+    <button onclick="show('infoWindow')">?</button>
+<!-- end of infoWindow-->    
 
 	<div id="category-output">
 		<div class="result">
@@ -33,7 +46,7 @@
 					<li{{ $order == 'score' ? " class='active'" : '' }}>
 					<a href="{{ URL::route('category-show', array('token' => $token, 'order' => 'score') )}}">Relevans</a></li>
 					<li{{ $order == 'revision_date' ? " class='active'" : '' }}>
-					<a href="{{ URL::route('category-show', array('token' => $token/* TODO , 'order' => 'revision_date' */) )}}">Senast uppdaterad</a>
+					<a href="{{ URL::route('category-show', array('token' => $token , 'order' => 'revision_date' ) )}}">Senast uppdaterad</a>
 				</ul>
 			@else
 				<ul class="sortby">
@@ -44,47 +57,36 @@
 					<li{{ $order == 'score' ? " class='active'" : '' }}>
 					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token, 'order' => 'score') )}}">Relevans</a></li>
 					<li{{ $order == 'revision_date' ? " class='active'" : '' }}>
-					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token/* TODO , 'order' => 'revision_date' */) )}}">Senast uppdaterad</a>
+					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token , 'order' => 'revision_date') )}}">Senast uppdaterad</a>
 				</ul>
 			@endif
 			<div class="clear"></div>
 		</div>
 
-		@foreach ($pms as $pm)
-			<div id="pmListing">
-
-				<div id="pmTitle">
-					<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>
-					<div id="roleRel">
-						@if (isset($pm['roles']))
-							<?php $roles = 'Detta PM är relevant till en eller flera av dina roller: '; ?>
-							@foreach ($pm['roles'] as $key => $role)
-								@if($key == 0)
-									<?php $roles .= $role->name; ?>
-								@else
-									<?php $roles .= ', ' . $role->name; ?>
-								@endif
-							@endforeach
-							{{ HTML::image('images/persons.png', $roles, array('title' => $roles)) }} 
+		<ul class="result">
+			@foreach ($pms as $pm)
+				<li>
+					<h3>
+						<a href="{{ URL::route('get-favourite-edit', array('goto' => 'resultat', 'token' => $pm['pm']->token)) }}" title="Favoritmarkera" class="{{ $pm['pm']->favouriteByUser() ? 'goldenstar' : 'greystar' }} small" >
+            				{{ $pm['pm']->favouriteByUser() ? '&#9733;' : '&#9734;' }}
+        				</a>
+        				<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>
+        			</h3>
+					<div class="tags">
+						@if (count($pm['pm']->tags) > 0)
+							<b>Taggar:</b>
 						@endif
+						@foreach($pm['pm']->tags as $tag)
+							<a href="{{ URL::route('tag-show', $tag->token) }}">{{ $tag->name }}</a>
+						@endforeach
+
+						<b>Giltigt till: {{ '2015-06-27'; /* TODO */ }}</b>
+						<div class="clear"></div>
 					</div>
-				</div>
-				<div id="pmInfo">
-					<b>Författare:</b> 
-					@foreach ($pm['pm']->users as $role) 
-					@if ($role->pivot->assignment == 'author')
-					{{ $role->real_name }}
-					@endif
-					@endforeach
-					<br>
-					<b>Skapad:</b> {{ substr($pm['pm']->created_at, 0, 11) }}
-					
-				</div>
-				<div id="catDescription">
-					{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...
-				</div>
-			</div>
-		@endforeach
+					<p class="description">{{ substr(trim(str_replace("&nbsp;", " ", strip_tags($pm['pm']->content))), 0, 200) }}...</p>
+				</li>
+			@endforeach
+		</ul>
 	</div>
 
 	<div class="clear"></div>

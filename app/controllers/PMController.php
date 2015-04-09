@@ -6,40 +6,112 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PMController extends BaseController {
 	// TODO Kolla igenom hela klassen och åtgärda validering och buggar och städa upp
+	
 	/**
 	 * Displays the PM page view.
 	 * @param $token the PM token
 	 */
-	public function showPMPage($token) {
+	public function getShow($token) {
 		try {
-		    $pm = Pm::where('token', '=', $token)->firstOrFail();
+			$pm = Pm::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
-		    return Redirect::back()
-		    	->with('error', 'PM:et som skulle visas hittades inte.');
+			return Redirect::back()
+			->with('error', 'PM:et som skulle visas hittades inte.');
 		}
+
+		$user = User::find(Auth::user()->id);
+		$fav = (!empty($user->favourites()->where('pm', '=', $pm->id)->first())) ? true : false;
 		
 		return View::make('pm.show')
-			->with('pm', $pm)
-			->with('assignments', $pm->users);
+		->with('pm', $pm)
+		->with('assignments', $pm->users)
+		->with('favourite' , $fav);
 	}
 
 	/**
-	 * Display the users favorite pms
-	 *
+	 * Displays the PM page view.
+	 * @param $token the PM token
+	 */
+	public function getInfo($token) {
+		try {
+			$pm = Pm::where('token', '=', $token)->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::back()
+			->with('error', 'PM:et som skulle visas hittades inte.');
+		}
+
+		$user = User::find(Auth::user()->id);
+		$fav = (!empty($user->favourites()->where('pm', '=', $pm->id)->first())) ? true : false;
+		
+		return View::make('user.admin.pm.info')
+		->with('pm', $pm)
+		->with('assignments', $pm->users)
+		->with('favourite' , $fav);
+	}
+
+	/**
+	 * Display the user's favorite pms
 	 */
 	public function showFavourites() {
-		$user = User::find(Auth::user()->id);
+		$pms = Auth::user()->favourites()
+			->where('published', '=' , 1)
+			->whereNull('pms.deleted_at')
+			->where('expiration_date', '<' , 'CURDATE()')
+			->get();
 
-		$pms = $user->favourites()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 		return View::make('pm.favourites')
 			->with('pms', $pms);
+	}
+
+	/**
+	* Change favourite status of the pm.
+	*/
+	public function favouritePM($token = null, $goto = null) {
+		$token = Input::get('token', $token);
+		$goto = Input::get('goto', $goto);
+		$user = Auth::user();
+		
+		try {
+			$pm = PM::where('token', '=', $token)->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			return Redirect::route('favourites-show')
+				->with('error', 'Kunde inte hitta PM:et som skulle favoritmarkeras.');
+		}
+
+		if (!empty($user->favourites()->where('pm', '=', $pm->id)->first())) {
+			$user->favourites()->detach($pm);
+			$message = '"' . $pm->title . '" togs bort som favorit.';
+		} else {
+			$user->favourites()->attach($pm);
+			$message = '"' . $pm->title . '" lades till som favorit.';
+		}
+
+		if ($goto == 'fav') {
+			$m = $message . 
+				' <a href="' . 
+					URL::route('get-favourite-edit', array('goto' => 'fav', 'token' => $token)) .
+				'">Ångra.</a>';
+
+			return Redirect::route('favourites-show')
+				->with('success', $m);
+
+		} elseif (isset($_SERVER['HTTP_REFERER'])) {
+			return Redirect::back()
+				->with('success', $message);
+		} elseif ($goto == 'pm') {
+			return Redirect::route('pm-show', array('token' => $token))
+				->with('success', $message);
+		}
+
+		return Redirect::route('favourites-show')
+			->with('error', 'Ett fel uppstod när PM:et skulle favoritmarkeras.');
 	}
 
 	/**
 	 * Displays the PM download page view.
 	 * @param $token the PM token
 	 */
-	public function download($token) {
+	public function getDownload($token) {
 		try {
 			$pm = PM::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -49,25 +121,25 @@ class PMController extends BaseController {
 		$assignments = $pm->users;
 
 		$resp = "";
-        foreach($assignments as $assignment) {
-            if ($assignment->pivot->assignment == 'owner') {
-                $resp .= $assignment->real_name . " ";
-            }
-        }
+		foreach($assignments as $assignment) {
+			if ($assignment->pivot->assignment == 'owner') {
+				$resp .= $assignment->name . " ";
+			}
+		}
 
-        $auth = "";
-        foreach($assignments as $assignment) {
-            if ($assignment->pivot->assignment == 'author') {
-                $auth .= $assignment->real_name . " ";
-            }
-        }
+		$auth = "";
+		foreach($assignments as $assignment) {
+			if ($assignment->pivot->assignment == 'author') {
+				$auth .= $assignment->name . " ";
+			}
+		}
 
-        $rev = "";
-        foreach($assignments as $assignment) {
-            if ($assignment->pivot->assignment == 'reviewer') {
-                $rev .= $assignment->real_name . " ";
-            }
-        }
+		$rev = "";
+		foreach($assignments as $assignment) {
+			if ($assignment->pivot->assignment == 'reviewer') {
+				$rev .= $assignment->name . " ";
+			}
+		}
 
 		// New Word Document:
 		$phpword_object = new \PhpOffice\PhpWord\PhpWord();
@@ -119,7 +191,7 @@ class PMController extends BaseController {
 		// HTML Dom object:
 		$html_dom = new simple_html_dom();
 		$html_dom->load('<html><body><h1>' . $pm->title . '</h1>' 
-				. $pm->content . '</body></html>');
+			. $pm->content . '</body></html>');
 
 		// Create the dom array of elements which we are going to work on:
 		$html_dom_array = $html_dom->find('html',0)->children();
@@ -142,16 +214,16 @@ class PMController extends BaseController {
   			'table_allowed' => TRUE, // Not in table, cannot be nested
   			'treat_div_as_paragraph' => TRUE, // If set to TRUE, each new div will trigger a new line in the Word document.
    			'style_sheet' => htmltodocx_docs_style(), // This is an array (the "style sheet") - returned by htmltodocx_styles_example() here (in styles.inc) - see this function for an example of how to construct this array.
-  		); 
+   			); 
 
-		// Convert the HTML and put it into the PHPWord object
+			// Convert the HTML and put it into the PHPWord object
 		htmltodocx_insert_html($section, $html_dom_array[0]->nodes, $initial_state);
 
-		// Clear the HTML dom object:
+				// Clear the HTML dom object:
 		$html_dom->clear(); 
 		unset($html_dom);
 
-		// Save File
+				// Save File
 		$h2d_file_uri = tempnam('', 'htd') . '.docx';
 		$objWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpword_object, 'Word2007');
 		$objWriter->save($h2d_file_uri);
@@ -163,30 +235,30 @@ class PMController extends BaseController {
 	 * Displays the PM edit page view.
 	 * @param $token the PM token
 	 */
-	public function showEditPMPage($token) {
+	public function getEdit($token) {
 		try {
-		    $pm = Pm::where('token', '=', $token)->firstOrFail();
+			$pm = Pm::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
-		    return Redirect::back()
-		    	->with('error', 'PM:et som skulle visas hittades inte.');
+			return Redirect::back()
+			->with('error', 'PM:et som skulle visas hittades inte.');
 		}
-		
+
 		return View::make('pm.edit')
-			->with('categorySelect', $this->getChildrenList(0, NULL))
-			->with('pm', $pm);
+		->with('categorySelect', $this->getChildrenList(0, NULL))
+		->with('pm', $pm);
 	}
 
 	/**
 	 * Handles post request to edit PM.
 	 */
-	public function editPM() {
+	public function postEdit() {
 		// TODO Hela funktionen
 
 		try {
 			$pm = PM::findOrFail(Input::get('id'));
 		} catch(ModelNotFoundException $e) {
-		    return Redirect::back()
-		    	->with('error', 'PM:et som skulle visas hittades inte.');
+			return Redirect::back()
+			->with('error', 'PM:et som skulle visas hittades inte.');
 		}
 
 		if (!(strlen(Input::get('title', '')) > 0))
@@ -194,68 +266,66 @@ class PMController extends BaseController {
 				->withInput()
 				->with('error', 'Du måste ange PM:ets rubrik.');
 
-		$tags = explode(",", Input::get('tags'));
-		// TODO Verifiera taggarna
-
-		if (count($tags) > 0) {
-			$pm->tags()->detach();
-			foreach ($tags as $tag) {
-				if (!is_null(Tag::where('id', '=', $tag)->first()))
-					$pm->tags()->attach([$tag => ['added_by' => Auth::user()->id]]);
+		$pm->title = Input::get('title');
+		$pm->content = Input::get('content');
+		if (Input::has('done')) {
+			if (substr($pm->status, 0, 7) == 'revision') {
+				$pm->status = 'revision-written';
+			} else {
+				$pm->status = 'written';
 			}
 		}
-		$pm->title = Input::get('title');
-		$pm->categories()->detach();
-		$pm->categories()->attach([Input::get('category') => ['added_by' => Auth::user()->id]]);
-		$pm->content = Input::get('content');
 		$pm->save();
 
-		return Redirect::route('pm-edit', $pm->token);
+		if (Input::has('done'))
+			return Redirect::route('admin-pm')->with('success', 'Texten sparades och PM:et markerades som klart.');
+
+		return Redirect::route('pm-edit', $pm->token)->with('warning', 'Texten sparades men PM:et måste fortfarande markeras som klart.');
 	}
 
 	/**
 	 * Displays the PM edit page view.
 	 * @param $token the PM token
 	 */
-	public function showReviewPMPage($token) {
+	public function getReview($token) {
 		try {
-		    $pm = Pm::where('token', '=', $token)->firstOrFail();
+			$pm = PM::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
-		    return Redirect::back()
-		    	->with('error', 'PM:et som skulle granskas hittades inte.');
+			return Redirect::back()
+				->with('error', 'PM:et som skulle granskas hittades inte.');
 		}
 
-		$comments = Comment::where('pm', '=', $pm->id)
-			->select('comments.id as id', 'content', 'users.real_name', 'pm')
-			->join('users', 'users.id', '=', 'comments.user')
-			->get();
-
-		$authors = array();
-		foreach($pm->users as $assignment) {
-			if ($assignment->pivot->assignment == 'author')
-				$authors[] = $assignment;
+		if (substr($pm->status, -7) != "written") {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et är inte färdigt för granskning än.');
 		}
 
 		try {
-			$review = Review::where('pm', '=', $pm->id)->where('user', '=', Auth::user()->id)->firstOrFail();
-			$accepted = $review->accepted == 1;
-			$comment = Comment::findOrFail($review->comment);
-			$commentC = $comment->content;
+			$assignment = Assignment::where('user', '=', Auth::user()->id)
+				->where('pm', '=', $pm->id)
+				->where(function($query) {
+					$query->where('assignment', '=', 'revision-reviewer')
+						->orWhere('assignment', '=', 'reviewer');
+				})
+				->firstOrFail();
 		} catch(ModelNotFoundException $e) {
-			$accepted = false;
-			$commentC = '';
+			return Redirect::route('admin-pm')
+				->with('error', 'Det verkar inte som du har behörighet att granska detta PM.');
 		}
+
+		$comments = $pm->comments;
+		$authors = $pm->users; // TODO Not all users
+		$assignments = $pm->users; 
 
 		return View::make('pm.review')
-			->with('pm', $pm)
-			->with('assignments', $pm->users)
+			->with('assignment', $assignment)
+			->with('assignments', $assignments)
 			->with('authors', $authors)
-			->with('reviews', $comments)
-			->with('accepted', $accepted)
-			->with('comment', $commentC);
+			->with('comments', $comments)
+			->with('pm', $pm);
 	}
 
-	public function saveComment() {
+	public function postSaveComment() {
 		try {
 			$pm = PM::findOrFail(Input::get('pm'));
 		} catch(ModelNotFoundException $e) {
@@ -288,106 +358,262 @@ class PMController extends BaseController {
 	/**
 	 * Handles post request to edit PM.
 	 */
-	public function reviewPM() {
-		// TODO Hela funktionen
-		$commentContent = Input::get('comment');
+	public function postReview() {
+		$content = Input::get('comment');
 		$accepted = Input::get('accept', 'no');
 
 		try {
 			$pm = PM::findOrFail(Input::get('pm-id'));
 		} catch(ModelNotFoundException $e) {
-		    return Redirect::back()
-		    	->with('error', 'PM:et som skulle granskas hittades inte.');
+			return Redirect::back()
+			->with('error', 'PM:et som skulle granskas hittades inte.');
+		}
+
+		if (substr($pm->status, -7) != "written") {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et är inte färdigt för granskning än.');
 		}
 
 		try {
-			$review = Review::where('pm', '=', $pm->id)->where('user', '=', Auth::user()->id)->firstOrFail();
-			$comment = Comment::findOrFail($review->comment);
+			$assignment = Assignment::where('user', '=', Auth::user()->id)
+				->where('pm', '=', $pm->id)
+				->where(function($query) {
+					$query->where('assignment', '=', 'revision-reviewer')
+						->orWhere('assignment', '=', 'reviewer');
+				})
+				->firstOrFail();
 		} catch(ModelNotFoundException $e) {
-			$comment = new Comment;
-			$comment->user = Auth::user()->id;
-			$comment->parent_comment = 0; 
-			$comment->pm = $pm->id;
-			$comment->save();
-
-			$review = new Review;
-			$review->user = Auth::user()->id;
-			$review->pm = $pm->id;
-			$review->accepted = 0;
-			$review->comment = $comment->id;
+			return Redirect::route('admin-pm')
+				->with('error', 'Det verkar inte som du har behörighet att granska detta PM.');
 		}
 
-		$review->accepted = $accepted == 'yes' ? 1 : 0;
-		$review->save();
-		$comment->content = $commentContent;
-		$comment->save();
+		$assignment->accepted = $accepted == 'yes' ? 1 : 0;
+		$assignment->content = $content;
+		$assignment->save();
+		
+		$allAss = Assignment::where('pm', '=', $pm->id)
+			->where('assignment', '=', $assignment->assignment)
+			->get();
 
-		return Redirect::route('pm-review', $pm->token)->with('success', 'Kommentaren sparades!');
+		$accepted = true;
+		foreach($allAss as $ass) {
+			if ($ass->accepted == 0) {
+				$accepted = false;
+				break;
+			}
+		}
+
+		if ($accepted) {
+			if (substr($pm->status, 0, 7) == 'revision') {
+				$pm->status = 'revision-reviewed';
+			} else {
+				$pm->status = 'reviewed';
+			}
+			$pm->save();
+			return Redirect::route('admin-pm')
+				->with('success', 'Kommentaren sparades och PM:et är nu godkänt av alla!');
+		}
+
+		// TODO Check if last to accept, then change PM status
+
+		return Redirect::route('pm-review', $pm->token)
+			->with('success', 'Kommentaren sparades!');
+	}
+
+	/**
+	 * Displays the PM edit page view.
+	 * @param $token the PM token
+	 */
+	public function getEndReview($token) {
+		try {
+			$pm = PM::where('token', '=', $token)->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::back()
+				->with('error', 'PM:et som skulle granskas hittades inte.');
+		}
+
+		if ($pm->status != "reviewed" && $pm->status != "revision-reviewed") {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et är inte färdigt för slutgranskning än.');
+		}
+
+		try {
+			$assignment = Assignment::where('user', '=', Auth::user()->id)
+				->where('pm', '=', $pm->id)
+				->where(function($query) {
+					$query->where('assignment', '=', 'revision-end-reviewer')
+						->orWhere('assignment', '=', 'end-reviewer');
+				})
+				->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+				->with('error', 'Det verkar inte som du har behörighet att slutgranska detta PM.');
+		}
+
+		$comments = $pm->comments;
+		$authors = $pm->users; // TODO Not all users
+		$assignments = $pm->users; 
+
+		return View::make('pm.end-review')
+			->with('assignment', $assignment)
+			->with('assignments', $assignments)
+			->with('authors', $authors)
+			->with('comments', $comments)
+			->with('pm', $pm);
+	}
+
+	/**
+	 * Handles post request to edit PM.
+	 */
+	public function postEndReview() {
+		$content = Input::get('comment');
+		$accepted = Input::get('accept', 'no');
+
+		try {
+			$pm = PM::findOrFail(Input::get('pm-id'));
+		} catch(ModelNotFoundException $e) {
+			return Redirect::back()
+			->with('error', 'PM:et som skulle slutgranskas hittades inte.');
+		}
+
+		if ($pm->status != "reviewed" && $pm->status != "revision-reviewed") {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et är inte färdigt för slutgranskning än.');
+		}
+
+		try {
+			$assignment = Assignment::where('user', '=', Auth::user()->id)
+				->where('pm', '=', $pm->id)
+				->where(function($query) {
+					$query->where('assignment', '=', 'revision-end-reviewer')
+						->orWhere('assignment', '=', 'end-reviewer');
+				})
+				->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+				->with('error', 'Det verkar inte som du har behörighet att slutgranska detta PM.');
+		}
+
+		$assignment->accepted = $accepted == 'yes' ? 1 : 0;
+		$assignment->content = $content;
+		$assignment->save();
+		
+		$allAss = Assignment::where('pm', '=', $pm->id)
+			->where('assignment', '=', $assignment->assignment)
+			->get();
+
+		$accepted = true;
+		foreach($allAss as $ass) {
+			if ($ass->accepted == 0) {
+				$accepted = false;
+				break;
+			}
+		}
+
+		if ($accepted) {
+			if (substr($pm->status, 0, 7) == 'revision') {
+				$pm->status = 'revision-end-reviewed';
+			} else {
+				$pm->status = 'end-reviewed';
+			}
+			$pm->save();
+			return Redirect::route('admin-pm')
+				->with('success', 'Kommentaren sparades och PM:et är nu helt färdiggranskat!');
+		}
+
+		return Redirect::route('pm-end-review', $pm->token)
+			->with('success', 'Kommentaren sparades!');
 	}
 
 	/**
 	 * Displays the PM edit assignments page view.
 	 * @param $token the PM token
 	 */
-	public function showEditPMAssignmentsPage($token) {
+	public function getEditAssignments($token) {
 		try {
-		    $pm = Pm::where('token', '=', $token)->firstOrFail();
+			$pm = Pm::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
-		    return Redirect::route('index')
-		    	->with('error', 'PM:et som skulle ändras hittades inte.');
+			return Redirect::route('index')
+			->with('error', 'PM:et som skulle ändras hittades inte.');
 		}
 
-		$owners = $reviewers = $authors = $members = array();
+		$creators = $authors = $settlers = $reviewers = $endReviewers = $reminders = array();
 
 		foreach($pm->users as $user) {
-			if ($user->pivot->assignment == 'author')
+			if ($user->pivot->assignment == 'creator')
+				$creators[] = $user;
+			elseif ($user->pivot->assignment == 'author')
 				$authors[] = $user;
+			elseif ($user->pivot->assignment == 'settler')
+				$settlers[] = $user;
 			elseif ($user->pivot->assignment == 'reviewer')
 				$reviewers[] = $user;
-			elseif ($user->pivot->assignment == 'owner')
-				$owners[] = $user;
-			elseif ($user->pivot->assignment == 'member')
-				$members[] = $user;
+			elseif ($user->pivot->assignment == 'end-reviewer')
+				$endReviewers[] = $user;
+			elseif ($user->pivot->assignment == 'reminder')
+				$reminders[] = $user;
 		}
 
 		return View::make('user.admin.pm.assignment-edit')
-			->with('pm', $pm)
-			->with('owners', $owners)
-			->with('reviewers', $reviewers)
-			->with('members', $members)
-			->with('authors', $authors);
+		->with('pm', $pm)
+		->with('creators', $creators)
+		->with('authors', $authors)
+		->with('settlers', $settlers)
+		->with('reviewers', $reviewers)
+		->with('endReviewers', $endReviewers)
+		->with('reminders', $reminders);
 	}
 
-	public function editPMAssignments() {
-		// TODO Validering
-		$owner = explode(',', Input::get('responsible'));
-		$owner = $owner[0];
-		$authors = explode(',', Input::get('authors'));
-		$reviewers = explode(',', Input::get('reviewers'));
+	public function postEditAssignments() {		
+		try {
+			$pm = PM::findOrFail(Input::get('id'));
+		} catch (ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et som skulle redigeras hittades inte.');
+		}
+
+		// TODO Samma som i postAssign
+		$creators = $this->userify(Input::get('creator'));
+		$authors = $this->userify(Input::get('authors'));
+		$settlers = $this->userify(Input::get('settler'));
+		$reviewers = $this->userify(Input::get('reviewers'));	
+		$endReviewers = $this->userify(Input::get('end-reviewer'));
+		$reminders = $this->userify(Input::get('reminder'));	
 
 		$user = Auth::user();
-
-		$pm = PM::findOrFail(Input::get('id'));
 		$pm->users()->detach();
+		// TODO Fix! This is bad. Bättre att loopa igenom alla och ändra de som ska ändras istället. Då kan man köra soft deletes.
 
+		foreach ($creators as $creator) {
+			$creator->pms()->attach([$pm->id => ['assignment' => 'creator']]);
+		}
 		foreach ($authors as $author) {
-			User::findOrFail($author)->pms()->attach([$pm->id => ['assignment' => 'author']]);
+			$author->pms()->attach([$pm->id => ['assignment' => 'author']]);
+		}
+		foreach ($settlers as $settler) {
+			$settler->pms()->attach([$pm->id => ['assignment' => 'settler']]);
 		}
 		foreach ($reviewers as $reviewer) {
-			User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
+			$reviewer->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
 		}
-		User::findOrFail($owner)->pms()->attach([$pm->id => ['assignment' => 'owner']]);
-		$user->save();
-		
-		return Redirect::route('admin-pm');
+		foreach ($endReviewers as $endReviewer) {
+			$endReviewer->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
+		}
+		foreach ($reminders as $reminder) {
+			$reminder->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
+		}
+
+		$pm->save();
+
+		return Redirect::route('admin-pm')->with('success', 'Tilldelningen ändrades!');
 	}
 
-	public function showImportPage()
+	public function getImport()
 	{
 		return View::make('user.import.import');
 	}
 
-	public function import()
+	public function postImport()
 	{
 		$filename = date('YmdHis') . '.pdf';
 		$path = 'PM/' . Input::get('file', 'none');
@@ -398,7 +624,7 @@ class PMController extends BaseController {
 		return Redirect::route('pm-import-verify');
 	}
 
-	public function importVerify() {
+	public function getImportVerify() {
 		if (Input::get('title', 'fail') != 'fail') {
 			$pm = new Pm;
 			$pm->title = Input::get('title');
@@ -426,7 +652,7 @@ class PMController extends BaseController {
 	 * Displays the PM verify page view.
 	 * @param $token the PM token
 	 */
-	public function showAddPMPage()
+	public function getAdd()
 	{
 		return View::make('pm.add');
 	}
@@ -435,7 +661,7 @@ class PMController extends BaseController {
 	 * Displays the PM add tag page view.
 	 * @param $token the PM token
 	 */
-	public function showAddTagPage($token)
+	public function getAddTag($token)
 	{
 		return View::make('pm.add-tag')->with('token', $token);
 	}
@@ -444,12 +670,12 @@ class PMController extends BaseController {
 	 * Displays the PM verify page view.
 	 * @param $token the PM token
 	 */
-	public function showVerifyPage($token)
+	public function getVerify($token)
 	{
 		return View::make('pm.verify')->with('token', $token);
 	}
 
-	public function showPMListPage() {
+	public function getList() {
 		$userAssignments = Auth::user()->pms;
 
 		$userPms = $assignments = array();
@@ -461,24 +687,36 @@ class PMController extends BaseController {
 		}
 
 		return View::make('user.admin.pm.index')
-			->with('pms', PM::orderBy('id', 'ASC')->paginate(15))
-			->with('userAssignments', $assignments)
+		->with('pms', PM::orderBy('id', 'ASC')->paginate(15))
+		->with('userAssignments', $assignments)
 			->with('userPms', $userPms); // TODO Pagination
-	}
+		}
 
-	public function showAssignPMPage() {
+	public function getAssign() {
 		return View::make('user.admin.pm.assign');
 	}
 
-	public function assignPM() {
-		// TODO Validering
-		// TODO kolla att användarna verkligen finns
-		// TODO Try-catch på findorfail
-		$creator = intval(Input::get('creator'));
-		$authors = explode(',', Input::get('authors'));
-		$reviewers = explode(',', Input::get('reviewers'));	
-		$endReviewer = Input::get('end-reviewer');		
-		$reminder = Input::get('reminder');	
+	/**
+	 * Returns an array of users from the comma-separated $string of user ids
+	 */
+	private function userify($string) {
+		$userIds = array_filter(explode(',', $string));
+		$res = array();
+		foreach($userIds as $userId) {
+			if (($user = User::find(intval(trim($userId)))) != NULL)
+				$res[] = $user;
+		}
+		return $res;
+	}
+
+	public function postAssign() {
+		// TODO Validering & en eller flera personer på vad?
+		$creators = $this->userify(Input::get('creator'));
+		$authors = $this->userify(Input::get('authors'));
+		$settlers = $this->userify(Input::get('settler'));
+		$reviewers = $this->userify(Input::get('reviewers'));	
+		$endReviewers = $this->userify(Input::get('end-reviewer'));
+		$reminders = $this->userify(Input::get('reminder'));	
 
 		$user = Auth::user();
 		$pm = new PM;
@@ -487,18 +725,26 @@ class PMController extends BaseController {
 		$pm->token = $this->generateToken($pm->title);
 		$pm->save();
 
+		foreach ($creators as $creator) {
+			$creator->pms()->attach([$pm->id => ['assignment' => 'creator']]);
+		}
 		foreach ($authors as $author) {
-			User::findOrFail($author)->pms()->attach([$pm->id => ['assignment' => 'author']]);
+			$author->pms()->attach([$pm->id => ['assignment' => 'author']]);
+		}
+		foreach ($settlers as $settler) {
+			$settler->pms()->attach([$pm->id => ['assignment' => 'settler']]);
 		}
 		foreach ($reviewers as $reviewer) {
-			User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
+			$reviewer->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
 		}
-		User::findOrFail($creator)->pms()->attach([$pm->id => ['assignment' => 'creator']]);
-		User::findOrFail($endReviewer)->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
-		User::findOrFail($reminder)->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
-		$user->save();
-		
-		return Redirect::route('admin-pm');
+		foreach ($endReviewers as $endReviewer) {
+			$endReviewer->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
+		}
+		foreach ($reminders as $reminder) {
+			$reminder->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
+		}
+
+		return Redirect::route('admin-pm')->with('success', 'PM:et lades till och personerna sparades!');
 	}
 
 	/**
@@ -523,13 +769,13 @@ class PMController extends BaseController {
 	 * Displays a page to add role for admin.
 	 * @param $id id of the role to delete
 	 */
-	public function showDeletePMPage($token) 
+	public function getDelete($token) 
 	{
 		try {
 			$pm = PM::where('token', '=', $token)->firstOrFail(); 
 		} catch(ModelNotFoundException $e) {
-		    return Redirect::route('admin-pm')
-		    	->with('error', 'PM:et som skulle tas bort hittades inte.');
+			return Redirect::route('admin-pm')
+			->with('error', 'PM:et som skulle tas bort hittades inte.');
 		}
 
 		return View::make('user.admin.pm.delete')->with('pm', $pm);
@@ -538,7 +784,7 @@ class PMController extends BaseController {
 	/**
 	 * Handles a post request of delete role.
 	 */
-	public function deletePM() 
+	public function postDelete() 
 	{
 		// TODO Fix whole function, should add to oldPMs and so
 		// Only yes-button should make this continue
@@ -550,12 +796,54 @@ class PMController extends BaseController {
 		try {
 			$role = PM::findOrFail($id)->delete(); 
 		} catch(ModelNotFoundException $e) {
-		    return Redirect::route('admin-pm')
-		    	->with('error', 'PM:et som skulle tas bort hittades inte.');
+			return Redirect::route('admin-pm')
+			->with('error', 'PM:et som skulle tas bort hittades inte.');
 		}
 
 		return Redirect::route('admin-pm')
-			->with('success', 'PM:et togs bort.');
+		->with('success', 'PM:et togs bort.');
+	}
+
+	/**
+	 * Displays a page to add role for admin.
+	 * @param $id id of the role to delete
+	 */
+	public function getSettle($token) {
+		try {
+			$pm = PM::where('token', '=', $token)->firstOrFail(); 
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+			->with('error', 'PM:et som skulle fastställas hittades inte.');
+		}
+
+		return View::make('user.admin.pm.settle')
+			->with('pm', $pm);
+	}
+
+	/**
+	 * Handles a post request of delete role.
+	 */
+	public function postSettle() 
+	{
+		// TODO Fix whole function, should add to oldPMs and so
+		// Only yes-button should make this continue
+		if (!Input::get('yes'))
+			return Redirect::route('admin-pm')->with('warning', 'PM:et fastställdes inte.');
+
+		$id = Input::get('pm-id');
+
+		try {
+			$pm = PM::findOrFail($id);
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+			->with('error', 'PM:et som skulle fastställas hittades inte.');
+		}
+
+		$pm->status = 'published';
+		$pm->save();
+
+		return Redirect::route('admin-pm')
+			->with('success', 'PM:et fastställdes.');
 	}
 
 	public function postFilter() {
@@ -564,19 +852,19 @@ class PMController extends BaseController {
 		if (Input::has('filter')) {
 			// Search in id and title to start with
 			$pms->where('id', 'LIKE', '%' . Input::get('filter') . '%')
-				->orWhere('title', 'LIKE', '%' . Input::get('filter') . '%');
+			->orWhere('title', 'LIKE', '%' . Input::get('filter') . '%');
 		}
-			
+
 		$resp = $pms->orderBy('id', 'ASC')
-			->take(100)
-			->get();
+		->take(100)
+		->get();
 
 		if ($resp->count() == 0 && Input::has('filter')) {
 			// Search on content if there was no match in title or id
 			$resp = PM::where('content', 'LIKE', '%' . Input::get('filter') . '%')
-				->orderBy('id', 'ASC')
-				->take(100)
-				->get();
+			->orderBy('id', 'ASC')
+			->take(100)
+			->get();
 		}
 
 		foreach($resp as $res) {
