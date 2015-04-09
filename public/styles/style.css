@@ -490,6 +490,31 @@ div.form .row.same .input {
 	display: block;
 }
 
+div.form.wide {
+	max-width: none;
+	margin: 0 40px 0 20px;
+}
+div.form.wide .row .description {
+	width: 20%;
+	float: left;
+	padding: 18px 10px;
+	margin-left: -20px;
+	display: block;
+	text-align: right;
+}
+div.form.wide .row .input {
+	width: 80%;
+	float: left;
+	padding: 10px 0;
+}
+div.form.wide .row {
+	display: block;
+	clear: both;
+}
+div.form.wide .submit input {
+	margin-left: 20%;
+}
+
 /*===============================
 =             Result            =
 ===============================*/

@@ -13,7 +13,7 @@
     <script type="text/javascript">
 	    $(document).ready(function() {
 	        $("#creator").tokenInput("/personer", {
-	        	'prePopulate' : [{'id' : '{{ Auth::user()->id }}', 'name' : '{{ Auth::user()->name . ' (' . Auth::user()->email . ')' }}'}]
+	        	'prePopulate' : [{'id' : {{ Auth::user()->id }}, 'name' : '{{ Auth::user()->name . ' (' . Auth::user()->email . ')' }}'}]
 	        });
 	        $("#authors").tokenInput("/personer");
 	        $("#settler").tokenInput("/personer");
@@ -30,9 +30,10 @@
 
 @section('body')
     <h1>Skapa och tilldela PM</h1>
+    <p>På den här sidan fyller du i information om det PM som ska skapas. Du anger rubriken och vilka personer som ska göra vad. När du sparar kommer samtliga personer få ett e-postmeddelande som berättar de tilldelats en uppgift på detta PM och de kan se det på sin egen sida.</p>
     @include('includes.messages')
     {{ Form::open(array('action' => 'post-pm-add-assign', 'method' => 'post')) }}
-	    <div class="form">
+	    <div class="form wide">
 			<div class="row">
 				<div class="description">{{ Form::label('title', 'PM:ets rubrik') }}</div>
 				<div class="input">{{ Form::text('title', NULL, array('class' => 'text')) }}</div>

@@ -88,11 +88,15 @@
                 </tr>
             @endforeach
         </table>
+    @else
+        <p>Om du tilldelas en uppgift eller på ett annat sätt blir kopplad till ett PM kommer det dyka upp här.</p>
     @endif
 
     @if(Auth::user()->privileges == 'admin')
         <h2>Alla PM</h2>
-        <p id="filter-p" style="display:none">Filtrera: {{ Form::text('filter', NULL, array('class' => 'text', 'id' => 'filter')) }}</p>
+        <p id="filter-p" style="display:none">
+            Filtrera: {{ Form::text('filter', NULL, array('class' => 'text', 'id' => 'filter')) }}
+        </p>
         <div class="form wide">
             <table class="list sortable">
         		<thead>
