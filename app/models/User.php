@@ -144,41 +144,70 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		// och se om något ska göras nu. Om det är så, ska det med i output-arrayen.
 		$res = array();
 		
-		$writeAss = $this->assignment()->where('assignment', '=', 'author')->whereNull('done_at')->get();
+		// 'creator'
+		$creatorAss = $this->assignment()->where('assignment', '=', 'creator')->whereNull('done_at')->get();
 		foreach ($writeAss as $key => $ass) {
 			$pm = $ass->pm;
-			if ($pm->status == 'assigned')
-			$res['verb'] = $this->assignmentString('author');
-			$res['pm'] = $pm;
-		}
-		$reviewAss = $this->assignment()->where('assignment', '=', 'reviewer')->whereNull('done_at')->get();
-		foreach ($reviewAss as $key => $ass) {
-			$pm = $ass->pm;
-			$wAss = $pm->assignment()->where('assignment', '=', 'author')->where('done_at', '<=', 'NOW()')->First();
-			if (isset($wAss)) {
-				$res['verb'] = $this->assignmentString('reviewer');
-				$res['pm'] = $pm;
-			}
-		}
-		$RevidAss = $this->assignment()->where('assignment', '=', 'reminder')->whereNull('done_at')->get();
-		foreach ($RevidAss as $key => $ass) {
-			$pm = $ass->pm;
-			if ($pm->expiration_date < now + 1month) {
-				$res['verb'] = $this->assignmentString('reminder');
+			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned') {
+				$res['verb'] = $this->assignmentString($ass->assignment);
 				$res['pm'] = $pm;
 			}
 		}
 
-		$LastReviewAss = $this->assignment()->where('assignment', '=', 'end-reviewer')->whereNull('done_at')->get();
-		foreach ($LastReviewAss as $key => $ass) {
+		// 'author'
+		$writeAss = $this->assignment()->where('assignment', '=', 'author')->whereNull('done_at')->get();
+		foreach ($writeAss as $key => $ass) {
 			$pm = $ass->pm;
-			$beforeRev = $pm->assignment()->where('assignment', '=', 'reviewer')->whereNull('done_at')->get();
-			if (!isset($beforeRev)) {
-				$res['verb'] = $this->assignmentString('end-reviewer');
+			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned')
+				$res['verb'] = $this->assignmentString($ass->assignment);
+			$res['pm'] = $pm;
+		}
+
+		// 'settler'
+		$settlerAss = $this->assignment()->where('assignment', '=', 'settler')->whereNull('done_at')->get();
+		foreach ($settlerAss as $key => $ass) {
+			$pm = $ass->pm;
+			$res['verb'] = $this->assignmentString($ass->assignment);
+			$res['pm'] = $pm;
+		}
+
+		// 'reviewer'
+		$reviewAss = $this->assignment()->where('assignment', '=', 'reviewer')->whereNull('done_at')->get();
+		foreach ($reviewAss as $key => $ass) {
+			$pm = $ass->pm;
+			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' 
+					|| $pm->status == 'författat' || $pm->status == 'review-författat') {
+				$res['verb'] = $this->assignmentString($ass->assignment);
 				$res['pm'] = $pm;
 			}
 		}
+
+		// 'end-reviewer'
+		$LastReviewAss = $this->assignment()->where('assignment', '=', 'end-reviewer')->whereNull('done_at')->get();
+		foreach ($LastReviewAss as $key => $ass) {
+			$pm = $ass->pm;
+			if ($pm->status == 'reviewed' || $pm->status == 'revision-reviewed' 
+					|| $pm->status == 'författat' || $pm->status == 'review-författat') {
+				$res['verb'] = $this->assignmentString($ass->assignment);
+				$res['pm'] = $pm;
+			}
+		}
+
+		// 'reminder'
+		$RevidAss = $this->assignment()->where('assignment', '=', 'reminder')->whereNull('done_at')->get();
+		foreach ($RevidAss as $key => $ass) {
+			$pm = $ass->pm;
+			if ($pm->expiration_date < Carbon::now() || $pm->status == 'revision-waiting') { // TODO jämför dates
+				$res['verb'] = $this->assignmentString($ass->assignment);
+				$res['pm'] = $pm;
+			}
+		}
+
+
 
 		return $res;
 	}
 }
+
+// 'assigned', 'reviewed', 'published', 'published-reminded'
+// 'revision-waiting', 'revision-assigned', 'revision-reviewed', 'end-reviewed', 'revision-end-reviewed'
