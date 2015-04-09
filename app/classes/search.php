@@ -380,6 +380,11 @@ class Search {
 		return $this->result;
 	}
 
+	/**
+	 * Get pms connected to the category and all child categories.
+	 *
+	 * @param Category $category Category to find all PMs under.
+	 */
 	public function categorySearch($category) {
 		$childcategories = $category->getAllChildren();
 
@@ -390,6 +395,18 @@ class Search {
 				$this->result[$pm->id]['score'] = 1;
 				$this->result[$pm->id]['operator'] = self::defaultOperator; 
 			}
+		}
+	}
+
+	/**
+	 * Get all pms sorted by revision_date
+	 */
+	public function latestUpdatedPMs() {
+		$latestPms = PM::where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->orderBy('revision_date', 'DESC')->get();
+		foreach ( $latestPms as $key => $pm) {
+			$this->result[$pm->id]['pm'] = $pm;
+			$this->result[$pm->id]['score'] = 1;
+			$this->result[$pm->id]['operator'] = self::defaultOperator; 
 		}
 	}
 

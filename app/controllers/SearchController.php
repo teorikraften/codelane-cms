@@ -59,6 +59,23 @@ class SearchController extends BaseController {
 	}
 
 	/**
+	 * 
+	 */
+	public function getLatest() {
+		$search = new Search('latestAddedPms');
+
+		$search->latestUpdatedPMs();
+		$returnResult = $search->getPage(1);
+
+		return View::make('search.result')
+		->with('searchQuery', "")
+		->with('result', $returnResult)
+		->with('order', $order)
+		->with('page', $page)
+		->with('maxPage', $search->maximumPage());
+	}
+
+	/**
 	 * Performs search with search request in POST.
 	 * @return a redirect to search result view
 	 */

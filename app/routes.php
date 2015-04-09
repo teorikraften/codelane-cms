@@ -87,7 +87,6 @@ Route::get('/person/favoriter/andra/{token}/{goto}', ['as' => 'get-favourite-edi
 Route::post('/person/favoriter/andra', ['as' => 'post-favourite-edit', 'uses' => 'PMController@favouritePM'])
 	->before('auth.verified');
 
-
 /*
 |--------------------------------------------------------------------------
 | Administrator routes.
@@ -245,7 +244,8 @@ Route::get('/pm/{token}/verifiera', ['as' => 'pm-verify', 'uses' => 'PMControlle
 Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@getShow'])
 	->where('token', '.+');
 
-
+Route::get('/pm/senaste', ['as' => 'latest-show', 'uses' => 'SearchController@getLatest'])
+	->before('auth.verified');
 /*
 |--------------------------------------------------------------------------
 | Tag functionality

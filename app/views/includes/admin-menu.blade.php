@@ -38,6 +38,7 @@
 			@endif
 	        <li><a href="{{ URL::route('user') }}">Din sida</a></li>
 			<li><a href="{{ URL::route('favourites-show') }}">Dina favorit-PM</a></li>
+			<li><a href="{{ URL::route('latest-show') }}">Senast uppdaterade-PM</a><li>
 	        <li><a href="{{ URL::route('admin-pm') }}">PM</a></li>
 	    </ul>
 	    <div class="clear"></div>
