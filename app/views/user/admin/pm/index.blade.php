@@ -40,6 +40,7 @@
                 <th class="action"></th>
                 <th class="action"></th>
                 <th class="action"></th>
+                <th class="action"></th>
                 <th>Rubrik</th>
                 <th>Dina uppgifter</th>
                 <th>Status</th>
@@ -52,9 +53,16 @@
                         </a>
                     </td>
                     <td>
-                        <a href="{{ URL::route('pm-info', $pm->token) }}" title="Visa">
-                            {{ HTML::image('images/information.png', 'Information') }}
+                        <a href="{{ URL::route('pm-info', $pm->token) }}" title="Visa information">
+                            {{ HTML::image('images/information.png', 'Visa information') }}
                         </a>
+                    </td>
+                    <td>
+                        @if (substr($pm->status, 0, 8) != 'revision' && (in_array('reminder', $userAssignments[$pm->id]) || Auth::user()->privilegesNum() > 2 /* More than verified */)) 
+                            <a href="{{ URL::route('pm-revise', $pm->token) }}" title="Öppna för revidering">
+                                {{ HTML::image('images/revision.png', 'Revidera') }}
+                            </a>
+                        @endif
                     </td>
                     <td>
                         @if (in_array('reminder', $userAssignments[$pm->id]) || Auth::user()->privilegesNum() > 2 /* More than verified */) 
@@ -82,7 +90,7 @@
                         @endif
                     </td>
                     <td>
-                        @if (in_array('settler', $userAssignments[$pm->id]) && ($pm->status == 'end-reviewed' || $pm->status == 'end-reviewed')) 
+                        @if (in_array('settler', $userAssignments[$pm->id]) && ($pm->status == 'end-reviewed' || $pm->status == 'revision-end-reviewed')) 
                             <a href="{{ URL::route('pm-settle', $pm->token) }}" title="Fastställ">
                                 {{ HTML::image('images/settle.png', 'Fastställ') }}
                             </a>

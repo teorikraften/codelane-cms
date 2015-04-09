@@ -252,8 +252,6 @@ class PMController extends BaseController {
 	 * Handles post request to edit PM.
 	 */
 	public function postEdit() {
-		// TODO Hela funktionen
-
 		try {
 			$pm = PM::findOrFail(Input::get('id'));
 		} catch(ModelNotFoundException $e) {
@@ -267,9 +265,10 @@ class PMController extends BaseController {
 				->with('error', 'Du måste ange PM:ets rubrik.');
 
 		$pm->title = Input::get('title');
-		$pm->content = Input::get('content');
+		$pm->draft = Input::get('draft');
+
 		if (Input::has('done')) {
-			if (substr($pm->status, 0, 7) == 'revision') {
+			if (substr($pm->status, 0, 8) == 'revision') {
 				$pm->status = 'revision-written';
 			} else {
 				$pm->status = 'written';
@@ -404,7 +403,7 @@ class PMController extends BaseController {
 		}
 
 		if ($accepted) {
-			if (substr($pm->status, 0, 7) == 'revision') {
+			if (substr($pm->status, 0, 8) == 'revision') {
 				$pm->status = 'revision-reviewed';
 			} else {
 				$pm->status = 'reviewed';
@@ -511,7 +510,7 @@ class PMController extends BaseController {
 		}
 
 		if ($accepted) {
-			if (substr($pm->status, 0, 7) == 'revision') {
+			if (substr($pm->status, 0, 8) == 'revision') {
 				$pm->status = 'revision-end-reviewed';
 			} else {
 				$pm->status = 'end-reviewed';
@@ -839,11 +838,68 @@ class PMController extends BaseController {
 			->with('error', 'PM:et som skulle fastställas hittades inte.');
 		}
 
+		$pm->content = $pm->draft;
+		$pm->draft = NULL;
 		$pm->status = 'published';
+		$pm->published = 1;
 		$pm->save();
+
+		// Reset all assignments comments
+		$assignments = Assignment::where('pm', '=', $pm->id)->get();
+		foreach ($assignments as $ass) {
+			$ass->content = '';
+			$ass->accepted = 0;
+			$ass->save();
+		}
+
+		// Delete all comments
+		$comments = Comment::where('pm', '=', $pm->id)->get();
+		foreach ($comments as $comment) {
+			$comment->delete();
+		}
 
 		return Redirect::route('admin-pm')
 			->with('success', 'PM:et fastställdes.');
+	}
+
+	/**
+	 * Displays a page to add role for admin.
+	 * @param $id id of the role to delete
+	 */
+	public function getRevise($token) {
+		try {
+			$pm = PM::where('token', '=', $token)->firstOrFail(); 
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+			->with('error', 'PM:et som skulle revideras hittades inte.');
+		}
+
+		return View::make('user.admin.pm.revise')
+			->with('pm', $pm);
+	}
+
+	/**
+	 * Handles a post request of delete role.
+	 */
+	public function postRevise() {
+		// Only yes-button should make this continue
+		if (!Input::get('yes'))
+			return Redirect::route('admin-pm')->with('warning', 'PM:et revideras inte.');
+
+		try {
+			$pm = PM::findOrFail(Input::get('pm-id'));
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+			->with('error', 'PM:et som skulle revideras hittades inte.');
+		}
+
+		$pm->draft = $pm->content;
+		$pm->published = Input::get('published', 'no') == 'yes' ? 1 : 0;
+		$pm->status = 'revision-assigned';
+		$pm->save();
+
+		return Redirect::route('admin-pm')
+			->with('success', 'Revision av PM:et har inletts. PM:et visas fortfarande tills dess att revisionsdatumet passerats.');
 	}
 
 	public function postFilter() {

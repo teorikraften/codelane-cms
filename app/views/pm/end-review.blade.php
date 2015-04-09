@@ -89,7 +89,7 @@
 	    <div id="pmc-text">
             <h1 id="h1">{{ $pm->title }}</h1>
             <div id="pmcc">
-                {{ $pm->content }}
+                {{ $pm->draft }}
             </div>
         </div>
         <div id="pm-comments">

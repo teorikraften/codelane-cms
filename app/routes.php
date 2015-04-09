@@ -249,6 +249,12 @@ Route::get('/pm/{token}/andra-personer', ['as' => 'pm-edit-assignments', 'uses' 
 Route::post('/pm/andra-personer', ['as' => 'post-pm-edit-assignments', 'uses' => 'PMController@postEditAssignments'])
 	->before('auth.verified');
 
+Route::get('/pm/{token}/revidera', ['as' => 'pm-revise', 'uses' => 'PMController@getRevise'])
+	->where('token', '.+')
+	->before('auth.verified');
+Route::post('/pm/revidera', ['as' => 'post-revise', 'uses' => 'PMController@postRevise'])
+	->before('auth.verified');
+
 Route::get('/pm/{token}/ny-tagg', ['as' => 'pm-add-tag', 'uses' => 'PMController@getAddTag'])
 	->where('token', '.+')
 	->before('auth.verified');

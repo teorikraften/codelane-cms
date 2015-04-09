@@ -53,8 +53,8 @@
 				<div class="input">{{ Form::text('title', NULL, array('class' => 'text')) }}</div>
 			</div>
 			<div class="row">
-				<div class="description">{{ Form::label('content', 'Innehåll') }}</div>
-				<div class="input">{{ Form::textarea('content', NULL, array('class' => 'textarea fullwidth')) }}</div>
+				<div class="description">{{ Form::label('draft', 'Innehåll') }}</div>
+				<div class="input">{{ Form::textarea('draft', NULL, array('class' => 'textarea fullwidth')) }}</div>
 			</div>
 			<div class="submit">
 				{{ Form::submit('Spara', array('class' => 'submit', 'name' => 'save')) }}
