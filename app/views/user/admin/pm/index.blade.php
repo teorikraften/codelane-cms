@@ -39,6 +39,7 @@
                 <th class="action"></th>
                 <th class="action"></th>
                 <th class="action"></th>
+                <th class="action"></th>
                 <th>Rubrik</th>
                 <th>Dina uppgifter</th>
                 <th>Status</th>
@@ -51,11 +52,9 @@
                         </a>
                     </td>
                     <td>
-                        @if (in_array('author', $userAssignments[$pm->id])) 
-                            <a href="{{ URL::route('pm-edit', $pm->token) }}" title="Ändra">
-                                {{ HTML::image('images/edit.png', 'Ändra') }}
-                            </a>
-                        @endif
+                        <a href="{{ URL::route('pm-info', $pm->token) }}" title="Visa">
+                            {{ HTML::image('images/information.png', 'Information') }}
+                        </a>
                     </td>
                     <td>
                         @if (in_array('reminder', $userAssignments[$pm->id]) || Auth::user()->privilegesNum() > 2 /* More than verified */) 
@@ -65,15 +64,26 @@
                         @endif
                     </td>
                     <td>
-                        @if (in_array('reviewer', $userAssignments[$pm->id])) 
-                            <a href="{{ URL::route('pm-review', $pm->token) }}" title="Granska">
-                                {{ HTML::image('images/review.png', 'Granska') }}
+                        @if (in_array('author', $userAssignments[$pm->id]) && ($pm->status == 'assigned' || $pm->status == 'revision-assigned'))
+                            <a href="{{ URL::route('pm-edit', $pm->token) }}" title="Ändra">
+                                {{ HTML::image('images/edit.png', 'Ändra') }}
                             </a>
                         @endif
                     </td>
                     <td>
-                        @if (in_array('settler', $userAssignments[$pm->id])) 
-                            <a href="{{ URL::route('pm-review', $pm->token) }}" title="Fastställ">
+                        @if (in_array('reviewer', $userAssignments[$pm->id]) && ($pm->status == 'assigned' || $pm->status == 'revision-assigned')) 
+                            <a href="{{ URL::route('pm-review', $pm->token) }}" title="Granska">
+                                {{ HTML::image('images/review.png', 'Granska') }}
+                            </a>
+                        @elseif (in_array('end-reviewer', $userAssignments[$pm->id]) && ($pm->status == 'reviewed' || $pm->status == 'revision-reviewed'))
+                            <a href="{{ URL::route('pm-end-review', $pm->token) }}" title="Slutgranska">
+                                {{ HTML::image('images/end-review.png', 'Slutgranska') }}
+                            </a>
+                        @endif
+                    </td>
+                    <td>
+                        @if (in_array('settler', $userAssignments[$pm->id]) && ($pm->status == 'end-reviewed' || $pm->status == 'end-reviewed')) 
+                            <a href="{{ URL::route('pm-settle', $pm->token) }}" title="Fastställ">
                                 {{ HTML::image('images/settle.png', 'Fastställ') }}
                             </a>
                         @endif

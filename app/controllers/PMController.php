@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class PMController extends BaseController {
 	// TODO Kolla igenom hela klassen och åtgärda validering och buggar och städa upp
+	
 	/**
 	 * Displays the PM page view.
 	 * @param $token the PM token
@@ -22,6 +23,27 @@ class PMController extends BaseController {
 		$fav = (!empty($user->favourites()->where('pm', '=', $pm->id)->first())) ? true : false;
 		
 		return View::make('pm.show')
+		->with('pm', $pm)
+		->with('assignments', $pm->users)
+		->with('favourite' , $fav);
+	}
+
+	/**
+	 * Displays the PM page view.
+	 * @param $token the PM token
+	 */
+	public function getInfo($token) {
+		try {
+			$pm = Pm::where('token', '=', $token)->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::back()
+			->with('error', 'PM:et som skulle visas hittades inte.');
+		}
+
+		$user = User::find(Auth::user()->id);
+		$fav = (!empty($user->favourites()->where('pm', '=', $pm->id)->first())) ? true : false;
+		
+		return View::make('user.admin.pm.info')
 		->with('pm', $pm)
 		->with('assignments', $pm->users)
 		->with('favourite' , $fav);
@@ -389,49 +411,75 @@ class PMController extends BaseController {
 			->with('error', 'PM:et som skulle ändras hittades inte.');
 		}
 
-		$owners = $reviewers = $authors = $members = array();
+		$creators = $authors = $settlers = $reviewers = $endReviewers = $reminders = array();
 
 		foreach($pm->users as $user) {
-			if ($user->pivot->assignment == 'author')
+			if ($user->pivot->assignment == 'creator')
+				$creators[] = $user;
+			elseif ($user->pivot->assignment == 'author')
 				$authors[] = $user;
+			elseif ($user->pivot->assignment == 'settler')
+				$settlers[] = $user;
 			elseif ($user->pivot->assignment == 'reviewer')
 				$reviewers[] = $user;
-			elseif ($user->pivot->assignment == 'owner')
-				$owners[] = $user;
-			elseif ($user->pivot->assignment == 'member')
-				$members[] = $user;
+			elseif ($user->pivot->assignment == 'end-reviewer')
+				$endReviewers[] = $user;
+			elseif ($user->pivot->assignment == 'reminder')
+				$reminders[] = $user;
 		}
 
 		return View::make('user.admin.pm.assignment-edit')
 		->with('pm', $pm)
-		->with('owners', $owners)
+		->with('creators', $creators)
+		->with('authors', $authors)
+		->with('settlers', $settlers)
 		->with('reviewers', $reviewers)
-		->with('members', $members)
-		->with('authors', $authors);
+		->with('endReviewers', $endReviewers)
+		->with('reminders', $reminders);
 	}
 
-	public function postEditAssignments() {
-		// TODO Validering
-		$owner = explode(',', Input::get('responsible'));
-		$owner = $owner[0];
-		$authors = explode(',', Input::get('authors'));
-		$reviewers = explode(',', Input::get('reviewers'));
+	public function postEditAssignments() {		
+		try {
+			$pm = PM::findOrFail(Input::get('id'));
+		} catch (ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et som skulle redigeras hittades inte.');
+		}
+
+		// TODO Samma som i postAssign
+		$creators = $this->userify(Input::get('creator'));
+		$authors = $this->userify(Input::get('authors'));
+		$settlers = $this->userify(Input::get('settler'));
+		$reviewers = $this->userify(Input::get('reviewers'));	
+		$endReviewers = $this->userify(Input::get('end-reviewer'));
+		$reminders = $this->userify(Input::get('reminder'));	
 
 		$user = Auth::user();
-
-		$pm = PM::findOrFail(Input::get('id'));
 		$pm->users()->detach();
+		// TODO Fix! This is bad. Bättre att loopa igenom alla och ändra de som ska ändras istället. Då kan man köra soft deletes.
 
+		foreach ($creators as $creator) {
+			$creator->pms()->attach([$pm->id => ['assignment' => 'creator']]);
+		}
 		foreach ($authors as $author) {
-			User::findOrFail($author)->pms()->attach([$pm->id => ['assignment' => 'author']]);
+			$author->pms()->attach([$pm->id => ['assignment' => 'author']]);
+		}
+		foreach ($settlers as $settler) {
+			$settler->pms()->attach([$pm->id => ['assignment' => 'settler']]);
 		}
 		foreach ($reviewers as $reviewer) {
-			User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
+			$reviewer->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
 		}
-		User::findOrFail($owner)->pms()->attach([$pm->id => ['assignment' => 'owner']]);
-		$user->save();
-		
-		return Redirect::route('admin-pm');
+		foreach ($endReviewers as $endReviewer) {
+			$endReviewer->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
+		}
+		foreach ($reminders as $reminder) {
+			$reminder->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
+		}
+
+		$pm->save();
+
+		return Redirect::route('admin-pm')->with('success', 'Tilldelningen ändrades!');
 	}
 
 	public function getImport()
@@ -522,15 +570,27 @@ class PMController extends BaseController {
 		return View::make('user.admin.pm.assign');
 	}
 
+	/**
+	 * Returns an array of users from the comma-separated $string of user ids
+	 */
+	private function userify($string) {
+		$userIds = array_filter(explode(',', $string));
+		$res = array();
+		foreach($userIds as $userId) {
+			if (($user = User::find(intval(trim($userId)))) != NULL)
+				$res[] = $user;
+		}
+		return $res;
+	}
+
 	public function postAssign() {
-	// TODO Validering
-	// TODO kolla att användarna verkligen finns
-	// TODO Try-catch på findorfail
-		$creator = intval(Input::get('creator'));
-		$authors = explode(',', Input::get('authors'));
-		$reviewers = explode(',', Input::get('reviewers'));	
-		$endReviewer = Input::get('end-reviewer');		
-		$reminder = Input::get('reminder');	
+		// TODO Validering & en eller flera personer på vad?
+		$creators = $this->userify(Input::get('creator'));
+		$authors = $this->userify(Input::get('authors'));
+		$settlers = $this->userify(Input::get('settler'));
+		$reviewers = $this->userify(Input::get('reviewers'));	
+		$endReviewers = $this->userify(Input::get('end-reviewer'));
+		$reminders = $this->userify(Input::get('reminder'));	
 
 		$user = Auth::user();
 		$pm = new PM;
@@ -539,18 +599,26 @@ class PMController extends BaseController {
 		$pm->token = $this->generateToken($pm->title);
 		$pm->save();
 
+		foreach ($creators as $creator) {
+			$creator->pms()->attach([$pm->id => ['assignment' => 'creator']]);
+		}
 		foreach ($authors as $author) {
-			User::findOrFail($author)->pms()->attach([$pm->id => ['assignment' => 'author']]);
+			$author->pms()->attach([$pm->id => ['assignment' => 'author']]);
+		}
+		foreach ($settlers as $settler) {
+			$settler->pms()->attach([$pm->id => ['assignment' => 'settler']]);
 		}
 		foreach ($reviewers as $reviewer) {
-			User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
+			$reviewer->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
 		}
-		User::findOrFail($creator)->pms()->attach([$pm->id => ['assignment' => 'creator']]);
-		User::findOrFail($endReviewer)->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
-		User::findOrFail($reminder)->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
-		$user->save();
+		foreach ($endReviewers as $endReviewer) {
+			$endReviewer->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
+		}
+		foreach ($reminders as $reminder) {
+			$reminder->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
+		}
 
-		return Redirect::route('admin-pm');
+		return Redirect::route('admin-pm')->with('success', 'PM:et lades till och personerna sparades!');
 	}
 
 	/**
