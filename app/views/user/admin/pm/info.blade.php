@@ -22,6 +22,12 @@
         <div id="pmListing">
             <table>
                 <tr>
+                    <th>Status: </th>
+                    <td>
+                        {{ $pm->status }}
+                    </td>
+                </tr>
+                <tr>
                     <th>Upprättare: </th>
                     <td>
                         @foreach ($assignments as $assignment)

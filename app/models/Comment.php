@@ -62,7 +62,7 @@ class Comment extends Eloquent {
 	 *
 	 * @return Relation
 	 */
-	public function user() {
+	public function pm() {
 		return $this->belongsTo('PM', 'id', 'pm');
 	}
 }

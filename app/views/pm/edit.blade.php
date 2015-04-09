@@ -38,12 +38,14 @@
 @stop
 
 @section('body')
-    <h1>Ändra PM</h1>
+    <h1>Skriv PM</h1>
+    @include('includes.messages')
     {{ Form::model($pm, array('action' => 'post-pm-edit', 'method' => 'post')) }}
     	{{ Form::hidden('id') }}
     	<div class="form">
 			<div class="submit">
-				{{ Form::submit('Spara PM', array('class' => 'submit')) }}
+				{{ Form::submit('Spara', array('class' => 'submit', 'name' => 'save')) }}
+				{{ Form::submit('Spara och markera som klart', array('class' => 'submit', 'name' => 'done')) }}
 				<a href="{{ URL::route('admin-pm') }}">eller gå tillbaka</a>
 			</div>
 			<div class="row">
@@ -54,18 +56,9 @@
 				<div class="description">{{ Form::label('content', 'Innehåll') }}</div>
 				<div class="input">{{ Form::textarea('content', NULL, array('class' => 'textarea fullwidth')) }}</div>
 			</div>
-			<div class="row">
-				<div class="description">{{ Form::label('tags', 'Taggar') }}</div>
-				<div class="input">{{ Form::text('tags', NULL, array('class' => 'text')) }}</div>
-			</div>
-	        <div class="row">
-	            <div class="description">{{ Form::label('category', 'Kategori') }}</div>
-	            <div class="input">
-	                {{ Form::select('category', array('0' => 'Den översta kategorin') + $categorySelect, $pm->category) }}
-	            </div>
-	        </div>
 			<div class="submit">
-				{{ Form::submit('Spara PM', array('class' => 'submit')) }}
+				{{ Form::submit('Spara', array('class' => 'submit', 'name' => 'save')) }}
+				{{ Form::submit('Spara och markera som klart', array('class' => 'submit', 'name' => 'done')) }}
 			</div>
 		</div>
     {{ Form::close() }}
