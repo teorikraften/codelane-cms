@@ -473,6 +473,7 @@ div.form .row.same {
 	padding: 1px;
 }
 div.form .row .description {
+	font-weight: bold;
 	font-size: 15px;
 	padding: 10px 0 0px;
 }

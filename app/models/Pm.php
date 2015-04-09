@@ -72,7 +72,7 @@ class PM extends Eloquent {
 	 * @return Relation
 	 */
 	public function comments() {
-		return $this->belongsToMany('Comment', 'pm', 'id');
+		return $this->hasMany('Comment', 'pm', 'id');
 	}
 
 	/**

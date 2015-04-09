@@ -12,9 +12,9 @@
          */
         $(document).ready(function() {
             $('#inline-comments').html('<b>För att göra en kommentar i texten</b>: markera stycket du vill kommentera med musen och klicka på knappen "Skapa kommentar". Du kan också skriva en övergripande kommentar om hela texten längst ner på sidan.');
-            @foreach ($reviews as $review)
-                @if ($review->parent_comment == 0)
-                    addCommentBox({{ $review->id }}, '{{ $review->name }}', document.getElementById({{ $review->id }}), '{{ $review->content }}', false);
+            @foreach ($comments as $comment)
+                @if ($comment->parent_comment == 0)
+                    addCommentBox({{ $comment->id }}, '{{ $comment->name }}', document.getElementById({{ $comment->id }}), '{{ $review->content }}', false);
                 @endif;
             @endforeach
             $('.comment').removeClass('active');
@@ -56,18 +56,18 @@
 @stop
 
 @section('body')
-    <h1>Granska</h1>
+    <h1>Granska "{{ $pm->title }}"</h1>
     @include('includes.messages')
-    <div class="pm-inf">
+    <div style="width: 750px">
         <h2>Information</h2>
         <p>Nedan kan du kommentera texten och ge förslag till {{ count($authors) == 1 ? 'författaren' : 'författarna' }}.</p>
         <p id="inline-comments">Textfältet där du skriver din kommentar ligger längst ner på denna sida, efter själva texten.</p>
         <p>
             Författare är 
             <ul>
-                @foreach ($assignments as $assignment)
-                    @if ($assignment->pivot->assignment == 'author')
-                        <li>{{ $assignment->name }}</li>
+                @foreach ($assignments as $ass)
+                    @if ($ass->pivot->ass == 'author')
+                        <li>{{ $ass->name }} ({{ $ass->email }})</li>
                     @endif
                 @endforeach
             </ul>
@@ -89,17 +89,21 @@
     <div class="clear" style="height: 100px"></div>
     <h2>Övergripande kommentar</h2>
     <p>Här kan du skriva en övergripande kommentar om texten som författaren kan se och förbättra texten efter. Om du godkänner PM:et måste du klicka i rutan längst ner och sedan trycka på "Spara".</p>
-    {{ Form::model($review, array('action' => 'post-save-review', 'method' => 'post')) }}
+    {{ Form::model($assignment, array('action' => 'post-save-review', 'method' => 'post')) }}
     {{ Form::hidden('pm-id', $pm->id) }}
     <div class="form" style="width: 100%; max-width: none;">
         <div class="row">
             <div class="description">{{ Form::label('comment', 'Din kommentar') }}</div>
-            <div class="input">{{ Form::textarea('comment', $comment, array('class' => 'text', 'style' => 'padding: 10px 1%;  height: 200px; width: 102%;')) }}</div>
+            <div class="input">{{ Form::textarea('comment', $assignment->content, array('class' => 'text', 'style' => 'padding: 10px 1%;  height: 200px; width: 102%;')) }}</div>
         </div>
         <div class="row same">
-            <div class="input" style="width:30px">{{ Form::checkbox('accept', 'yes', $accepted, array('style' => 'width: 30px', 'class' => 'checkbox', 'id' => 'accept')) }}</div>
-            <div class="description" style="float: left">{{ Form::label('accept', 'Jag godkänner detta PM (klicka inte i rutan om du inte godkänner, din kommentar sparas ändå)') }}</div>
-            <div class="clear"></div>
+            <div class="input" style="width:30px">{{ Form::checkbox('accept', 'yes', $assignment->accepted, array('style' => 'width: 30px', 'class' => 'checkbox', 'id' => 'accept')) }}</div>
+            <div class="description" style="float: left;">
+                <label for="accept">
+                    Jag godkänner detta PM. <span style="font-weight:normal;">(Klicka inte i rutan om du inte godkänner. Din kommentar sparas ändå när du trycker på knappen nedan.)</span>
+                </label>
+            </div>
+            <div class="clear" style="height: 20px;"></div>
         </div>
         <div class="submit">
             {{ Form::submit('Spara', array('class' => 'submit')) }}

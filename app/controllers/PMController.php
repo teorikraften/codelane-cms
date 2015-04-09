@@ -263,28 +263,24 @@ class PMController extends BaseController {
 
 		if (!(strlen(Input::get('title', '')) > 0))
 			return Redirect::back()
-		->withInput()
-		->with('error', 'Du måste ange PM:ets rubrik.');
+				->withInput()
+				->with('error', 'Du måste ange PM:ets rubrik.');
 
-		$tags = explode(",", Input::get('tags'));
-		// TODO Verifiera taggarna
-
-		if (count($tags) > 0) {
-			$pm->tags()->detach();
-			foreach ($tags as $tag) {
-				if (!is_null(Tag::where('id', '=', $tag)->first()))
-					$pm->tags()->attach([$tag => ['added_by' => Auth::user()->id]]);
+		$pm->title = Input::get('title');
+		$pm->content = Input::get('content');
+		if (Input::has('done')) {
+			if (substr($pm->status, 0, 7) == 'revision') {
+				$pm->status = 'revision-written';
+			} else {
+				$pm->status = 'written';
 			}
 		}
-		$pm->title = Input::get('title');
-		if(Input::get('category') != 0) {
-			$pm->categories()->detach();
-			$pm->categories()->attach([Input::get('category') => ['added_by' => Auth::user()->id]]);
-		}
-		$pm->content = Input::get('content');
 		$pm->save();
 
-		return Redirect::route('pm-edit', $pm->token);
+		if (Input::has('done'))
+			return Redirect::route('admin-pm')->with('success', 'Texten sparades och PM:et markerades som klart.');
+
+		return Redirect::route('pm-edit', $pm->token)->with('warning', 'Texten sparades men PM:et måste fortfarande markeras som klart.');
 	}
 
 	/**
@@ -293,40 +289,40 @@ class PMController extends BaseController {
 	 */
 	public function getReview($token) {
 		try {
-			$pm = Pm::where('token', '=', $token)->firstOrFail();
+			$pm = PM::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
 			return Redirect::back()
-			->with('error', 'PM:et som skulle granskas hittades inte.');
+				->with('error', 'PM:et som skulle granskas hittades inte.');
 		}
 
-		$comments = Comment::where('pm', '=', $pm->id)
-		->select('comments.id as id', 'content', 'users.name', 'pm')
-		->join('users', 'users.id', '=', 'comments.user')
-		->get();
-
-		$authors = array();
-		foreach($pm->users as $assignment) {
-			if ($assignment->pivot->assignment == 'author')
-				$authors[] = $assignment;
+		if (substr($pm->status, -7) != "written") {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et är inte färdigt för granskning än.');
 		}
 
 		try {
-			$review = Review::where('pm', '=', $pm->id)->where('user', '=', Auth::user()->id)->firstOrFail();
-			$accepted = $review->accepted == 1;
-			$comment = Comment::findOrFail($review->comment);
-			$commentC = $comment->content;
+			$assignment = Assignment::where('user', '=', Auth::user()->id)
+				->where('pm', '=', $pm->id)
+				->where(function($query) {
+					$query->where('assignment', '=', 'revision-reviewer')
+						->orWhere('assignment', '=', 'reviewer');
+				})
+				->firstOrFail();
 		} catch(ModelNotFoundException $e) {
-			$accepted = false;
-			$commentC = '';
+			return Redirect::route('admin-pm')
+				->with('error', 'Det verkar inte som du har behörighet att granska detta PM.');
 		}
 
+		$comments = $pm->comments;
+		$authors = $pm->users; // TODO Not all users
+		$assignments = $pm->users; 
+
 		return View::make('pm.review')
-		->with('pm', $pm)
-		->with('assignments', $pm->users)
-		->with('authors', $authors)
-		->with('reviews', $comments)
-		->with('accepted', $accepted)
-		->with('comment', $commentC);
+			->with('assignment', $assignment)
+			->with('assignments', $assignments)
+			->with('authors', $authors)
+			->with('comments', $comments)
+			->with('pm', $pm);
 	}
 
 	public function postSaveComment() {
@@ -363,8 +359,7 @@ class PMController extends BaseController {
 	 * Handles post request to edit PM.
 	 */
 	public function postReview() {
-		// TODO Hela funktionen
-		$commentContent = Input::get('comment');
+		$content = Input::get('comment');
 		$accepted = Input::get('accept', 'no');
 
 		try {
@@ -374,29 +369,55 @@ class PMController extends BaseController {
 			->with('error', 'PM:et som skulle granskas hittades inte.');
 		}
 
-		try {
-			$review = Review::where('pm', '=', $pm->id)->where('user', '=', Auth::user()->id)->firstOrFail();
-			$comment = Comment::findOrFail($review->comment);
-		} catch(ModelNotFoundException $e) {
-			$comment = new Comment;
-			$comment->user = Auth::user()->id;
-			$comment->parent_comment = 0; 
-			$comment->pm = $pm->id;
-			$comment->save();
-
-			$review = new Review;
-			$review->user = Auth::user()->id;
-			$review->pm = $pm->id;
-			$review->accepted = 0;
-			$review->comment = $comment->id;
+		if (substr($pm->status, -7) != "written") {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et är inte färdigt för granskning än.');
 		}
 
-		$review->accepted = $accepted == 'yes' ? 1 : 0;
-		$review->save();
-		$comment->content = $commentContent;
-		$comment->save();
+		try {
+			$assignment = Assignment::where('user', '=', Auth::user()->id)
+				->where('pm', '=', $pm->id)
+				->where(function($query) {
+					$query->where('assignment', '=', 'revision-reviewer')
+						->orWhere('assignment', '=', 'reviewer');
+				})
+				->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+				->with('error', 'Det verkar inte som du har behörighet att granska detta PM.');
+		}
 
-		return Redirect::route('pm-review', $pm->token)->with('success', 'Kommentaren sparades!');
+		$assignment->accepted = $accepted == 'yes' ? 1 : 0;
+		$assignment->content = $content;
+		$assignment->save();
+		
+		$allAss = Assignment::where('pm', '=', $pm->id)
+			->where('assignment', '=', $assignment->assignment)
+			->get();
+
+		$accepted = true;
+		foreach($allAss as $ass) {
+			if ($ass->accepted == 0) {
+				$accepted = false;
+				break;
+			}
+		}
+
+		if ($accepted) {
+			if (substr($pm->status, 0, 7) == 'revision') {
+				$pm->status = 'revision-reviewed';
+			} else {
+				$pm->status = 'reviewed';
+			}
+			$pm->save();
+			return Redirect::route('admin-pm')
+				->with('success', 'Kommentaren sparades och PM:et är nu godkänt av alla!');
+		}
+
+		// TODO Check if last to accept, then change PM status
+
+		return Redirect::route('pm-review', $pm->token)
+			->with('success', 'Kommentaren sparades!');
 	}
 
 	/**
