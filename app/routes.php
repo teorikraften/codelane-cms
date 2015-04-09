@@ -189,6 +189,8 @@ Route::get('/admin/pm/tilldela', ['as' => 'pm-add-assign', 'uses' => 'PMControll
 	->before('auth.verified');
 Route::post('/admin/pm/tilldela', ['as' => 'post-pm-add-assign', 'uses' => 'PMController@postAssign'])
 	->before('auth.verified');
+Route::get('/admin/pm/information/{token}', ['as' => 'pm-info', 'uses' => 'PMController@getInfo'])
+	->where('token', '.+');
 
 
 /*
@@ -220,7 +222,7 @@ Route::get('/pm/{token}/ladda-ner', ['as' => 'pm-download', 'uses' => 'PMControl
 Route::get('/pm/{token}/andra', ['as' => 'pm-edit', 'uses' => 'PMController@getEdit'])
 	->where('token', '.+')
 	->before('auth.verified');
-Route::post('/pm/andra', ['as' => 'post-pm-edit', 'uses' => 'PMController@editPM'])
+Route::post('/pm/andra', ['as' => 'post-pm-edit', 'uses' => 'PMController@postEdit'])
 	->before('auth.verified');
 
 Route::get('/pm/{token}/granska', ['as' => 'pm-review', 'uses' => 'PMController@getReview'])

@@ -39,6 +39,7 @@
                 <th class="action"></th>
                 <th class="action"></th>
                 <th class="action"></th>
+                <th class="action"></th>
                 <th>Rubrik</th>
                 <th>Dina uppgifter</th>
                 <th>Status</th>
@@ -48,6 +49,11 @@
                     <td>
                         <a href="{{ URL::route('pm-show', $pm->token) }}" title="Visa">
                             {{ HTML::image('images/view.png', 'Visa') }}
+                        </a>
+                    </td>
+                    <td>
+                        <a href="{{ URL::route('pm-info', $pm->token) }}" title="Visa">
+                            {{ HTML::image('images/information.png', 'Information') }}
                         </a>
                     </td>
                     <td>
