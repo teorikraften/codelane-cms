@@ -1,10 +1,11 @@
 @if(Auth::guest())
 
 @elseif(Auth::user()->privileges == 'admin')
+	<?php $countEvents = Auth::user()->countEvents(); ?>
 	<div class="submenu">
 	    <ul>
-	    	@if (count(Auth::user()->allEvents()))
-				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ count(Auth::user()->allEvents()) }} saker att göra</a></li>
+	    	@if ($countEvents)
+				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ $countEvents }} saker att göra</a></li>
 			@endif
 			<li><a href="{{ URL::route('favourites-show') }}">Dina favoriter</a></li>
 	        <!--<li><a href="{{ URL::route('pm-import') }}">Importera PM</a></li>-->
@@ -18,10 +19,11 @@
 	    <div class="clear"></div>
 	</div>
 @elseif(Auth::user()->privileges == 'pm-admin')
+	<?php $countEvents = Auth::user()->countEvents(); ?>
 	<div class="submenu">
 	    <ul>
-	    	@if (count(Auth::user()->allEvents()))
-				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ count(Auth::user()->allEvents()) }} saker att göra</a></li>
+	    	@if ($countEvents)
+				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ $countEvents }} saker att göra</a></li>
 			@endif
 			<li><a href="{{ URL::route('favourites-show') }}">Dina favoriter</a></li>
 	        <li><a href="{{ URL::route('admin-pm') }}">PM</a></li>
@@ -30,10 +32,11 @@
 	    <div class="clear"></div>
 	</div>
 @elseif(Auth::user()->privileges == 'verified')
+	<?php $countEvents = Auth::user()->countEvents(); ?>
 	<div class="submenu">
 	    <ul>
-	    	@if (count(Auth::user()->allEvents()))
-				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ count(Auth::user()->allEvents()) }} saker att göra</a></li>
+	    	@if ($countEvents)
+				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ $countEvents }} saker att göra</a></li>
 			@endif
 	        <li><a href="{{ URL::route('user') }}">Din sida</a></li>
 			<li><a href="{{ URL::route('favourites-show') }}">Dina favorit-PM</a></li>

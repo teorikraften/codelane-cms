@@ -78,11 +78,6 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		return $this->hasMany('Assignment', 'user');
 	}
 
-
-
-
-
-
 	/**
 	 * Get a nice, Swedish, string of user privilege.
 	 *
@@ -135,72 +130,91 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
+	 *
+	 */
+	public function countEvents() {
+		$events = DB::table('pms')->join('assignments', 'assignments.pm', '=', 'pms.id')
+		->where('assignments.user', '=', $this->id)
+		->whereNull('pms.deleted_at')
+		->whereNull('done_at')
+		->where(function($validAssignment){
+			$validAssignment
+			->where(function($creator){
+				$creator->where('assignments.assignment', '=', 'creator')
+				->whereIn('pms.status', array('assigned', 'revision-assigned'));
+			})
+			->orWhere(function($author){
+				$author->where('assignments.assignment', '=', 'author')
+				->whereIn('pms.status', array('assigned', 'revision-assigned'));
+			})
+			->orWhere(function($settler){
+				$settler->where('assignments.assignment', '=', 'settler')
+				->whereIn('pms.status', array('end-reviewed', 'revision-end-reviewed'));
+			})
+			->orWhere(function($reviewer){
+				$reviewer->where('assignments.assignment', '=', 'reviewer')
+				->whereIn('pms.status', array( 'written', 'revision-written'));
+			})
+			->orWhere(function($end_reviewer){
+				$end_reviewer->where('assignments.assignment', '=', 'end-reviewer')
+				->whereIn('pms.status', array('reviewed', 'revision-reviewed'));
+			})
+			->orWhere(function($reminder){  // TODO maybe jämför dates $pm->expiration_date < Carbon::now() ||
+				$reminder->where('assignments.assignment', '=', 'reminder')
+				->whereIn('pms.status', array('revision-waiting', 'published-reminded'));
+			});
+		})
+		->count();
+		return $events;
+	}
+
+	/**
 	 * Gets all events that this user has to finish.
 	 *
 	 * @return array of events - array({ 'verb':string, 'pm':PM })
 	 */
 	public function allEvents() {
-		$res = array();
+		$res = DB::table('pms')->join('assignments', 'assignments.pm', '=', 'pms.id')
+		->where('assignments.user', '=', $this->id)
+		->whereNull('pms.deleted_at')
+		->whereNull('done_at')
+		->where(function($validAssignment){
+			$validAssignment
+			->where(function($creator){
+				$creator->where('assignments.assignment', '=', 'creator')
+				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written'));
+			})
+			->orWhere(function($author){
+				$author->where('assignments.assignment', '=', 'author')
+				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written'));
+			})
+			->orWhere(function($settler){
+				$settler->where('assignments.assignment', '=', 'settler')
+				->whereIn('pms.status', array('end-reviewed', 'revision-end-reviewed'));
+			})
+			->orWhere(function($reviewer){
+				$reviewer->where('assignments.assignment', '=', 'reviewer')
+				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written'));
+			})
+			->orWhere(function($end_reviewer){
+				$end_reviewer->where('assignments.assignment', '=', 'end-reviewer')
+				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written', 'reviewed', 'revision-reviewed'));
+			})
+			->orWhere(function($reminder){  // TODO maybe jämför dates $pm->expiration_date < Carbon::now() ||
+				$reminder->where('assignments.assignment', '=', 'reminder')
+				->whereIn('pms.status', array('revision-waiting', 'published-reminded'));
+			});
+		})
+		->get();
 
-		// TODO FirstO Continue on deleted PMS
 
-		// 'creator'
-		$creatorAss = $this->assignment()->where('assignment', '=', 'creator')->whereNull('done_at')->get();
-		foreach ($creatorAss as $key => $ass) {
-			$pm = $ass->assignedPm;
-			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written') {
-				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
-			}
+		foreach ($res as $key => $value) {
+			$value->assignment = $this->assignmentString($value->assignment);
 		}
 
-		// 'author'
-		$writeAss = $this->assignment()->where('assignment', '=', 'author')->whereNull('done_at')->get();
-		foreach ($writeAss as $key => $ass) {
-			$pm = $ass->assignedPm;
-			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written')
-				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
-		}
+		//var_dump($res);
+		//exit;
 
-		// 'settler'
-		$settlerAss = $this->assignment()->where('assignment', '=', 'settler')->whereNull('done_at')->get();
-		foreach ($settlerAss as $key => $ass) {
-			$pm = $ass->assignedPm;
-			if ($pm->status == 'end-reviewed' || $pm->status == 'revision-end-reviewed') {
-			$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
-			}
-		}
-
-		// 'reviewer'
-		$reviewAss = $this->assignment()->where('assignment', '=', 'reviewer')->whereNull('done_at')->get();
-		foreach ($reviewAss as $key => $ass) {
-			$pm = $ass->assignedPm;
-			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written') {
-				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
-			}
-		}
-
-		// 'end-reviewer'
-		$LastReviewAss = $this->assignment()->where('assignment', '=', 'end-reviewer')->whereNull('done_at')->get();
-		foreach ($LastReviewAss as $key => $ass) {
-			$pm = $ass->assignedPm;
-			if ($pm->status == 'reviewed' || $pm->status == 'revision-reviewed'	|| $pm->status == 'written' || $pm->status == 'revision-written' || $pm->status == 'reviewed' || $pm->status == 'revision-reviewed') {
-				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
-			}
-		}
-
-		// 'reminder'
-		$RevidAss = $this->assignment()->where('assignment', '=', 'reminder')->whereNull('done_at')->get();
-		foreach ($RevidAss as $key => $ass) {
-			$pm = $ass->assignedPm;
-			if ( $pm->status == 'revision-waiting' || $pm->status == 'published-reminded') { // TODO jämför dates $pm->expiration_date < Carbon::now() ||
-				$res[] = array('verb' => $this->assignmentString($ass->assignment), 'pm' => $pm);
-			}
-		}
 		return $res;
 	}
 }
-
-/*
-'assigned','written','reviewed','end-reviewed','published','published-reminded'
-,'revision-waiting','revision-assigned','revision-reviewed','revision-end-reviewed','revision-written'
-*/
