@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('head-title')
-    Användare: {{ Auth::user()->real_name }}
+    Användare: {{ Auth::user()->name }}
 @stop
 
 @section('head-extra')
@@ -13,15 +13,15 @@
 @stop
 
 @section('body') 
-    <h1>Ditt konto, {{ Auth::user()->real_name }}</h1>  
+    <h1>Ditt konto, {{ Auth::user()->name }}</h1>  
     <table>
         <tr>
             <th>Namn:</th>
-            <td>{{ Auth::user()->real_name }}</td>
+            <td>{{ Auth::user()->name }}</td>
         </tr>
         <tr>
             <th>Kontostatus:</th>
-            <td>{{ ucfirst(Auth::user()->privileges()) }}</td>
+            <td>{{ ucfirst(Auth::user()->privilegesString()) }}</td>
         </tr>
         <tr>
             <th>E-postadress:</th>

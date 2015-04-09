@@ -136,7 +136,7 @@
                                 <table style="display: none" id="pm{{ $pm->id }}">
                                 @foreach ($pm->users as $user)
                                     <tr>
-                                        <td>{{ $user->real_name }}</td>
+                                        <td>{{ $user->name }}</td>
                                         <td>({{ $user->pivot->assignment }})</td>
                                     </tr>
                                 @endforeach

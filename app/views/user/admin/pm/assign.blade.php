@@ -13,7 +13,7 @@
     <script type="text/javascript">
 	    $(document).ready(function() {
 	        $("#creator").tokenInput("/personer", {
-	        	'prePopulate' : [{'id' : '{{ Auth::user()->id }}', 'name' : '{{ Auth::user()->real_name . ' (' . Auth::user()->email . ')' }}'}]
+	        	'prePopulate' : [{'id' : '{{ Auth::user()->id }}', 'name' : '{{ Auth::user()->name . ' (' . Auth::user()->email . ')' }}'}]
 	        });
 	        $("#authors").tokenInput("/personer");
 	        $("#settler").tokenInput("/personer");
@@ -40,7 +40,7 @@
 			<div class="row">
 				<div class="description">{{ Form::label('creator', 'Upprättare') }}</div>
 				<div class="input">
-					{{ Form::text('creator', Auth::user()->real_name, array('class' => 'text')) }}
+					{{ Form::text('creator', Auth::user()->name, array('class' => 'text')) }}
 				</div>
 			</div>
 			<div class="row">

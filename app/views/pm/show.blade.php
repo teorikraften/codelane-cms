@@ -30,7 +30,7 @@ Visa PM "{{ $pm->title }}"
                     <td>
                         @foreach ($assignments as $assignment)
                         @if ($assignment->pivot->assignment == 'owner')
-                        {{ $assignment->real_name }}
+                        {{ $assignment->name }}
                         @endif
                         @endforeach
                     </td>
@@ -40,7 +40,7 @@ Visa PM "{{ $pm->title }}"
                     <td>
                         @foreach ($assignments as $assignment)
                         @if ($assignment->pivot->assignment == 'author')
-                        {{ $assignment->real_name }}
+                        {{ $assignment->name }}
                         @endif
                         @endforeach
                     </td>
@@ -50,7 +50,7 @@ Visa PM "{{ $pm->title }}"
                     <td>
                         @foreach ($assignments as $assignment)
                         @if ($assignment->pivot->assignment == 'reviewer')
-                        {{ $assignment->real_name }}
+                        {{ $assignment->name }}
                         @endif
                         @endforeach
                     </td>

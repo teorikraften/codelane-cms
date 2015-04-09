@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('head-title')
-    Användare: {{ Auth::user()->real_name }}
+    Användare: {{ Auth::user()->name }}
 @stop
 
 @section('head-extra')

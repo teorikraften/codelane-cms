@@ -14,7 +14,7 @@
             $('#inline-comments').html('<b>För att göra en kommentar i texten</b>: markera stycket du vill kommentera med musen och klicka på knappen "Skapa kommentar". Du kan också skriva en övergripande kommentar om hela texten längst ner på sidan.');
             @foreach ($reviews as $review)
                 @if ($review->parent_comment == 0)
-                    addCommentBox({{ $review->id }}, '{{ $review->real_name }}', document.getElementById({{ $review->id }}), '{{ $review->content }}', false);
+                    addCommentBox({{ $review->id }}, '{{ $review->name }}', document.getElementById({{ $review->id }}), '{{ $review->content }}', false);
                 @endif;
             @endforeach
             $('.comment').removeClass('active');
@@ -27,7 +27,7 @@
          * Starts the whole comment process onclick
          */
         function gText() {
-            window.getSelection().commentize('{{ Auth::user()->real_name }}');
+            window.getSelection().commentize('{{ Auth::user()->name }}');
         }
 
         /**
@@ -67,7 +67,7 @@
             <ul>
                 @foreach ($assignments as $assignment)
                     @if ($assignment->pivot->assignment == 'author')
-                        <li>{{ $assignment->real_name }}</li>
+                        <li>{{ $assignment->name }}</li>
                     @endif
                 @endforeach
             </ul>
