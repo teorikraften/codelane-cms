@@ -49,6 +49,9 @@ class RemindersController extends Controller {
 	 * @return Response
 	 */
 	public function postReset() {
+
+		// USE validateResetPassword()
+
 		$credentials = Input::only(
 			'email', 'password', 'password_confirmation', 'token'
 		);

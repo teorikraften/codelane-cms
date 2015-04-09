@@ -81,7 +81,7 @@ class UserAdminController extends BaseController {
 		$privileges = Input::get('privileges');
 		$password = "NULL";
 
-		// Check if input is OK
+		// Check if input is OK USE validateProfileInfoWithPrivileges($name, $email, $privileges) 
 		$validator = Validator::make(
 		[
 			'name' => $name,

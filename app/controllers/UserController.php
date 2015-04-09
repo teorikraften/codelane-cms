@@ -35,7 +35,7 @@ class UserController extends BaseController {
 		$new_password = Input::get('new_password');
 		$new_password_again = Input::get('new_password_again'); // Look in postCreatePassword function
 
-		// TODO Move to class
+		// TODO Move to class USE function validatechangePassword($new_password, $new_password_again)
 		$validator = Validator::make(
 		[
 			'new_password' => $new_password,
@@ -86,7 +86,7 @@ class UserController extends BaseController {
 		$roles = Input::get('roles_'); // TODO Do nicer
 		$roles = explode(",", $roles);
 
-		// TODO Move to class
+		// TODO Move to class // USE validateProfileInfo($name, $email)
 		$validator = Validator::make(
 		[
 			'name' => $name,
