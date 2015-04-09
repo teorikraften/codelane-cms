@@ -421,6 +421,111 @@ class PMController extends BaseController {
 	}
 
 	/**
+	 * Displays the PM edit page view.
+	 * @param $token the PM token
+	 */
+	public function getEndReview($token) {
+		try {
+			$pm = PM::where('token', '=', $token)->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::back()
+				->with('error', 'PM:et som skulle granskas hittades inte.');
+		}
+
+		if ($pm->status != "reviewed" && $pm->status != "revision-reviewed") {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et är inte färdigt för slutgranskning än.');
+		}
+
+		try {
+			$assignment = Assignment::where('user', '=', Auth::user()->id)
+				->where('pm', '=', $pm->id)
+				->where(function($query) {
+					$query->where('assignment', '=', 'revision-end-reviewer')
+						->orWhere('assignment', '=', 'end-reviewer');
+				})
+				->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+				->with('error', 'Det verkar inte som du har behörighet att slutgranska detta PM.');
+		}
+
+		$comments = $pm->comments;
+		$authors = $pm->users; // TODO Not all users
+		$assignments = $pm->users; 
+
+		return View::make('pm.end-review')
+			->with('assignment', $assignment)
+			->with('assignments', $assignments)
+			->with('authors', $authors)
+			->with('comments', $comments)
+			->with('pm', $pm);
+	}
+
+	/**
+	 * Handles post request to edit PM.
+	 */
+	public function postEndReview() {
+		$content = Input::get('comment');
+		$accepted = Input::get('accept', 'no');
+
+		try {
+			$pm = PM::findOrFail(Input::get('pm-id'));
+		} catch(ModelNotFoundException $e) {
+			return Redirect::back()
+			->with('error', 'PM:et som skulle slutgranskas hittades inte.');
+		}
+
+		if ($pm->status != "reviewed" && $pm->status != "revision-reviewed") {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et är inte färdigt för slutgranskning än.');
+		}
+
+		try {
+			$assignment = Assignment::where('user', '=', Auth::user()->id)
+				->where('pm', '=', $pm->id)
+				->where(function($query) {
+					$query->where('assignment', '=', 'revision-end-reviewer')
+						->orWhere('assignment', '=', 'end-reviewer');
+				})
+				->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+				->with('error', 'Det verkar inte som du har behörighet att slutgranska detta PM.');
+		}
+
+		$assignment->accepted = $accepted == 'yes' ? 1 : 0;
+		$assignment->content = $content;
+		$assignment->save();
+		
+		$allAss = Assignment::where('pm', '=', $pm->id)
+			->where('assignment', '=', $assignment->assignment)
+			->get();
+
+		$accepted = true;
+		foreach($allAss as $ass) {
+			if ($ass->accepted == 0) {
+				$accepted = false;
+				break;
+			}
+		}
+
+		if ($accepted) {
+			if (substr($pm->status, 0, 7) == 'revision') {
+				$pm->status = 'revision-end-reviewed';
+			} else {
+				$pm->status = 'end-reviewed';
+			}
+			$pm->save();
+			return Redirect::route('admin-pm')
+				->with('success', 'Kommentaren sparades och PM:et är nu helt färdiggranskat!');
+		}
+
+		return Redirect::route('pm-end-review', $pm->token)
+			->with('success', 'Kommentaren sparades!');
+	}
+
+	/**
 	 * Displays the PM edit assignments page view.
 	 * @param $token the PM token
 	 */
@@ -697,6 +802,48 @@ class PMController extends BaseController {
 
 		return Redirect::route('admin-pm')
 		->with('success', 'PM:et togs bort.');
+	}
+
+	/**
+	 * Displays a page to add role for admin.
+	 * @param $id id of the role to delete
+	 */
+	public function getSettle($token) {
+		try {
+			$pm = PM::where('token', '=', $token)->firstOrFail(); 
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+			->with('error', 'PM:et som skulle fastställas hittades inte.');
+		}
+
+		return View::make('user.admin.pm.settle')
+			->with('pm', $pm);
+	}
+
+	/**
+	 * Handles a post request of delete role.
+	 */
+	public function postSettle() 
+	{
+		// TODO Fix whole function, should add to oldPMs and so
+		// Only yes-button should make this continue
+		if (!Input::get('yes'))
+			return Redirect::route('admin-pm')->with('warning', 'PM:et fastställdes inte.');
+
+		$id = Input::get('pm-id');
+
+		try {
+			$pm = PM::findOrFail($id);
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+			->with('error', 'PM:et som skulle fastställas hittades inte.');
+		}
+
+		$pm->status = 'published';
+		$pm->save();
+
+		return Redirect::route('admin-pm')
+			->with('success', 'PM:et fastställdes.');
 	}
 
 	public function postFilter() {

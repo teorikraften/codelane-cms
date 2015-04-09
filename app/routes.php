@@ -240,7 +240,7 @@ Route::post('/pm/slutgranska', ['as' => 'post-save-end-review', 'uses' => 'PMCon
 Route::get('/pm/{token}/faststall', ['as' => 'pm-settle', 'uses' => 'PMController@getSettle'])
 	->where('token', '.+')
 	->before('auth.verified');
-Route::post('/pm/slutgranska', ['as' => 'post-settle', 'uses' => 'PMController@postSettle'])
+Route::post('/pm/faststall', ['as' => 'post-settle', 'uses' => 'PMController@postSettle'])
 	->before('auth.verified');
 
 Route::get('/pm/{token}/andra-personer', ['as' => 'pm-edit-assignments', 'uses' => 'PMController@getEditAssignments'])
