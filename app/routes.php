@@ -2,52 +2,54 @@
 
 /*
 |--------------------------------------------------------------------------
-| Application Routes
+| Autocomplete and filter routes
 |--------------------------------------------------------------------------
 |
-| Here is where you can register all of the routes for an application.
-| It's a breeze. Simply tell Laravel the URIs it should respond to
-| and give it the Closure to execute when that URI is requested.
+| All autocomplete and ajax routes.
 |
 */
-Route::get('decode', ['as' => 'decode-test', 'uses' => 'TestController@showDecodePage']);
-Route::post('decode', ['as' => 'post-decode-test', 'uses' => 'TestController@decode']);
-Route::get('encode', ['as' => 'encode-test', 'uses' => 'TestController@showEncodePage']);
-Route::post('encode', ['as' => 'post-encode-test', 'uses' => 'TestController@encode']);
+Route::get('/keywords', ['as' => 'search-autocomplete', 'uses' => 'SearchController@getSearchAutocomplete']);
+Route::get('/personer', ['as' => 'persons-autocomplete', 'uses' => 'UserController@getPersonsAutocomplete']);
+Route::get('/roller', ['as' => 'roles-autocomplete', 'uses' => 'RoleController@getRolesAutocomplete']);
+Route::get('/taggar', ['as' => 'tags-autocomplete', 'uses' => 'TagController@getTagsAutocomplete']);
 
-Route::get('/', ['as' => 'index', 'uses' => 'MainController@showIndex']);
-Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
-Route::get('/keywords', ['as' => 'search-autocomplete', 'uses' => 'SearchController@searchAutocomplete']);
-Route::get('/personer', ['as' => 'persons-autocomplete', 'uses' => 'UserController@personsAutocomplete']);
-Route::get('/roller', ['as' => 'roles-autocomplete', 'uses' => 'RoleController@rolesAutocomplete']);
-Route::post('/spara-kommentar', ['as' => 'save-comment', 'uses' => 'PMController@saveComment'])
+Route::post('/pm-filter', ['as' => 'pm-filter', 'uses' => 'PMController@postFilter']);//->before('csrf');
+Route::post('/user-filter', ['as' => 'user-filter', 'uses' => 'UserAdminController@postFilter']);//->before('csrf');
+Route::post('/role-filter', ['as' => 'role-filter', 'uses' => 'RoleController@postFilter']);//->before('csrf');
+Route::post('/tag-filter', ['as' => 'tag-filter', 'uses' => 'TagController@postFilter']);//->before('csrf');
+
+Route::post('/spara-kommentar', ['as' => 'save-comment', 'uses' => 'PMController@postSaveComment'])
 	->before('csrf');
-Route::post('/pm-filter', ['as' => 'pm-filter', 'uses' => 'PMController@postFilter'])
-	;//->before('csrf');
-Route::post('/user-filter', ['as' => 'user-filter', 'uses' => 'UserAdminController@postFilter'])
-	;//->before('csrf');
-Route::post('/role-filter', ['as' => 'role-filter', 'uses' => 'RoleController@postFilter'])
-	;//->before('csrf');
-Route::post('/tag-filter', ['as' => 'tag-filter', 'uses' => 'TagController@postFilter'])
-	;//->before('csrf');
 
 
-Route::get('/taggar', ['as' => 'tags-autocomplete', 'uses' => 'TagController@tagsAutocomplete']);
+/*
+|--------------------------------------------------------------------------
+| Recover, reset and create password routes
+|--------------------------------------------------------------------------
+|
+| All routes connected to logged out, password changes.
+|
+*/
 Route::get('/glomt-losenordet', ['as' => 'recover-password', 'uses' => 'RemindersController@getRemind']);
 Route::post('/glomt-losenordet', ['as' => 'post-recover-password', 'uses' => 'RemindersController@postRemind']);
+
 Route::get('/aterstall-losenordet/{token}', ['as' => 'reset-password', 'uses' => 'RemindersController@getReset']);
 Route::post('/aterstall-losenordet', ['as' => 'post-reset-password', 'uses' => 'RemindersController@postReset']);
-Route::get('/skapa-losenord/{token}', ['as' => 'create-password', 'uses' => 'UserController@showCreatePasswordPage']);
-Route::post('/skapa-losenord', ['as' => 'post-create-password', 'uses' => 'UserController@createPassword']);
-
+Route::get('/skapa-losenord/{token}', ['as' => 'create-password', 'uses' => 'UserController@getCreatePassword']);
+Route::post('/skapa-losenord', ['as' => 'post-create-password', 'uses' => 'UserController@postCreatePassword']);
 
 Route::get('/person/uppgifter', ['as' => 'to-do', 'uses' => 'UserController@getTodo']);
 
+
 /*
+|--------------------------------------------------------------------------
+| Signed out routes
+|--------------------------------------------------------------------------
 |
 | Signed out user related routes like sign in and sign up.
 |
 */
+Route::get('/', ['as' => 'index', 'uses' => 'BaseController@getIndex']);
 Route::post('/logga-in', ['as' => 'post-sign-in', 'uses' => 'GuestController@postSignIn'])
 	->before('guest');
 Route::get('/logga-ut', ['as' => 'sign-out', 'uses' => 'GuestController@getSignOut'])
@@ -59,239 +61,226 @@ Route::post('/registrera', ['as' => 'post-sign-up', 'uses' => 'GuestController@p
 
 
 /*
+|--------------------------------------------------------------------------
+| Signed in routes
+|--------------------------------------------------------------------------
 |
-| Signed in user related routes, like profile page.
+| Signed in user related routes, like profile page, and edit profile page.
 |
 */
-Route::get('/person', ['as' => 'user', 'uses' => 'UserController@showProfilePage'])
+Route::get('/person', ['as' => 'user', 'uses' => 'UserController@getProfile'])
+	->before('auth');
+Route::get('/person/andra', ['as' => 'user-edit', 'uses' => 'UserController@getEditProfile'])
+	->before('auth');
+Route::post('/person/andra', ['as' => 'post-user-edit', 'uses' => 'UserController@postEditProfile'])
+	->before('auth');
+Route::post('/person/andra-losenord', ['as' => 'post-change-password', 'uses' => 'UserController@postChangePassword'])
 	->before('auth');
 
-Route::get('/person/andra', ['as' => 'user-edit', 'uses' => 'UserController@showEditProfilePage'])
-	->before('auth');
-
-Route::post('/person/andra', ['as' => 'post-user-edit', 'uses' => 'UserController@editProfile'])
-	->before('auth');
-
-Route::post('/person/andra-losenord', ['as' => 'post-change-password', 'uses' => 'UserController@changePassword'])
-	->before('auth');
+/*
+| Favorite PM
+*/
+Route::get('/person/favoriter', ['as' => 'favourites-show', 'uses' => 'PMController@showFavourites'])
+	->before('auth.verified');
+Route::get('/person/favoriter/andra/{token}/{goto}', ['as' => 'get-favourite-edit', 'uses' => 'PMController@favouritePM'])
+	->before('auth.verified');
+Route::post('/person/favoriter/andra', ['as' => 'post-favourite-edit', 'uses' => 'PMController@favouritePM'])
+	->before('auth.verified');
 
 
 /*
+|--------------------------------------------------------------------------
+| Administrator routes.
+|--------------------------------------------------------------------------
 |
 | Signed in admin functionality.
 |
+| Tags functionality
 */
-/*
-| Admin tags.
-*/
-Route::get('/admin/taggar', ['as' => 'admin-tags', 'uses' => 'TagController@showTagsListPage'])
+Route::get('/admin/taggar', ['as' => 'admin-tags', 'uses' => 'TagController@getList'])
 	->before('auth.admin');
-Route::get('/admin/tagg/{token}', ['as' => 'admin-tag-show', 'uses' => 'TagController@showTagWithToken'])
+Route::get('/admin/tagg/{token}', ['as' => 'admin-tag-show', 'uses' => 'TagController@getShow'])
 	->before('auth.admin');
-Route::get('/admin/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'TagController@showAddTagPage'])
+Route::get('/admin/taggar/ny', ['as' => 'admin-tags-new', 'uses' => 'TagController@getAdd'])
 	->before('auth.admin');
-Route::post('/admin/taggar/ny', ['as' => 'post-admin-tags-new', 'uses' => 'TagController@addTag'])
+Route::post('/admin/taggar/ny', ['as' => 'post-admin-tags-new', 'uses' => 'TagController@postAdd'])
 	->before('auth.admin');
-Route::get('/admin/taggar/ta-bort/{token}', ['as' => 'admin-tags-delete', 'uses' => 'TagController@showDeleteTagPage'])
+Route::get('/admin/taggar/ta-bort/{token}', ['as' => 'admin-tags-delete', 'uses' => 'TagController@getDelete'])
 	->before('auth.admin');
-Route::post('/admin/taggar/ta-bort', ['as' => 'post-admin-tags-delete', 'uses' => 'TagController@deleteTag'])
+Route::post('/admin/taggar/ta-bort', ['as' => 'post-admin-tags-delete', 'uses' => 'TagController@postDelete'])
 	->before('auth.admin');
-Route::get('/admin/taggar/andra/{token}', ['as' => 'admin-tags-edit', 'uses' => 'TagController@showEditTagPage'])
+Route::get('/admin/taggar/andra/{token}', ['as' => 'admin-tags-edit', 'uses' => 'TagController@getEdit'])
 	->before('auth.admin');
-Route::post('/admin/taggar/andra', ['as' => 'post-admin-tags-edit', 'uses' => 'TagController@editTag'])
+Route::post('/admin/taggar/andra', ['as' => 'post-admin-tags-edit', 'uses' => 'TagController@postEdit'])
 	->before('auth.admin');
 
 /*
-| Admin categories.
+| Category functionality
 */
-Route::get('/admin/kategorier', ['as' => 'admin-categories', 'uses' => 'CategoryController@showCategoriesListPage'])
+Route::get('/admin/kategorier', ['as' => 'admin-categories', 'uses' => 'CategoryController@getList'])
 	->before('auth.admin');
-Route::get('/admin/kategorier/ny', ['as' => 'admin-categories-new', 'uses' => 'CategoryController@showAddCategoryPage'])
+Route::get('/admin/kategorier/ny', ['as' => 'admin-categories-new', 'uses' => 'CategoryController@getAdd'])
 	->before('auth.admin');
-Route::post('/admin/kategorier/ny', ['as' => 'post-admin-categories-new', 'uses' => 'CategoryController@addCategory'])
+Route::post('/admin/kategorier/ny', ['as' => 'post-admin-categories-new', 'uses' => 'CategoryController@postAdd'])
 	->before('auth.admin');
-Route::get('/admin/kategorier/ta-bort/{token}', ['as' => 'admin-categories-delete', 'uses' => 'CategoryController@showDeleteCategoryPage'])
+Route::get('/admin/kategorier/ta-bort/{token}', ['as' => 'admin-categories-delete', 'uses' => 'CategoryController@getDelete'])
 	->before('auth.admin');
-Route::post('/admin/kategorier/ta-bort', ['as' => 'post-admin-categories-delete', 'uses' => 'CategoryController@deleteCategory'])
+Route::post('/admin/kategorier/ta-bort', ['as' => 'post-admin-categories-delete', 'uses' => 'CategoryController@postDelete'])
 	->before('auth.admin');
-Route::get('/admin/kategorier/andra/{token}', ['as' => 'admin-categories-edit', 'uses' => 'CategoryController@showEditCategoryPage'])
+Route::get('/admin/kategorier/andra/{token}', ['as' => 'admin-categories-edit', 'uses' => 'CategoryController@getEdit'])
 	->before('auth.admin');
-Route::post('/admin/kategorier/andra', ['as' => 'post-admin-categories-edit', 'uses' => 'CategoryController@editCategory'])
+Route::post('/admin/kategorier/andra', ['as' => 'post-admin-categories-edit', 'uses' => 'CategoryController@postEdit'])
 	->before('auth.admin');
 
 /*
-| Admin roles.
+| Roles functionality
 */
-Route::get('/admin/roller', ['as' => 'admin-roles', 'uses' => 'RoleController@showRolesListPage'])
+Route::get('/admin/roller', ['as' => 'admin-roles', 'uses' => 'RoleController@getList'])
 	->before('auth.admin');
-Route::get('/admin/roller/ny', ['as' => 'admin-roles-new', 'uses' => 'RoleController@showAddRolePage'])
+Route::get('/admin/roller/ny', ['as' => 'admin-roles-new', 'uses' => 'RoleController@getAdd'])
 	->before('auth.admin');
-Route::post('/admin/roller/ny', ['as' => 'post-admin-roles-new', 'uses' => 'RoleController@addRole'])
+Route::post('/admin/roller/ny', ['as' => 'post-admin-roles-new', 'uses' => 'RoleController@postAdd'])
 	->before('auth.admin');
-Route::get('/admin/roller/ta-bort/{id}', ['as' => 'admin-roles-delete', 'uses' => 'RoleController@showDeleteRolePage'])
+Route::get('/admin/roller/ta-bort/{id}', ['as' => 'admin-roles-delete', 'uses' => 'RoleController@getDelete'])
 	->before('auth.admin')
 	->where('id', '[0-9]+');
-Route::post('/admin/roller/ta-bort', ['as' => 'post-admin-roles-delete', 'uses' => 'RoleController@deleteRole'])
+Route::post('/admin/roller/ta-bort', ['as' => 'post-admin-roles-delete', 'uses' => 'RoleController@postDelete'])
 	->before('auth.admin');
-Route::get('/admin/roller/andra/{id}', ['as' => 'admin-roles-edit', 'uses' => 'RoleController@showEditRolePage'])
+Route::get('/admin/roller/andra/{id}', ['as' => 'admin-roles-edit', 'uses' => 'RoleController@getEdit'])
 	->before('auth.admin')
 	->where('id', '[0-9]+');
-Route::post('/admin/roller/andra', ['as' => 'post-admin-roles-edit', 'uses' => 'RoleController@editRole'])
+Route::post('/admin/roller/andra', ['as' => 'post-admin-roles-edit', 'uses' => 'RoleController@postEdit'])
 	->before('auth.admin');
 
 /*
-| Admin users.
+| User functionality
 */
-Route::get('/admin/personer', ['as' => 'admin-users', 'uses' => 'UserAdminController@showUsersListPage'])
+Route::get('/admin/personer', ['as' => 'admin-users', 'uses' => 'UserAdminController@getList'])
 	->before('auth.admin');
-Route::get('/admin/personer/ny', ['as' => 'admin-users-new', 'uses' => 'UserAdminController@showAddUserPage'])
+Route::get('/admin/personer/ny', ['as' => 'admin-users-new', 'uses' => 'UserAdminController@getAdd'])
 	->before('auth.admin');
-Route::post('/admin/personer/ny', ['as' => 'post-admin-users-new', 'uses' => 'UserAdminController@addUser'])
+Route::post('/admin/personer/ny', ['as' => 'post-admin-users-new', 'uses' => 'UserAdminController@postAdd'])
 	->before('auth.admin');
-Route::get('/admin/personer/ta-bort/{id}', ['as' => 'admin-users-delete', 'uses' => 'UserAdminController@showDeleteUserPage'])
+Route::get('/admin/personer/ta-bort/{id}', ['as' => 'admin-users-delete', 'uses' => 'UserAdminController@getDelete'])
 	->before('auth.admin')
 	->where('id', '[0-9]+');
-Route::post('/admin/personer/ta-bort', ['as' => 'post-admin-users-delete', 'uses' => 'UserAdminController@deleteUser'])
+Route::post('/admin/personer/ta-bort', ['as' => 'post-admin-users-delete', 'uses' => 'UserAdminController@postDelete'])
 	->before('auth.admin');
-Route::get('/admin/personer/andra/{id}', ['as' => 'admin-users-edit', 'uses' => 'UserAdminController@showEditUserPage'])
+Route::get('/admin/personer/andra/{id}', ['as' => 'admin-users-edit', 'uses' => 'UserAdminController@getEdit'])
 	->before('auth.admin')
 	->where('id', '[0-9]+');
-Route::get('/admin/personer/verifiera/{id}', ['as' => 'admin-users-verify', 'uses' => 'UserAdminController@showVerifyUserPage'])
+Route::get('/admin/personer/verifiera/{id}', ['as' => 'admin-users-verify', 'uses' => 'UserAdminController@getVerify'])
 	->before('auth.admin')
 	->where('id', '[0-9]+');
-Route::post('/admin/personer/verifiera', ['as' => 'post-admin-users-verify', 'uses' => 'UserAdminController@verifyUser'])
+Route::post('/admin/personer/verifiera', ['as' => 'post-admin-users-verify', 'uses' => 'UserAdminController@postVerify'])
 	->before('auth.admin');
-Route::post('/admin/personer/andra', ['as' => 'post-admin-users-edit', 'uses' => 'UserAdminController@editUser'])
+Route::post('/admin/personer/andra', ['as' => 'post-admin-users-edit', 'uses' => 'UserAdminController@postEdit'])
 	->before('auth.admin');
 
 /*
-| Admin pms.
+| PM functionality
 */
-Route::get('/admin/pm', ['as' => 'admin-pm', 'uses' => 'PMController@showPMListPage'])
+Route::get('/admin/pm', ['as' => 'admin-pm', 'uses' => 'PMController@getList'])
 	->before('auth.admin');
-Route::get('/admin/pm/ta-bort/{token}', ['as' => 'admin-pm-delete', 'uses' => 'PMController@showDeletePMPage'])
+Route::get('/admin/pm/ta-bort/{token}', ['as' => 'admin-pm-delete', 'uses' => 'PMController@getDelete'])
 	->before('auth.admin');
-Route::post('/admin/pm/ta-bort', ['as' => 'post-admin-pms-delete', 'uses' => 'PMController@deletePM'])
+Route::post('/admin/pm/ta-bort', ['as' => 'post-admin-pms-delete', 'uses' => 'PMController@postDelete'])
 	->before('auth.admin');
-Route::get('/admin/pm/tilldela', ['as' => 'pm-add-assign', 'uses' => 'PMController@showAssignPMPage'])
+Route::get('/admin/pm/tilldela', ['as' => 'pm-add-assign', 'uses' => 'PMController@getAssign'])
 	->before('auth.verified');
-Route::post('/admin/pm/tilldela', ['as' => 'post-pm-add-assign', 'uses' => 'PMController@assignPM'])
+Route::post('/admin/pm/tilldela', ['as' => 'post-pm-add-assign', 'uses' => 'PMController@postAssign'])
 	->before('auth.verified');
 
 
 /*
+|--------------------------------------------------------------------------
+| Search functionality
+|--------------------------------------------------------------------------
 |
-| Search functionality.
+| Routes connected to search.
 |
 */
-Route::get('/sok', ['as' => 'search-form', function() {
-	return Redirect::route('search-result', 'Easter Eggs');
-}]);
-Route::post('/sok', ['as' => 'post-search', 'uses' => 'SearchController@search']);
-Route::get('/sok/{searchQuery}/{order?}/{page?}/{options?}', ['as' => 'search-result', 'uses' => 'SearchController@showSearchResultPage'])
+Route::post('/sok', ['as' => 'post-search', 'uses' => 'SearchController@postSearch']);
+Route::get('/sok/{searchQuery}/{order?}/{page?}/{options?}', ['as' => 'search-result', 'uses' => 'SearchController@getResult'])
 	->where('page', '[0-9]*')
 	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)');
 
-
 /*
-|
-| Favorite PM
-| 
-*/
-Route::get('/favoriter', ['as' => 'favourites-show', 'uses' => 'PMController@showFavourites'])
-	->before('auth.verified');
-Route::get('favorit/andra/{token}/{goto}', ['as' => 'get-favourite-edit', 'uses' => 'PMController@favouritePM'])
-	->before('auth.verified');
-Route::post('favorit/andra', ['as' => 'post-favourite-edit', 'uses' => 'PMController@favouritePM'])
-	->before('auth.verified');
-/*
+|--------------------------------------------------------------------------
+| PM functionality
+|--------------------------------------------------------------------------
 |
 | Functionality directly connected to PM read/write/edit.
-| TODO Check permissions
 |
 */
-Route::get('/pm', ['as' => 'pm', function() {
-	return Redirect::route('pm-add');
-}]);
-Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@showAddPMPage'])
+Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@getAdd'])
 	->before('auth.verified');
-
-Route::get('/admin/importera', ['as' => 'pm-import', 'uses' => 'PMController@showImportPage'])
-	->before('auth.verified');
-Route::post('/admin/importera', ['as' => 'post-pm-import', 'uses' => 'PMController@import'])
-	->before('auth.verified');
-Route::any('/admin/importera/verifiera', ['as' => 'pm-import-verify', 'uses' => 'PMController@importVerify'])
-	->before('auth.verified');
-
-Route::get('/pm/{token}/ladda-ner', ['as' => 'pm-download', 'uses' => 'PMController@download'])
+Route::get('/pm/{token}/ladda-ner', ['as' => 'pm-download', 'uses' => 'PMController@getDownload'])
 	->where('token', '.+');
-Route::get('/pm/{token}/andra', ['as' => 'pm-edit', 'uses' => 'PMController@showEditPMPage'])
+
+Route::get('/pm/{token}/andra', ['as' => 'pm-edit', 'uses' => 'PMController@getEdit'])
 	->where('token', '.+')
 	->before('auth.verified');
 Route::post('/pm/andra', ['as' => 'post-pm-edit', 'uses' => 'PMController@editPM'])
 	->before('auth.verified');
 
-Route::get('/pm/{token}/granska', ['as' => 'pm-review', 'uses' => 'PMController@showReviewPMPage'])
+Route::get('/pm/{token}/granska', ['as' => 'pm-review', 'uses' => 'PMController@getReview'])
 	->where('token', '.+')
 	->before('auth.verified');
-Route::post('/pm/granska', ['as' => 'post-save-review', 'uses' => 'PMController@reviewPM'])
+Route::post('/pm/granska', ['as' => 'post-save-review', 'uses' => 'PMController@postReview'])
 	->before('auth.verified');
 
-Route::get('/pm/{token}/andra-personer', ['as' => 'pm-edit-assignments', 'uses' => 'PMController@showEditPMAssignmentsPage'])
+Route::get('/pm/{token}/andra-personer', ['as' => 'pm-edit-assignments', 'uses' => 'PMController@getEditAssignments'])
 	->where('token', '.+')
 	->before('auth.verified');
-Route::post('/pm/andra-personer', ['as' => 'post-pm-edit-assignments', 'uses' => 'PMController@editPMAssignments'])
+Route::post('/pm/andra-personer', ['as' => 'post-pm-edit-assignments', 'uses' => 'PMController@postEditAssignments'])
 	->before('auth.verified');
 
-Route::get('/pm/{token}/ny-tagg', ['as' => 'pm-add-tag', 'uses' => 'PMController@showAddTagPage'])
+Route::get('/pm/{token}/ny-tagg', ['as' => 'pm-add-tag', 'uses' => 'PMController@getAddTag'])
 	->where('token', '.+')
 	->before('auth.verified');
-Route::get('/pm/{token}/verifiera', ['as' => 'pm-verify', 'uses' => 'PMController@showVerifyPage'])
+Route::get('/pm/{token}/verifiera', ['as' => 'pm-verify', 'uses' => 'PMController@getVerify'])
 	->where('token', '.+')
 	->before('auth.verified'); // TODO
-Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@showPMPage'])
+Route::get('/pm/{token}', ['as' => 'pm-show', 'uses' => 'PMController@getShow'])
 	->where('token', '.+');
 
 
 /*
+|--------------------------------------------------------------------------
+| Tag functionality
+|--------------------------------------------------------------------------
 |
 | Functionality directly connected to tags.
 |
 */
-Route::get('/tagg/{tag}/{page?}', ['as' => 'tag-show', 'uses' => 'TagController@showTagPMListPage'])
+Route::get('/tagg/{tag}/{page?}', ['as' => 'tag-show', 'uses' => 'TagController@getPMList'])
 	->where('page', '[0-9]+');
 
 
 /*
+|--------------------------------------------------------------------------
+| Category functionality
+|--------------------------------------------------------------------------
 |
-| Functionality directly connected to statistics.
-|
-*/
-Route::get('/statistik', ['as' => 'statistics-index', 'uses' => 'StatisticsController@showStatisticsIndexPage'])
-	->before('auth.admin');
-Route::get('/statistik/historik', ['as' => 'statistics-history', 'uses' => 'StatisticsController@showStatisticsHistoryPage'])
-	->before('auth.admin');
-Route::get('/statistik/pm/{token}', ['as' => 'statistics-pm', 'uses' => 'StatisticsController@showStatisticsPMPage'])
-	->before('auth.admin');
-
-
-/*
-|
-| Category routes.
+| Category routes. TODO
 |
 */
-Route::get('/kategori', ['as' => 'category-show-all', 'uses' => 'CategoryController@showAllCategories'])
+Route::get('/kategori', ['as' => 'category-show-all', 'uses' => 'CategoryController@getShowAll'])
 	->before('auth');
-Route::get('/kategori/top/{order?}/{page?}', ['as' => 'category-show-all-sorted', 'uses' => 'CategoryController@showAllCategories'])
+Route::get('/kategori/top/{order?}/{page?}', ['as' => 'category-show-all-sorted', 'uses' => 'CategoryController@getShow'])
 	->before('auth')
 	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)')
 	->where('page', '[0-9]*');
-Route::get('/kategori/{token}/{order?}/{page?}', ['as' => 'category-show', 'uses' => 'CategoryController@showCategory'])
+Route::get('/kategori/{token}/{order?}/{page?}', ['as' => 'category-show', 'uses' => 'CategoryController@getShowCategory'])
 	->before('auth')
 	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)')
 	->where('page', '[0-9]*');
 
 /*
+|--------------------------------------------------------------------------
+| Help functionality
+|--------------------------------------------------------------------------
 |
 | Help routes.
 |
@@ -305,6 +294,9 @@ Route::get('/hjalp', ['as' => 'help-index', function()
 
 
 /*
+|--------------------------------------------------------------------------
+| About functionality
+|--------------------------------------------------------------------------
 |
 | About routes.
 |
@@ -316,4 +308,24 @@ Route::get('/om', ['as' => 'about-index', function()
 
 
 
+
+/*
+|--------------------------------------------------------------------------
+| Test routes
+|--------------------------------------------------------------------------
+|
+| All test routes.
+|
+*/
+Route::get('decode', ['as' => 'decode-test', 'uses' => 'TestController@showDecodePage']);
+Route::post('decode', ['as' => 'post-decode-test', 'uses' => 'TestController@decode']);
+Route::get('encode', ['as' => 'encode-test', 'uses' => 'TestController@showEncodePage']);
+Route::post('encode', ['as' => 'post-encode-test', 'uses' => 'TestController@encode']);
+Route::get('/test/importera', ['as' => 'test-importera', 'uses' => 'TestController@showImportPage']);
+Route::get('/admin/importera', ['as' => 'pm-import', 'uses' => 'PMController@getImport'])
+	->before('auth.verified');
+Route::post('/admin/importera', ['as' => 'post-pm-import', 'uses' => 'PMController@postImport'])
+	->before('auth.verified');
+Route::any('/admin/importera/verifiera', ['as' => 'pm-import-verify', 'uses' => 'PMController@getImportVerify'])
+	->before('auth.verified');
 

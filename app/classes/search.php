@@ -210,7 +210,7 @@ class Search {
 
 			$fullTextSearchResult = PM::whereRaw("MATCH(content, title) AGAINST(? IN BOOLEAN MODE)", array("\"".$searchQuery."\""))
 			->addSelect(DB::raw("*, MATCH(content, title) AGAINST(\"".$searchQuery."\" IN BOOLEAN MODE) AS score"))
-			->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+			->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 		} catch (Exception $e) {
 			$this->error[] = $e->getMessage();
 		}
@@ -261,7 +261,7 @@ class Search {
 	private function searchTag($query, $operator, $score) {
 		$tag = Tag::where('name', 'like', '%'.$query.'%')->get();
 		foreach ($tag as $key => $value) {
-			$tagpms = $value->pm()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+			$tagpms = $value->pm()->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 			foreach ($tagpms as $key => $v) {
 				$this->result = $this->updatePMScore($v, 100 * $score, $operator);
 			}
@@ -274,7 +274,7 @@ class Search {
 	private function searchRole($query, $operator, $score) {
 		$role = Role::where('name', 'like', '%'.$query.'%')->get();
 		foreach ($role as $key => $value) {
-			$rolepms = $value->pms()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+			$rolepms = $value->pms()->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 			foreach ($rolepms as $key => $v) {
 				$this->result = $this->updatePMScore($v, 10 * $score, $operator);
 			}
@@ -285,7 +285,7 @@ class Search {
 	* Searches the database for matches from the column title
 	*/
 	private function searchTitle($query, $operator, $score) {
-		$titleResult = PM::where('title', 'like', '%'.$query.'%')->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		$titleResult = PM::where('title', 'like', '%'.$query.'%')->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 		foreach ($titleResult as $key => $v) {
 			$this->result = $this->updatePMScore($v, 15 * $score, $operator);
 		}
@@ -298,7 +298,7 @@ class Search {
 	* 
 	*/
 	private function searchContent($query, $operator, $score) {
-		$contentResult = Pm::where('content', 'like', '%'.$query.'%')->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		$contentResult = Pm::where('content', 'like', '%'.$query.'%')->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 		foreach ($contentResult as $key => $v) {
 			$this->result = $this->updatePMScore($v, 1 * $score, $operator);
 		}
@@ -384,7 +384,7 @@ class Search {
 		$childcategories = $category->getAllChildren();
 
 		foreach (array($category) + $childcategories as $key => $cat) {
-			$categoryPms = $cat->pms()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+			$categoryPms = $cat->pms()->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 			foreach ($categoryPms as $key => $pm) {
 				$this->result[$pm->id]['pm'] = $pm;
 				$this->result[$pm->id]['score'] = 1;
@@ -394,7 +394,7 @@ class Search {
 	}
 
 	public function findAllPms() {
-		$allpms = PM::where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		$allpms = PM::where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 		foreach ( $allpms as $key => $pm) {
 			$this->result[$pm->id]['pm'] = $pm;
 			$this->result[$pm->id]['score'] = 1;

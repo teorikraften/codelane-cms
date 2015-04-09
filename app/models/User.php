@@ -29,7 +29,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 *
 	 * @var array(string)
 	 */
-	protected $fillable = ['email', 'password', 'real_name', 'privileges', 'remember_token'];
+	protected $fillable = ['email', 'password', 'name', 'privileges', 'remember_token'];
 
 	/**
 	 * The deleted_at is protected.
@@ -103,7 +103,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 *
 	 * @return 10 (admin), 8 (pm-admin), 2 (verifierad), 0 (overifierad)
 	 */
-	public function privilegesLevel() {
+	public function privilegesNum() {
 		if ($this->privileges == 'admin') 
 			return 10;
 		if ($this->privileges == 'pm-admin') 
