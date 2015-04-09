@@ -141,16 +141,20 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	public function allEvents() {
 		$res = array();
-		
+		/*
+
 		// 'creator'
 		$creatorAss = $this->assignment()->where('assignment', '=', 'creator')->whereNull('done_at')->get();
 		foreach ($creatorAss as $key => $ass) {
-			$pm = $ass->pm;
+			$pm = $ass->pmGet;
+			var_dump($pm);
+			exit;
 			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written') {
 				$res['verb'] = $this->assignmentString($ass->assignment);
 				$res['pm'] = $pm;
 			}
 		}
+		/*
 
 		// 'author'
 		$writeAss = $this->assignment()->where('assignment', '=', 'author')->whereNull('done_at')->get();
@@ -200,7 +204,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 				$res['pm'] = $pm;
 			}
 		}
-
+		*/
 		return $res;
 	}
 }

@@ -21,7 +21,7 @@ class Assignment extends Eloquent {
 	 * 
 	 * @return Relation
 	 */
-	public function pm() {
+	public function pmGet() {
 		return $this->hasOne('Pm');
 	}
 
