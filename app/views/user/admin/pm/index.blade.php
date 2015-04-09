@@ -71,7 +71,7 @@
                         @endif
                     </td>
                     <td>
-                        @if (in_array('reviewer', $userAssignments[$pm->id]) && ($pm->status == 'assigned' || $pm->status == 'revision-assigned')) 
+                        @if (in_array('reviewer', $userAssignments[$pm->id]) && ($pm->status == 'written' || $pm->status == 'revision-written')) 
                             <a href="{{ URL::route('pm-review', $pm->token) }}" title="Granska">
                                 {{ HTML::image('images/review.png', 'Granska') }}
                             </a>
