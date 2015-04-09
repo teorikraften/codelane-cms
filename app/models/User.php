@@ -139,15 +139,45 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 *
 	 * @return array of events - array({ 'verb':string, 'pm':PM })
 	 */
-	public static function allEvents() {
+	public function allEvents() {
 		// TODO Hela funktionen. Den ska loopa igenom alla assignments för en person
 		// och se om något ska göras nu. Om det är så, ska det med i output-arrayen.
-		
 		$res = array();
-		$obj = new stdClass; $obj->verb = 'skriva'; $obj->pm = PM::find(1); $res[] = $obj;
-		$obj = new stdClass; $obj->verb = 'granska'; $obj->pm = PM::find(2); $res[] = $obj;
-		$obj = new stdClass; $obj->verb = 'revidera'; $obj->pm = PM::find(4); $res[] = $obj;
-		$obj = new stdClass; $obj->verb = 'slutgranska'; $obj->pm = PM::find(3); $res[] = $obj;
+		
+		$writeAss = $this->assignment()->where('assignment', '=', 'author')->whereNull('done_at')->get();
+		foreach ($writeAss as $key => $ass) {
+			$pm = $ass->pm;
+			if ($pm->status == 'assigned')
+			$res['verb'] = $this->assignmentString('author');
+			$res['pm'] = $pm;
+		}
+		$reviewAss = $this->assignment()->where('assignment', '=', 'reviewer')->whereNull('done_at')->get();
+		foreach ($reviewAss as $key => $ass) {
+			$pm = $ass->pm;
+			$wAss = $pm->assignment()->where('assignment', '=', 'author')->where('done_at', '<=', 'NOW()')->First();
+			if (isset($wAss)) {
+				$res['verb'] = $this->assignmentString('reviewer');
+				$res['pm'] = $pm;
+			}
+		}
+		$RevidAss = $this->assignment()->where('assignment', '=', 'reminder')->whereNull('done_at')->get();
+		foreach ($RevidAss as $key => $ass) {
+			$pm = $ass->pm;
+			if ($pm->expiration_date < now + 1month) {
+				$res['verb'] = $this->assignmentString('reminder');
+				$res['pm'] = $pm;
+			}
+		}
+
+		$LastReviewAss = $this->assignment()->where('assignment', '=', 'end-reviewer')->whereNull('done_at')->get();
+		foreach ($LastReviewAss as $key => $ass) {
+			$pm = $ass->pm;
+			$beforeRev = $pm->assignment()->where('assignment', '=', 'reviewer')->whereNull('done_at')->get();
+			if (!isset($beforeRev)) {
+				$res['verb'] = $this->assignmentString('end-reviewer');
+				$res['pm'] = $pm;
+			}
+		}
 
 		return $res;
 	}

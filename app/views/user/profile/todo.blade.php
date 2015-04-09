@@ -29,7 +29,7 @@
                     <th>Uppgift</th>
                     <th>Skapad</th>
             </tr>
-        @foreach(Auth::user()->allEvents() as $event)
+        @foreach($events as $event)
             <tr>
                 <td></td> <!-- TODO: Add PM document type -->
                 <td></td> <!-- TODO: Add PM number -->
