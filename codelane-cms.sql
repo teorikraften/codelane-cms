@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: localhost
--- Tid vid skapande: 09 apr 2015 kl 14:13
+-- Tid vid skapande: 09 apr 2015 kl 19:34
 -- Serverversion: 5.6.22
 -- PHP-version: 5.5.14
 
@@ -37,7 +37,7 @@ CREATE TABLE IF NOT EXISTS `assignments` (
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `deleted_at` timestamp NULL DEFAULT NULL,
   `done_at` timestamp NULL DEFAULT NULL
-) ENGINE=InnoDB AUTO_INCREMENT=58 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=73 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
 
 --
 -- Dumpning av Data i tabell `assignments`
@@ -54,10 +54,13 @@ INSERT INTO `assignments` (`id`, `accepted`, `user`, `pm`, `content`, `assignmen
 (8, 0, 2, 6, '', 'settler', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
 (9, 0, 2, 6, '', 'reviewer', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
 (10, 0, 2, 6, '', 'reminder', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, '0000-00-00 00:00:00'),
-(54, 0, 2, 7, '', 'creator', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
-(55, 0, 3, 7, '', 'end-reviewer', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
-(56, 0, 2, 7, '', 'reminder', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
-(57, 0, 3, 7, '', 'reminder', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL);
+(66, 0, 2, 7, '', 'creator', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
+(67, 0, 2, 7, '', 'author', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
+(68, 0, 2, 7, '', 'settler', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
+(69, 0, 2, 7, '', 'reviewer', '0000-00-00 00:00:00', '2015-04-09 17:22:20', NULL, NULL),
+(70, 0, 2, 7, '', 'end-reviewer', '0000-00-00 00:00:00', '2015-04-09 17:22:20', NULL, NULL),
+(71, 0, 2, 7, '', 'reminder', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
+(72, 0, 3, 7, '', 'reminder', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -107,7 +110,14 @@ CREATE TABLE IF NOT EXISTS `favourites` (
   `pm` int(10) unsigned NOT NULL,
   `created_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00',
   `updated_at` timestamp NOT NULL DEFAULT '0000-00-00 00:00:00'
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+
+--
+-- Dumpning av Data i tabell `favourites`
+--
+
+INSERT INTO `favourites` (`id`, `user`, `pm`, `created_at`, `updated_at`) VALUES
+(3, 2, 7, '0000-00-00 00:00:00', '0000-00-00 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -151,6 +161,7 @@ CREATE TABLE IF NOT EXISTS `pms` (
   `safetystatus` set('K1','K2','K3') COLLATE utf8_unicode_ci DEFAULT NULL,
   `title` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci NOT NULL,
+  `draft` text COLLATE utf8_unicode_ci,
   `token` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `department` int(10) unsigned NOT NULL,
   `published` tinyint(1) NOT NULL,
@@ -167,14 +178,14 @@ CREATE TABLE IF NOT EXISTS `pms` (
 -- Dumpning av Data i tabell `pms`
 --
 
-INSERT INTO `pms` (`id`, `code`, `status`, `safetystatus`, `title`, `content`, `token`, `department`, `published`, `created_by`, `revision_date`, `expiration_date`, `first_published_date`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, '', 'assigned', NULL, '', '', '5', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 10:27:19', '2015-04-09 10:27:19', '2015-04-09 13:39:00'),
-(2, '', 'assigned', NULL, '', '', '0', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 10:27:32', '2015-04-09 10:27:32', '2015-04-09 13:39:00'),
-(3, '', 'assigned', NULL, '', '', '5-7', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 10:28:34', '2015-04-09 10:28:34', '2015-04-09 13:39:00'),
-(4, '', 'assigned', NULL, '', '', '1', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 10:39:49', '2015-04-09 10:39:49', '2015-04-09 13:39:00'),
-(5, '', 'assigned', NULL, 'Nu finns en rubrik', '', 'nu-finns-en-rubrik', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 10:57:34', '2015-04-09 10:57:34', '2015-04-09 13:39:00'),
-(6, '', 'assigned', NULL, 'TestPM', '', 'testpm', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 11:03:51', '2015-04-09 11:03:51', '2015-04-09 13:39:00'),
-(7, '', 'assigned', NULL, 'En ny rubrik', '', '4', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 11:05:27', '2015-04-09 11:18:46', NULL);
+INSERT INTO `pms` (`id`, `code`, `status`, `safetystatus`, `title`, `content`, `draft`, `token`, `department`, `published`, `created_by`, `revision_date`, `expiration_date`, `first_published_date`, `created_at`, `updated_at`, `deleted_at`) VALUES
+(1, '', 'assigned', NULL, '', '', '', '5', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 10:27:19', '2015-04-09 10:27:19', '2015-04-09 13:39:00'),
+(2, '', 'assigned', NULL, '', '', '', '0', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 10:27:32', '2015-04-09 10:27:32', '2015-04-09 13:39:00'),
+(3, '', 'assigned', NULL, '', '', '', '5-7', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 10:28:34', '2015-04-09 10:28:34', '2015-04-09 13:39:00'),
+(4, '', 'assigned', NULL, '', '', '', '1', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 10:39:49', '2015-04-09 10:39:49', '2015-04-09 13:39:00'),
+(5, '', 'assigned', NULL, 'Nu finns en rubrik', '', '', 'nu-finns-en-rubrik', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 10:57:34', '2015-04-09 10:57:34', '2015-04-09 13:39:00'),
+(6, '', 'assigned', NULL, 'TestPM', '', '', 'testpm', 0, 0, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 11:03:51', '2015-04-09 11:03:51', '2015-04-09 13:39:00'),
+(7, '', 'published', NULL, 'En ny rubrik', '<p>Juste, h&auml;r &auml;r inneh&aring;llet.</p>', NULL, '4', 0, 1, 2, NULL, '0000-00-00', '0000-00-00', '2015-04-09 11:05:27', '2015-04-09 17:22:20', NULL);
 
 -- --------------------------------------------------------
 
@@ -415,7 +426,7 @@ ALTER TABLE `user_roles`
 -- AUTO_INCREMENT för tabell `assignments`
 --
 ALTER TABLE `assignments`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=58;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=73;
 --
 -- AUTO_INCREMENT för tabell `categories`
 --
@@ -430,7 +441,7 @@ ALTER TABLE `comments`
 -- AUTO_INCREMENT för tabell `favourites`
 --
 ALTER TABLE `favourites`
-  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=3;
+  MODIFY `id` int(10) unsigned NOT NULL AUTO_INCREMENT,AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT för tabell `files`
 --
