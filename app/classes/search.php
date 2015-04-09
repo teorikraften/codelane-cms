@@ -478,13 +478,12 @@ function cmpExpiration($res1, $res2)
 
 function cmpRevision($res1, $res2) 
 {
-	throw new Exception("We shuld use another column than updated_at");
 	if ($res1['operator'] == $res2['operator']) {
-		if ($res1['pm']->updated_at == $res2['pm']->updated_at) 
+		if ($res1['pm']->revision_date == $res2['pm']->revision_date) 
 		{
 			return 0;
 		}
-		return ($res1['pm']->updated_at < $res2['pm']->updated_at) ? -1 : 1;	
+		return ($res1['pm']->revision_date < $res2['pm']->revision_date) ? -1 : 1;	
 	} else {
 		throw new Exception('Unknown compare ' . $res1['operator'] . ' ' . $res2['operator']);
 	}

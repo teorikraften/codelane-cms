@@ -54,7 +54,7 @@
 				</a>
 			</li>
 			<li <?php if ($order == 'revision_date') echo "class='active'"?> >
-				<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, /* TODO 'order' => 'revision_date' */))}}">
+				<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'revision_date'))}}">
 					Senast uppdaterad
 				</a>
 			</li>

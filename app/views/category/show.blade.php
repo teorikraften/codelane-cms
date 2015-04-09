@@ -46,7 +46,7 @@
 					<li{{ $order == 'score' ? " class='active'" : '' }}>
 					<a href="{{ URL::route('category-show', array('token' => $token, 'order' => 'score') )}}">Relevans</a></li>
 					<li{{ $order == 'revision_date' ? " class='active'" : '' }}>
-					<a href="{{ URL::route('category-show', array('token' => $token/* TODO , 'order' => 'revision_date' */) )}}">Senast uppdaterad</a>
+					<a href="{{ URL::route('category-show', array('token' => $token , 'order' => 'revision_date' ) )}}">Senast uppdaterad</a>
 				</ul>
 			@else
 				<ul class="sortby">
@@ -57,7 +57,7 @@
 					<li{{ $order == 'score' ? " class='active'" : '' }}>
 					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token, 'order' => 'score') )}}">Relevans</a></li>
 					<li{{ $order == 'revision_date' ? " class='active'" : '' }}>
-					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token/* TODO , 'order' => 'revision_date' */) )}}">Senast uppdaterad</a>
+					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token , 'order' => 'revision_date') )}}">Senast uppdaterad</a>
 				</ul>
 			@endif
 			<div class="clear"></div>
