@@ -24,52 +24,71 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
-	protected $fillable = array('email', 'password', 'real_name', 'privileges','remember_token');
-	protected $dates = ['deleted_at'];
+	/**
+	 * The mass assignable fields for the model.
+	 *
+	 * @var array(string)
+	 */
+	protected $fillable = ['email', 'password', 'real_name', 'privileges', 'remember_token'];
 
 	/**
-	 * favourite pms of the user.
+	 * The deleted_at is protected.
+	 *
+	 * @var array(string)
 	 */
-	public function favourites() 
-	{
-		return $this->belongsToMany('Pm', 'favourites', 'user', 'pm');
+	protected $dates = ['deleted_at'];
+
+
+
+
+
+	/**
+	 * Defines relation to all the PM the user has favourited.
+	 *
+	 * @return Relation
+	 */
+	public function favourites() {
+		return $this->belongsToMany('PM', 'favourites', 'user', 'pm');
 	}
 
 	/**
-	 * Roles of the user.
+	 * Defines relation to all roles the user has.
+	 *
+	 * @return Relation
 	 */
-	public function roles() 
-	{
+	public function roles() {
 		return $this->belongsToMany('Role', 'user_roles', 'user', 'role');
 	}
 
 	/**
-	 * Roles of the user.
+	 * Defines relation to all the PM:s (via assignment) the user is working with.
+	 *
+	 * @return Relation
 	 */
-	public function pms() 
-	{
+	public function pms() {
 		return $this->belongsToMany('Pm', 'assignments', 'user', 'pm')->withPivot('assignment');
 	}
 
 	/**
-	 * Actions made by the user.
+	 * Defines relation to all the assignment the user has.
+	 *
+	 * @return Relation
 	 */
 	public function assignment() {
 		return $this->hasMany('Assignment', 'user');
 	}
 
-	/**
-	 * The users last read pms
-	 */
-	public function lastReadPms() 
-	{
-		return $this->belongsToMany('Pm', 'last_read', 'user', 'pm');
-	}
+
+
+
+
 
 	/**
-	 * Returns user's privileges as a nice string word.
+	 * Get a nice, Swedish, string of user privilege.
+	 *
+	 * @return string
 	 */
-	public function privileges() {
+	public function privilegesString() {
 		if ($this->privileges == 'admin') 
 			return "systemadministatör";
 		if ($this->privileges == 'pm-admin') 
@@ -80,10 +99,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
-	 * Returns user's privileges as an integer.
+	 * Get user's privileges as an integer.
+	 *
 	 * @return 10 (admin), 8 (pm-admin), 2 (verifierad), 0 (overifierad)
 	 */
-	public function privilegesNum() {
+	public function privilegesLevel() {
 		if ($this->privileges == 'admin') 
 			return 10;
 		if ($this->privileges == 'pm-admin') 
@@ -94,7 +114,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
-	 * Returns user's privileges as a nice string word.
+	 * Get a nice, Swedish, string of user assignment.
+	 *
+	 * @return string
 	 */
 	public static function assignmentString($assignment) {
 		if ($assignment == 'creator') 
@@ -113,9 +135,14 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
-	 * Gets all events connected to this user.
+	 * Gets all events that this user has to finish.
+	 *
+	 * @return array of events - array({ 'verb':string, 'pm':PM })
 	 */
 	public static function allEvents() {
+		// TODO Hela funktionen. Den ska loopa igenom alla assignments för en person
+		// och se om något ska göras nu. Om det är så, ska det med i output-arrayen.
+		
 		$res = array();
 		$obj = new stdClass; $obj->verb = 'skriva'; $obj->pm = PM::find(1); $res[] = $obj;
 		$obj = new stdClass; $obj->verb = 'granska'; $obj->pm = PM::find(2); $res[] = $obj;
