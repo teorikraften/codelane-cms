@@ -140,15 +140,13 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 * @return array of events - array({ 'verb':string, 'pm':PM })
 	 */
 	public function allEvents() {
-		// TODO Hela funktionen. Den ska loopa igenom alla assignments för en person
-		// och se om något ska göras nu. Om det är så, ska det med i output-arrayen.
 		$res = array();
 		
 		// 'creator'
 		$creatorAss = $this->assignment()->where('assignment', '=', 'creator')->whereNull('done_at')->get();
-		foreach ($writeAss as $key => $ass) {
+		foreach ($creatorAss as $key => $ass) {
 			$pm = $ass->pm;
-			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned') {
+			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written') {
 				$res['verb'] = $this->assignmentString($ass->assignment);
 				$res['pm'] = $pm;
 			}
@@ -158,7 +156,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		$writeAss = $this->assignment()->where('assignment', '=', 'author')->whereNull('done_at')->get();
 		foreach ($writeAss as $key => $ass) {
 			$pm = $ass->pm;
-			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned')
+			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written')
 				$res['verb'] = $this->assignmentString($ass->assignment);
 			$res['pm'] = $pm;
 		}
@@ -167,16 +165,17 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		$settlerAss = $this->assignment()->where('assignment', '=', 'settler')->whereNull('done_at')->get();
 		foreach ($settlerAss as $key => $ass) {
 			$pm = $ass->pm;
+			if ($pm->status == 'end-reviewed' || $pm->status == 'revision-end-reviewed') {
 			$res['verb'] = $this->assignmentString($ass->assignment);
 			$res['pm'] = $pm;
+			}
 		}
 
 		// 'reviewer'
 		$reviewAss = $this->assignment()->where('assignment', '=', 'reviewer')->whereNull('done_at')->get();
 		foreach ($reviewAss as $key => $ass) {
 			$pm = $ass->pm;
-			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' 
-					|| $pm->status == 'författat' || $pm->status == 'review-författat') {
+			if ($pm->status == 'assigned' || $pm->status == 'revision-assigned' || $pm->status == 'written' || $pm->status == 'revision-written') {
 				$res['verb'] = $this->assignmentString($ass->assignment);
 				$res['pm'] = $pm;
 			}
@@ -186,8 +185,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		$LastReviewAss = $this->assignment()->where('assignment', '=', 'end-reviewer')->whereNull('done_at')->get();
 		foreach ($LastReviewAss as $key => $ass) {
 			$pm = $ass->pm;
-			if ($pm->status == 'reviewed' || $pm->status == 'revision-reviewed' 
-					|| $pm->status == 'författat' || $pm->status == 'review-författat') {
+			if ($pm->status == 'reviewed' || $pm->status == 'revision-reviewed'	|| $pm->status == 'written' || $pm->status == 'revision-written' || $pm->status == 'reviewed' || $pm->status == 'revision-reviewed') {
 				$res['verb'] = $this->assignmentString($ass->assignment);
 				$res['pm'] = $pm;
 			}
@@ -197,17 +195,17 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		$RevidAss = $this->assignment()->where('assignment', '=', 'reminder')->whereNull('done_at')->get();
 		foreach ($RevidAss as $key => $ass) {
 			$pm = $ass->pm;
-			if ($pm->expiration_date < Carbon::now() || $pm->status == 'revision-waiting') { // TODO jämför dates
+			if ( $pm->status == 'revision-waiting' || $pm->status == 'published-reminded') { // TODO jämför dates $pm->expiration_date < Carbon::now() ||
 				$res['verb'] = $this->assignmentString($ass->assignment);
 				$res['pm'] = $pm;
 			}
 		}
 
-
-
 		return $res;
 	}
 }
 
-// 'assigned', 'reviewed', 'published', 'published-reminded'
-// 'revision-waiting', 'revision-assigned', 'revision-reviewed', 'end-reviewed', 'revision-end-reviewed'
+/*
+'assigned','written','reviewed','end-reviewed','published','published-reminded'
+,'revision-waiting','revision-assigned','revision-reviewed','revision-end-reviewed','revision-written'
+*/
