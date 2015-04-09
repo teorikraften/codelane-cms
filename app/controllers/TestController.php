@@ -6,7 +6,7 @@ class TestController extends BaseController {
 	/*
 	 * Displays the index page view.
 	 */
-	public function showImportPage()
+	public function getImport()
 	{
 		header('Content-Type: text/html; charset=utf-8');
 		$path = 'PM/Akutmottagningen/Administrativa riktlinjer/Gemensamma PM akutmottagningen';

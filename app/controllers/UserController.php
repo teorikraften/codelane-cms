@@ -3,20 +3,22 @@
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends BaseController {
+
 	/**
 	 * Displays the profile page for the user.
-	 * @param $userId the user id for the user to be displayed
+	 *
+	 * @return Response
 	 */
-	public function showProfilePage()
-	{
+	public function getProfile() {
 		return View::make('user.profile.profile');
 	}
 
 	/**
 	 * Displays the edit profile page view for the user.
-	 * @param $userId the user id for the user to be displayed
+	 *
+	 * @return Response
 	 */ 
-	public function showEditProfilePage() {
+	public function getEditProfile() {
 		return View::make('user.profile.edit-profile')
 			->with('userRoles', Auth::user()->roles)
 			->with('error', Session::get('error'))
@@ -25,14 +27,15 @@ class UserController extends BaseController {
 
 	/**
 	 * Changes the password and redirects to profile edit page.
+	 *
+	 * @return Response
 	 */ 
-	public function changePassword() 
-	{
-		// TODO Göra "upprepa lösenord"
+	public function postChangePassword() {
 		$old_password = Input::get('old_password');
 		$new_password = Input::get('new_password');
-		$new_password_again = Input::get('new_password_again');
+		$new_password_again = Input::get('new_password_again'); // Look in postCreatePassword function
 
+		// TODO Move to class
 		$validator = Validator::make(
 		[
 			'new_password' => $new_password,
@@ -54,8 +57,7 @@ class UserController extends BaseController {
 		if (!Hash::check($old_password, Auth::user()->password))
 			$error[] = 'Du skrev fel gammalt lösenord';
 
-		if ($validator->fails() || count($error) != 0)
-		{
+		if ($validator->fails() || count($error) != 0) {
 			$messages = $validator->messages();
 			// If not succes set error and ask user to change input
 			return Redirect::route('user-edit')
@@ -75,16 +77,16 @@ class UserController extends BaseController {
 
 	/**
 	 * Changes the information of the user and redirects to profile edit page.
-	 * @param $userId the user id for the user to be displayed
+	 *
+	 * @return Response
 	 */ 
-	public function editProfile() 
-	{
-		// TODO Göra "upprepa lösenord"
-		$name = Input::get('real_name');
+	public function postEditProfile() {
+		$name = Input::get('name');
 		$email = Input::get('email');
-		$roles = Input::get('roles_');
+		$roles = Input::get('roles_'); // TODO Do nicer
 		$roles = explode(",", $roles);
 
+		// TODO Move to class
 		$validator = Validator::make(
 		[
 			'name' => $name,
@@ -102,8 +104,7 @@ class UserController extends BaseController {
 		]);
 
 		$error = array();
-		if ($validator->fails())
-		{
+		if ($validator->fails()) {
 			$messages = $validator->messages();
 			// If not succes set error and ask user to change input
 			return Redirect::route('user-edit')
@@ -114,7 +115,7 @@ class UserController extends BaseController {
 
 		// Edit user in database 
 		$user = User::find(Auth::user()->id);
-		$user->real_name = $name;
+		$user->name = $name;
 		$user->email = $email;
 		$user->save();
 		$user->roles()->detach();
@@ -129,30 +130,45 @@ class UserController extends BaseController {
 			->with('success', 'Informationen uppdaterades!');
 	}
 
-	public function personsAutocomplete() {
-		$users = User::where('real_name', 'LIKE', '%' . Input::get('q') . '%')
+	/**
+	 * Gets all persons matching Input::get('q') on email, name or other.
+	 *
+	 * @return Response as json
+	 */
+	public function getPersonsAutocomplete() {
+		$users = User::where('name', 'LIKE', '%' . Input::get('q') . '%')
 				->orWhere('email', 'LIKE', '%' . Input::get('q') . '%')
 				->where('deleted_at', '=', 'NULL')
 				->take(10)
 				->get();
+
 		$userNames = array();
 		foreach ($users as $user) {
 			$var = new stdClass();
 			$var->id = $user->id;
-			$var->name = $user->real_name . ' (' . $user->email . ')';
+			$var->name = $user->name . ' (' . $user->email . ')';
 			$userNames[] = $var;
 		}
-		return json_encode($userNames
-			);
+
+		return json_encode($userNames);
 	}
 
-	public function showCreatePasswordPage($token) {
+	/**
+	 * Shows the create new password page.
+	 *
+	 * @return Response
+	 */
+	public function getCreatePassword($token) {
 		return View::make('user.create-password')
 			->with('id', $token);
 	}
 
-	public function createPassword()
-	{
+	/**
+	 * Handles post request of create password.
+	 *
+	 * @return Response
+	 */
+	public function postCreatePassword() {
 		$credentials = Input::only(
 			'email', 'password', 'password_confirmation', 'id'
 		);
@@ -185,7 +201,13 @@ class UserController extends BaseController {
 		return Redirect::route('index')->with('success', 'Ditt lösenord har skapats. Testa att logga in!');
 	}
 
+	/**
+	 * Displays the todo view.
+	 *
+	 * @return Response as json
+	 */
 	public function getTodo() {
-		return View::make('user.profile.todo');
+		return View::make('user.profile.todo')
+			->with('events', Auth::user()->allEvents());
 	}
 }

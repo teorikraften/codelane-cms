@@ -10,7 +10,7 @@ class PMController extends BaseController {
 	 * Displays the PM page view.
 	 * @param $token the PM token
 	 */
-	public function showPMPage($token) {
+	public function getShow($token) {
 		try {
 			$pm = Pm::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -32,7 +32,7 @@ class PMController extends BaseController {
 	 */
 	public function showFavourites() {
 		$pms = Auth::user()->favourites()
-			->where('verified', '=' , 1)
+			->where('published', '=' , 1)
 			->whereNull('pms.deleted_at')
 			->where('expiration_date', '<' , 'CURDATE()')
 			->get();
@@ -58,17 +58,17 @@ class PMController extends BaseController {
 
 		if (!empty($user->favourites()->where('pm', '=', $pm->id)->first())) {
 			$user->favourites()->detach($pm);
-			$message = "Favorit borttagen: " . $pm->title;
+			$message = '"' . $pm->title . '" togs bort som favorit.';
 		} else {
 			$user->favourites()->attach($pm);
-			$message = "Favorit tillagd: " . $pm->title;
+			$message = '"' . $pm->title . '" lades till som favorit.';
 		}
 
 		if ($goto == 'fav') {
 			$m = $message . 
 				' <a href="' . 
 					URL::route('get-favourite-edit', array('goto' => 'fav', 'token' => $token)) .
-				'">Undo</a>';
+				'">Ångra.</a>';
 
 			return Redirect::route('favourites-show')
 				->with('success', $m);
@@ -89,7 +89,7 @@ class PMController extends BaseController {
 	 * Displays the PM download page view.
 	 * @param $token the PM token
 	 */
-	public function download($token) {
+	public function getDownload($token) {
 		try {
 			$pm = PM::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -101,21 +101,21 @@ class PMController extends BaseController {
 		$resp = "";
 		foreach($assignments as $assignment) {
 			if ($assignment->pivot->assignment == 'owner') {
-				$resp .= $assignment->real_name . " ";
+				$resp .= $assignment->name . " ";
 			}
 		}
 
 		$auth = "";
 		foreach($assignments as $assignment) {
 			if ($assignment->pivot->assignment == 'author') {
-				$auth .= $assignment->real_name . " ";
+				$auth .= $assignment->name . " ";
 			}
 		}
 
 		$rev = "";
 		foreach($assignments as $assignment) {
 			if ($assignment->pivot->assignment == 'reviewer') {
-				$rev .= $assignment->real_name . " ";
+				$rev .= $assignment->name . " ";
 			}
 		}
 
@@ -213,7 +213,7 @@ class PMController extends BaseController {
 	 * Displays the PM edit page view.
 	 * @param $token the PM token
 	 */
-	public function showEditPMPage($token) {
+	public function getEdit($token) {
 		try {
 			$pm = Pm::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -229,7 +229,7 @@ class PMController extends BaseController {
 	/**
 	 * Handles post request to edit PM.
 	 */
-	public function editPM() {
+	public function postEdit() {
 		// TODO Hela funktionen
 
 		try {
@@ -269,7 +269,7 @@ class PMController extends BaseController {
 	 * Displays the PM edit page view.
 	 * @param $token the PM token
 	 */
-	public function showReviewPMPage($token) {
+	public function getReview($token) {
 		try {
 			$pm = Pm::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -278,7 +278,7 @@ class PMController extends BaseController {
 		}
 
 		$comments = Comment::where('pm', '=', $pm->id)
-		->select('comments.id as id', 'content', 'users.real_name', 'pm')
+		->select('comments.id as id', 'content', 'users.name', 'pm')
 		->join('users', 'users.id', '=', 'comments.user')
 		->get();
 
@@ -307,7 +307,7 @@ class PMController extends BaseController {
 		->with('comment', $commentC);
 	}
 
-	public function saveComment() {
+	public function postSaveComment() {
 		try {
 			$pm = PM::findOrFail(Input::get('pm'));
 		} catch(ModelNotFoundException $e) {
@@ -340,7 +340,7 @@ class PMController extends BaseController {
 	/**
 	 * Handles post request to edit PM.
 	 */
-	public function reviewPM() {
+	public function postReview() {
 		// TODO Hela funktionen
 		$commentContent = Input::get('comment');
 		$accepted = Input::get('accept', 'no');
@@ -381,7 +381,7 @@ class PMController extends BaseController {
 	 * Displays the PM edit assignments page view.
 	 * @param $token the PM token
 	 */
-	public function showEditPMAssignmentsPage($token) {
+	public function getEditAssignments($token) {
 		try {
 			$pm = Pm::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -410,7 +410,7 @@ class PMController extends BaseController {
 		->with('authors', $authors);
 	}
 
-	public function editPMAssignments() {
+	public function postEditAssignments() {
 		// TODO Validering
 		$owner = explode(',', Input::get('responsible'));
 		$owner = $owner[0];
@@ -434,12 +434,12 @@ class PMController extends BaseController {
 		return Redirect::route('admin-pm');
 	}
 
-	public function showImportPage()
+	public function getImport()
 	{
 		return View::make('user.import.import');
 	}
 
-	public function import()
+	public function postImport()
 	{
 		$filename = date('YmdHis') . '.pdf';
 		$path = 'PM/' . Input::get('file', 'none');
@@ -450,7 +450,7 @@ class PMController extends BaseController {
 		return Redirect::route('pm-import-verify');
 	}
 
-	public function importVerify() {
+	public function getImportVerify() {
 		if (Input::get('title', 'fail') != 'fail') {
 			$pm = new Pm;
 			$pm->title = Input::get('title');
@@ -478,7 +478,7 @@ class PMController extends BaseController {
 	 * Displays the PM verify page view.
 	 * @param $token the PM token
 	 */
-	public function showAddPMPage()
+	public function getAdd()
 	{
 		return View::make('pm.add');
 	}
@@ -487,7 +487,7 @@ class PMController extends BaseController {
 	 * Displays the PM add tag page view.
 	 * @param $token the PM token
 	 */
-	public function showAddTagPage($token)
+	public function getAddTag($token)
 	{
 		return View::make('pm.add-tag')->with('token', $token);
 	}
@@ -496,12 +496,12 @@ class PMController extends BaseController {
 	 * Displays the PM verify page view.
 	 * @param $token the PM token
 	 */
-	public function showVerifyPage($token)
+	public function getVerify($token)
 	{
 		return View::make('pm.verify')->with('token', $token);
 	}
 
-	public function showPMListPage() {
+	public function getList() {
 		$userAssignments = Auth::user()->pms;
 
 		$userPms = $assignments = array();
@@ -518,40 +518,40 @@ class PMController extends BaseController {
 			->with('userPms', $userPms); // TODO Pagination
 		}
 
-		public function showAssignPMPage() {
-			return View::make('user.admin.pm.assign');
+	public function getAssign() {
+		return View::make('user.admin.pm.assign');
+	}
+
+	public function postAssign() {
+	// TODO Validering
+	// TODO kolla att användarna verkligen finns
+	// TODO Try-catch på findorfail
+		$creator = intval(Input::get('creator'));
+		$authors = explode(',', Input::get('authors'));
+		$reviewers = explode(',', Input::get('reviewers'));	
+		$endReviewer = Input::get('end-reviewer');		
+		$reminder = Input::get('reminder');	
+
+		$user = Auth::user();
+		$pm = new PM;
+		$pm->title = Input::get('title');
+		$pm->created_by = $user->id;
+		$pm->token = $this->generateToken($pm->title);
+		$pm->save();
+
+		foreach ($authors as $author) {
+			User::findOrFail($author)->pms()->attach([$pm->id => ['assignment' => 'author']]);
 		}
-
-		public function assignPM() {
-		// TODO Validering
-		// TODO kolla att användarna verkligen finns
-		// TODO Try-catch på findorfail
-			$creator = intval(Input::get('creator'));
-			$authors = explode(',', Input::get('authors'));
-			$reviewers = explode(',', Input::get('reviewers'));	
-			$endReviewer = Input::get('end-reviewer');		
-			$reminder = Input::get('reminder');	
-
-			$user = Auth::user();
-			$pm = new PM;
-			$pm->title = Input::get('title');
-			$pm->created_by = $user->id;
-			$pm->token = $this->generateToken($pm->title);
-			$pm->save();
-
-			foreach ($authors as $author) {
-				User::findOrFail($author)->pms()->attach([$pm->id => ['assignment' => 'author']]);
-			}
-			foreach ($reviewers as $reviewer) {
-				User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
-			}
-			User::findOrFail($creator)->pms()->attach([$pm->id => ['assignment' => 'creator']]);
-			User::findOrFail($endReviewer)->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
-			User::findOrFail($reminder)->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
-			$user->save();
-
-			return Redirect::route('admin-pm');
+		foreach ($reviewers as $reviewer) {
+			User::findOrFail($reviewer)->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
 		}
+		User::findOrFail($creator)->pms()->attach([$pm->id => ['assignment' => 'creator']]);
+		User::findOrFail($endReviewer)->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
+		User::findOrFail($reminder)->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
+		$user->save();
+
+		return Redirect::route('admin-pm');
+	}
 
 	/**
      * Generates a valid token.
@@ -575,7 +575,7 @@ class PMController extends BaseController {
 	 * Displays a page to add role for admin.
 	 * @param $id id of the role to delete
 	 */
-	public function showDeletePMPage($token) 
+	public function getDelete($token) 
 	{
 		try {
 			$pm = PM::where('token', '=', $token)->firstOrFail(); 
@@ -590,7 +590,7 @@ class PMController extends BaseController {
 	/**
 	 * Handles a post request of delete role.
 	 */
-	public function deletePM() 
+	public function postDelete() 
 	{
 		// TODO Fix whole function, should add to oldPMs and so
 		// Only yes-button should make this continue

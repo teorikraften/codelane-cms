@@ -60,7 +60,7 @@ class CategoryController extends BaseController {
 	 * @param page, the result page, default is 1
 	 * @return response, the view with category page
 	 */
-	public function showAllCategories($order = 'alphabetical', $page = 1) {
+	public function getShowAll($order = 'alphabetical', $page = 1) {
 		$page = intval($page);
 
 		// Get first level of categories
@@ -98,7 +98,7 @@ class CategoryController extends BaseController {
 	 * @param page, the result page, default is 1
 	 * @return response, the view with the category page
 	 */ 
-	public function showCategory($token, $order = 'alphabetical', $page = 1) {
+	public function getShow($token, $order = 'alphabetical', $page = 1) {
 		$page = intval($page);
 
 		// Find the PM we want
@@ -142,7 +142,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Displays the categories for admin.	 
 	 */
-	public function showCategoriesListPage() {
+	public function getList() {
 
 		$cats = $this->getCategoryTree(0);
 
@@ -153,7 +153,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Displays a page to add category for admin.
 	 */
-	public function showAddCategoryPage() {
+	public function getAdd() {
 		// TODO Move to function
 		$parents[0] = 'Ingen förälder';
 		$parents += $this->getChildrenList(0, NULL);
@@ -165,7 +165,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Handles a post request of add category.
 	 */
-	public function addCategory() {
+	public function postAdd() {
 		$name = Input::get('name', '');
 		if (!(strlen($name) > 0))
 			return Redirect::back()
@@ -190,7 +190,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Displays a page to add category for admin.
 	 */
-	public function showDeleteCategoryPage($token) {
+	public function getDelete($token) {
 		try {
 			$category = Category::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -204,7 +204,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Handles a post request of delete category.
 	 */
-	public function deleteCategory() {
+	public function postDelete() {
 		// TODO Delete all children upon delete
 
 		// Check which button was pressed, only 'yes' should continue
@@ -222,7 +222,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Displays a page to edit category for admin.
 	 */
-	public function showEditCategoryPage($token) {
+	public function getEdit($token) {
 		try {
 			$category = Category::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -242,7 +242,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Handles a post request of edit category.
 	 */
-	public function editCategory() {
+	public function postEdit() {
 		$token = Input::get('token');
 		try {
 			$category = Category::where('token', '=', $token)->firstOrFail();
