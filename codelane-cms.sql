@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: localhost
--- Tid vid skapande: 09 apr 2015 kl 13:49
+-- Tid vid skapande: 09 apr 2015 kl 14:13
 -- Serverversion: 5.6.22
 -- PHP-version: 5.5.14
 
@@ -147,7 +147,7 @@ CREATE TABLE IF NOT EXISTS `password_reminders` (
 CREATE TABLE IF NOT EXISTS `pms` (
   `id` int(10) unsigned NOT NULL,
   `code` varchar(100) COLLATE utf8_unicode_ci NOT NULL,
-  `status` set('assigned','reviewed','published','published-reminded','revision-waiting','revision-assigned','revision-reviewed','end-reviewed','revision-end-reviewed') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'assigned',
+  `status` set('assigned','written','reviewed','end-reviewed','published','published-reminded','revision-waiting','revision-assigned','revision-reviewed','revision-end-reviewed','revision-written') COLLATE utf8_unicode_ci NOT NULL DEFAULT 'assigned',
   `safetystatus` set('K1','K2','K3') COLLATE utf8_unicode_ci DEFAULT NULL,
   `title` varchar(150) COLLATE utf8_unicode_ci NOT NULL,
   `content` text COLLATE utf8_unicode_ci NOT NULL,
