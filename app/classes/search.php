@@ -57,8 +57,12 @@ class Search {
 	 * Get an array of errors from the search.
 	 * @return array Strings with error meassages.
 	 */
-	public function getErrorArray() {
-		return $this->error;
+	public function getErrorString() {
+		$s = '';
+		foreach ($this->error as $key => $value) {
+			$s .= $value;
+		}
+		return $s;
 	}
 
 	/**
@@ -210,9 +214,10 @@ class Search {
 
 			$fullTextSearchResult = PM::whereRaw("MATCH(content, title) AGAINST(? IN BOOLEAN MODE)", array("\"".$searchQuery."\""))
 			->addSelect(DB::raw("*, MATCH(content, title) AGAINST(\"".$searchQuery."\" IN BOOLEAN MODE) AS score"))
-			->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+			->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->where('published', '=', 1)->get();
 		} catch (Exception $e) {
 			$this->error[] = $e->getMessage();
+			$fullTextSearchResult = array();
 		}
 
 		foreach ($fullTextSearchResult as $key => $pm) {
@@ -223,6 +228,7 @@ class Search {
 			$this->result[$id]['operator'] = $defaultOperator;
 		}
 	}
+	
 
 
 	/**

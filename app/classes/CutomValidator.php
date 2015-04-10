@@ -5,12 +5,13 @@ class CustomValidator
 
 	// http://culttt.com/2014/01/20/extending-laravel-4-validator/
 
+	// http://regexlib.com/Search.aspx?k=strong%20password&AspxAutoDetectCookieSupport=1 
 	$messages = array();
 
 	public function validatechangePassword($new_password, $new_password_again)
 	{
 		Validator::extend('goodpassword', function($attribute, $value, $parameters){
-			if (preg_match("(password)", $value)) {
+			if (preg_match(".*[0-9].*", $value)) {
 				return true;
 			}
 			return false;
@@ -34,13 +35,12 @@ class CustomValidator
 
 
 		if ($new_password != $new_password_again)
-			$this->error[] = 'Lösenorden stämmer inte överens';
+			$this->messages[] = 'Lösenorden stämmer inte överens';
 		if (!Hash::check($old_password, Auth::user()->password))
-			$this->error[] = 'Du skrev fel gammalt lösenord';
+			$this->messages[] = 'Du skrev fel gammalt lösenord';
 
 		if ($validator->fails() || count($error) != 0) {
-			$this->messages = $validator->messages();
-			array_merge($this->messages->all(), $error)
+			$this->messages = array_merge($this->messages, $validator->messages()->all();
 			// If not succes set error and ask user to change input
 			return false;
 		} 
@@ -124,14 +124,16 @@ class CustomValidator
 		switch ($response)
 		{
 			case Password::INVALID_PASSWORD:
-				return Redirect::back()->with('error', 'Lösenordet måste vara minst 7 tecken långt.');
-
+				$this->error[] = 'Lösenordet måste vara minst 7 tecken långt.';
+				return false;
 			case Password::INVALID_TOKEN:
 			case Password::INVALID_USER:
-				return Redirect::back()->with('error', 'Felaktig e-postadress.');
+				$this->error[] = 'Felaktig e-postadress.';
+				return false;
 
 			case Password::PASSWORD_RESET:
-				return Redirect::route('index')->with('success', 'Ditt lösenord har ändrats. Testa att logga in!');;
+				// 'success', 'Ditt lösenord har ändrats. Testa att logga in!';
+				return true;
 		}
 	}
 	}

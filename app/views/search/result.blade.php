@@ -24,6 +24,7 @@
 @stop
 
 @section('body')
+@include('includes.messages')
 	{{ Form::open(array('url' => route('post-search'), 'method' => 'post')) }}
 		<div class="form big-search">
 			<div class="search-field">

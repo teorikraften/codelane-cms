@@ -55,6 +55,7 @@ class SearchController extends BaseController {
 		->with('result', $returnResult)
 		->with('order', $order)
 		->with('page', $page)
+		->with('error', $search->getErrorString())
 		->with('maxPage', $search->maximumPage());
 	}
 
