@@ -28,6 +28,12 @@
                     </td>
                 </tr>
                 <tr>
+                    <th>Sista giltighetsdatum: </th>
+                    <td>
+                        {{ $pm->expiration_date }}
+                    </td>
+                </tr>
+                <tr>
                     <th>Upprättare: </th>
                     <td>
                         @foreach ($assignments as $assignment)

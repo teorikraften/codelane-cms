@@ -1182,3 +1182,52 @@ ul.pagination li a:hover, ul.pagination li.active span {
 * .greystar {
 	color: #ccc;
 }
+
+#ui-datepicker-div {
+	background: #eee;
+	border: 1px solid #ccc;
+	display: block;
+}
+#ui-datepicker-div table {
+	text-align: center;
+    border-spacing: 0;
+    border-collapse: separate;
+}
+#ui-datepicker-div table td {
+	text-align: center;
+	padding: 0;
+}
+#ui-datepicker-div table th {
+	padding: 5px;
+	width: 32px;
+}
+#ui-datepicker-div table td a {
+	text-decoration: none;
+	background: #ddd;
+	display: block;
+	padding: 5px;
+	width: 32px;
+}
+#ui-datepicker-div table td a:hover {
+	background: #008472;
+	color: #fff;
+}
+.ui-datepicker-title {
+	text-align: center;
+	background: #008472;
+	color: #fff;
+	padding: 5px 0;
+	font-weight: bold;
+}
+.ui-datepicker-prev {
+	color: #ddd;
+	cursor: pointer;
+	float: left;
+	padding: 5px 5px;
+}
+.ui-datepicker-next {
+	color: #ddd;
+	cursor: pointer;
+	float: right;
+	padding: 5px 5px;
+}

@@ -21,7 +21,29 @@
 	        $("#end-reviewer").tokenInput("/personer");
 	        $("#reminder").tokenInput("/personer");
 	    });
-    </script>
+
+	  	$(function() {
+	    	$("#validityYear").datepicker({
+		        showOtherMonths: true,
+		        dayNamesMin: ['Sön', 'Mån', 'Tis', 'Ons', 'Tor', 'Fre', 'Lör'],
+		        monthNames: [ "Januari", "Februari", "Mars", "April",
+                   "Maj", "Juni", "Juli", "Augusti", "September",
+                   "Oktober", "November", "December" ],
+		        firstDay: 1,
+		        nextText: 'Nästa',
+		        prevText: 'Föreg.',
+		        dateFormat: 'yy-mm-dd',
+		        onSelect: function() {
+		        	$("#validityTypeDate").prop('checked', true);
+		        },
+		        minDate: 0,
+		        maxDate: "+5y",
+	    	});
+	    	$("#validityTime").change(function() {
+	        	$("#validityTypeTime").prop('checked', true);
+	        });
+	  	});
+  </script>
 @stop
 
 @section('submenu')
@@ -37,6 +59,29 @@
 			<div class="row">
 				<div class="description">{{ Form::label('title', 'PM:ets rubrik') }}</div>
 				<div class="input">{{ Form::text('title', NULL, array('class' => 'text')) }}</div>
+			</div>
+			<div class="row">
+				<div class="description">{{ Form::label('validityTime', 'Giltighetstid') }}</div>
+				<div class="input">
+					<table>
+						<tr>
+							<td>
+								{{ Form::radio('validityType', 'time', true, array('id' => 'validityTypeTime')) }}
+							</td>
+							<td>
+								{{ Form::select('validityTime', array('6m' => 'Sex månader från publicering', '1y' => 'Ett år från publicering', '1y6m' => 'Ett år och sex månader från publicering', '2y' => 'Två år från publicering', '5y' => 'Fem år från publicering'), '1y', array('id' => 'validityTime')) }}
+							</td>
+						</tr>
+						<tr>
+							<td>
+								{{ Form::radio('validityType', 'date', false, array('id' => 'validityTypeDate')) }}
+							</td>
+							<td>
+								{{ Form::text('validityDate', date('Y-m-d', strtotime('+1 year')), array('class' => 'text', 'id' => 'validityYear')) }}
+							</td>
+						</tr>
+					</table>
+				</div>
 			</div>
 			<div class="row">
 				<div class="description">{{ Form::label('creator', 'Upprättare') }}</div>

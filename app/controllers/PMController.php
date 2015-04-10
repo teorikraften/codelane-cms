@@ -708,6 +708,23 @@ class PMController extends BaseController {
 		return $res;
 	}
 
+	private function validateDate($date) {
+	    $d = DateTime::createFromFormat('Y-m-d', $date);
+	    return $d && $d->format('Y-m-d') == $date;
+	}
+
+	/**
+	 * Valid are '(\d+y)?(\d+m)?'.
+	 */
+	private function getPeriod($period) {
+	    if (preg_match('/^(\d+y)?(\d+m)?$/', $period, $matches)) {
+	    	unset($matches[0]);
+	    	print_r($matches);
+	    }
+	    
+	    return implode('', $matches);
+	}
+
 	public function postAssign() {
 		// TODO Validering & en eller flera personer på vad?
 		$creators = $this->userify(Input::get('creator'));
@@ -722,6 +739,17 @@ class PMController extends BaseController {
 		$pm->title = Input::get('title');
 		$pm->created_by = $user->id;
 		$pm->token = $this->generateToken($pm->title);
+		if (Input::get('validityType', 'time') == 'date') {
+			if (!$this->validateDate(Input::get('validityDate'))) {
+				return Redirect::route('pm-assign')
+					->with('error', 'Datumet du angav är felaktigt.')
+					->withInput();
+			}
+			$pm->validity_date = Input::get('validityDate');
+		} else {
+			$period = $this->checkPeriod(Input::get('validityTime'));
+			$pm->validity_period = $period;
+		}
 		$pm->save();
 
 		foreach ($creators as $creator) {
@@ -841,6 +869,25 @@ class PMController extends BaseController {
 		$pm->content = $pm->draft;
 		$pm->draft = NULL;
 		$pm->status = 'published';
+		if ($pm->validity_date != NULL) {
+			$pm->expiration_date = $pm->validity_date;
+		} elseif ($pm->validity_period != NULL) {
+			// TODO Verify validity date
+			if (preg_match('/^(\d+y)?(\d+m)?$/', $pm->validity_period, $matches)) {
+		    	unset($matches[0]);
+		    	print_r($matches);
+		    }
+
+		    $date = new DateTime();
+		    foreach($matches as $match) {
+		    	if (substr($match, -1) == 'y') {
+					$date->add(new DateInterval('P' . intval(substr($match, 0, -1)) . 'Y'));
+		    	} else if (substr($match, -1) == 'm') {
+					$date->add(new DateInterval('P' . intval(substr($match, 0, -1)) . 'M'));
+		    	}
+		    }
+			$pm->expiration_date = $date->format('Y-m-d');
+		}
 		$pm->published = 1;
 		$pm->save();
 
