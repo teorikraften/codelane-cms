@@ -5,30 +5,6 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 class CategoryController extends BaseController {
 
 	/**
-	 * Creates $num colors between red and green
-	 * @param num, the number of colors
-	 * @return the colors as an array of strings (array('000', 'fb0', 'fff'))
-	 */
-	public function createColors($num) {
-		if ($num <= 0) {
-			return array();
-		}
-		// Start value
-		$r = 0xb; $g = 4; $b = 0;
-
-		// Calculate the step
-		$step = 7 / $num;
-
-		$color = array();
-		for ($i = 0; $i < intval($num); $i++) {
-			$r -= $step; $g += $step; // Update var
-			$color[$i] = dechex(intval($r)) . dechex(intval($g)) . dechex(intval($b)); // The actual color
-		}
-
-		return $color;
-	}
-
-	/**
 	 * Recursive function that creates a breadcrumb text over categories.
 	 * @param category, the category where we are now
 	 * @return the breadcrumb to the actual category
@@ -49,19 +25,46 @@ class CategoryController extends BaseController {
 	}
 
 	/**
+	 * Produces the menu tree HTML.
+	 */
+	public function getMenuTree($active = 0, $parentId = 0) {
+		$children = Category::where('parent',  '=', $parentId)
+			->orderBy('name', 'ASC')
+			->get();
+
+		$ab = $active == $parentId;
+		$lis = "";
+		foreach ($children as $child) {
+			list($childIsActive, $children) = $this->getMenuTree($active, $child->id);
+			if ($child->parent == $active || $childIsActive) 
+				$ab = true;
+
+			$lis .= 
+				'<li>' . 
+					'<a href="' . URL::route('category-show', $child->token) . '" class="btn">' .
+						'<span id="' . $child->id . '" class="cat' . ($childIsActive ? ' a' : '') . '">' . ($childIsActive ? '&#9662;' : '&#9656;') . ' </span>' . $child->name .
+					'</a>' . 
+					$children .
+				'</li>';
+		}
+		$res = "";
+		$res .= '<ul' . ($ab ? ' class="active"' : '') . '>';
+		$res .= $lis;
+		$res .= '</ul>';
+		return array($ab, $res);
+	}
+
+	/**
 	 * Display all categories
 	 * @param order, the sorting order, alphabetical is default
 	 * @param page, the result page, default is 1
 	 * @return response, the view with category page
 	 */
-	public function showAllCategories($order = 'alphabetical', $page = 1) {
+	public function getShowAll($order = 'alphabetical', $page = 1) {
 		$page = intval($page);
 
 		// Get first level of categories
 		$children = Category::where('parent',  '=', 0)->get();
-
-		// Create background colors
-		$colors = $this->createColors($children->count());
 
 		// Init search and find PMs
 		$search = new Search('ALL');
@@ -71,14 +74,21 @@ class CategoryController extends BaseController {
 
 		$searchResult = $search->getPage($page);
 
+		// Create the trivial breadcrumb to start
+		$breadcrumb = '<a href="' . URL::route('category-show-all') . '" title="Gå till översta kategorisidan">Start</a>';
+
+		$catList = $this->getMenuTree()[1];
+
 		// Return the view with correct values
 		return View::make('category.show')
-			->with('color', $colors)
+			->with('catList', $catList)
+			->with('breadcrumb', $breadcrumb)
 			->with('token', NULL)
 			->with('pms', $searchResult)
 			->with('children', $children)
 			->with('order', $order)
-			->with('page', $page);
+			->with('page', $page)
+			->with('maxPage', $search->maximumPage());
 	}
 
 	/**
@@ -88,7 +98,7 @@ class CategoryController extends BaseController {
 	 * @param page, the result page, default is 1
 	 * @return response, the view with the category page
 	 */ 
-	public function showCategory($token, $order = 'alphabetical', $page = 1) {
+	public function getShow($token, $order = 'alphabetical', $page = 1) {
 		$page = intval($page);
 
 		// Find the PM we want
@@ -102,9 +112,6 @@ class CategoryController extends BaseController {
 		// Get the children of the category
 		$children = Category::where('parent', '=', $category->id)->get();
 
-		// Create background colors
-		$colors = $this->createColors($children->count());
-
 		// Init search and get result
 		$search = new Search('category');
 		$search->categorySearch($category);
@@ -114,14 +121,18 @@ class CategoryController extends BaseController {
 
 		$searchResult = $search->getPage($page);
 
+		$catList = $this->getMenuTree($category->id)[1];
+
 		return View::make('category.show')
-			->with('color', $colors)
+			->with('catList', $catList)
 			->with('breadcrumb', $this->createBreadcrumb($category))
 			->with('token', $token)
 			->with('children', $children)
 			->with('pms', $searchResult)
 			->with('order', $order)
-			->with('page', $page);
+			->with('page', $page)
+			->with('maxPage', $search->maximumPage())
+			->with('category', $category->name);
 	}
 
 
@@ -131,7 +142,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Displays the categories for admin.	 
 	 */
-	public function showCategoriesListPage() {
+	public function getList() {
 
 		$cats = $this->getCategoryTree(0);
 
@@ -142,7 +153,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Displays a page to add category for admin.
 	 */
-	public function showAddCategoryPage() {
+	public function getAdd() {
 		// TODO Move to function
 		$parents[0] = 'Ingen förälder';
 		$parents += $this->getChildrenList(0, NULL);
@@ -154,7 +165,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Handles a post request of add category.
 	 */
-	public function addCategory() {
+	public function postAdd() {
 		$name = Input::get('name', '');
 		if (!(strlen($name) > 0))
 			return Redirect::back()
@@ -179,7 +190,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Displays a page to add category for admin.
 	 */
-	public function showDeleteCategoryPage($token) {
+	public function getDelete($token) {
 		try {
 			$category = Category::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -193,7 +204,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Handles a post request of delete category.
 	 */
-	public function deleteCategory() {
+	public function postDelete() {
 		// TODO Delete all children upon delete
 
 		// Check which button was pressed, only 'yes' should continue
@@ -211,7 +222,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Displays a page to edit category for admin.
 	 */
-	public function showEditCategoryPage($token) {
+	public function getEdit($token) {
 		try {
 			$category = Category::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -231,7 +242,7 @@ class CategoryController extends BaseController {
 	/**
 	 * Handles a post request of edit category.
 	 */
-	public function editCategory() {
+	public function postEdit() {
 		$token = Input::get('token');
 		try {
 			$category = Category::where('token', '=', $token)->firstOrFail();

@@ -20,8 +20,8 @@
 				</div>
 			</div>
 			<div class="row">
-				<div class="description">{{ Form::label('real_name', 'Användarens namn') }}</div>
-				<div class="input">{{ Form::text('real_name', NULL, array('class' => 'text')) }}</div>
+				<div class="description">{{ Form::label('name', 'Användarens namn') }}</div>
+				<div class="input">{{ Form::text('name', NULL, array('class' => 'text')) }}</div>
 			</div>
 			<div class="row">
 				<div class="description">{{ Form::label('name', 'Användarens e-postadress') }}</div>

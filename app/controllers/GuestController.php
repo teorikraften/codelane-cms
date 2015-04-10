@@ -3,13 +3,15 @@
 class GuestController extends BaseController {
 
 	/**
-	 * Handles user sign in post request.
+	 * Handles user sign in post request. Logs user in 
+	 * if possible, or redirects with error message.
+	 *
+	 * @return Response
 	 */
 	public function postSignIn() {	
 		if (Auth::attempt(array('email' => Input::get('email'), 'password' => Input::get('password')))) {
-			// Here we must check if user is verified, or deny
+			// Here we must check if user is verified, else deny
 			if (Auth::user()->privileges == 'unverified') {
-				
 				// Not enough permissions, log out
 				Auth::logout();
 
@@ -30,11 +32,15 @@ class GuestController extends BaseController {
 	}
 
 	/**
-	 * Handles user sign up post request
-	 */	
+	 * Handles user sign up post request. Validates and signs up if everything is OK.
+	 * Else, displays error message.
+	 *
+	 * @return Response
+	 */
 	public function postSignUp() {
 		$data = Input::only(array('name', 'email', 'password', 'password_confirmation'));
 
+		// TODO Move validation
 		$validator = Validator::make($data,
 		[
 			'name' => 'required',
@@ -63,12 +69,13 @@ class GuestController extends BaseController {
 
 		// Add user to database 
 		$user = User::create([
-			'real_name' => $data['name'], 
+			'name' => $data['name'], 
 			'email' => $data['email'], 
 			'password' => Hash::make($data['password']), 
 			'privileges' => 'unverified'
 		]);
 
+		// TODO Move email sending
 		// Send email to user
 		Mail::send('emails.welcome-unverified', array('name' => $data['name']), function($message) use($data) {
 		    $message
@@ -77,26 +84,31 @@ class GuestController extends BaseController {
 		    	->subject('Välkommen!');
 		});
 
-		return Redirect::route('sign-up')->with('success', 'Ditt konto har skapats. Du kommer få ett mejl när ditt konto godkänts av en administratör.');
+		return Redirect::route('sign-up')
+			->with('success', 'Ditt konto har skapats. Du kommer få ett mejl när ditt konto godkänts av en administratör.');
 	}
 
 
 	/**
 	 * Signs out user.
+	 *
+	 * @return Response
 	 */
 	public function getSignOut() {
 		Auth::logout();
+
 		return Redirect::route('index')
 			->with('message', 'Du loggades ut.');
 	}
 
 	/**
 	 * Displays sign up form view.
+	 * 
+	 * @return Response
 	 */ 
 	public function getSignUp() {	
 		return View::make('sign-in.sign-up')
 			->with('error', Session::get('error'))
 			->with('input', Session::get('input'));
 	}
-
 }

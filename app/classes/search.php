@@ -6,21 +6,39 @@ class Search {
 	private $error = array();
 	private $query;
 
+	private $searchTags = true;
+	private $searchText = true;
+	private $searchRoles = true;
 
-	// TODO check if correct syntax
-	/*
-	Operator ENUM
-		default			
-		remove
-		require
-	*/
-		const defaultOperator = 0;
-		const requireOperator = 1;
-		const removeOperator = 2;
 
-		function __construct($searchQuery) {
-			$this->query = htmlspecialchars($searchQuery);
+
+	public function setSearchOptions($options) {
+		$this->searchTags = (boolean)$options[0];
+		$this->searchRoles = (boolean)$options[1];
+		$this->searchText = (boolean)$options[2];
+	}
+
+	public function matchingOptions($options) {
+		if ($this->searchTags == (boolean)$options[0] 
+				&& $this->searchRoles == (boolean)$options[1] && $this->searchText == (boolean)$options[2]) {
+			return true;
 		}
+		return false;
+	}
+
+	/**
+	*Operator ENUM
+	*	default			
+	*	remove
+	*	require
+	*/
+	const defaultOperator = 0;
+	const requireOperator = 1;
+	const removeOperator = 2;
+
+	function __construct($searchQuery) {
+		$this->query = htmlspecialchars($searchQuery);
+	}
 
 	/**
 	 * Returns the result array.
@@ -115,7 +133,9 @@ class Search {
 			$error[] = 'Ojämnt antal apostorofer';
 		}
 
-		$this->fulltextsearch($searchQuery, $defaultOperator);
+		if ($this->searchText) {
+			$this->fulltextsearch($searchQuery, $defaultOperator);
+		}
 
 		$splitQuote = explode("'", $searchQuery);
 		foreach ($splitQuote as $key1 => $value2) {
@@ -123,19 +143,15 @@ class Search {
 			// For search terms between ' '
 			if ($key1 % 2 ==  1) { 
 				if (strrpos($splitQuote[$key1 - 1], 1, -1) === '+') {
-					// REQUIRED
 					$score = 10;
 					$operator = self::requireOperator;
 				} else if (strrpos($splitQuote[$key1 - 1], 1, -1) === '-') {
-					// REMOVE
 					$score = -10;
 					$operator = self::removeOperator;
 				} else if (strrpos($splitQuote[$key1 - 1], 1, -1) === '~') {
-					// NEGATIVE
 					$score = -1;
 					$operator = self::defaultOperator;
 				} else {
-					// DEFAULT
 					$score = 1;
 					$operator = self::defaultOperator;
 				}
@@ -194,7 +210,7 @@ class Search {
 
 			$fullTextSearchResult = PM::whereRaw("MATCH(content, title) AGAINST(? IN BOOLEAN MODE)", array("\"".$searchQuery."\""))
 			->addSelect(DB::raw("*, MATCH(content, title) AGAINST(\"".$searchQuery."\" IN BOOLEAN MODE) AS score"))
-			->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+			->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 		} catch (Exception $e) {
 			$this->error[] = $e->getMessage();
 		}
@@ -224,25 +240,68 @@ class Search {
 		if (preg_match("/(\s)|(^$)/", $query)) {
 			return;
 		}
+		if ($this->searchTags) {
+			$this->searchTag($query, $operator, $score);
+		}
 
+		if ($this->searchRoles) {
+			$this->searchRole($query, $operator, $score);
+		}
+
+		if ($this->searchText) {
+			$this->searchTitle($query, $operator, $score);
+
+			$this->searchContent($query, $operator, $score);
+		}
+	}
+
+	/**
+	* Searches the database for tag matches and adds pm connected to matching tags.
+	*/
+	private function searchTag($query, $operator, $score) {
 		$tag = Tag::where('name', 'like', '%'.$query.'%')->get();
 		foreach ($tag as $key => $value) {
-			$tagpms = $value->pm()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+			$tagpms = $value->pm()->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 			foreach ($tagpms as $key => $v) {
 				$this->result = $this->updatePMScore($v, 100 * $score, $operator);
 			}
 		}
+	}
 
-		$contentResult = Pm::where('content', 'like', '%'.$query.'%')->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
-		foreach ($contentResult as $key => $v) {
-			$this->result = $this->updatePMScore($v, 1 * $score, $operator);
+	/**
+	* Searches the database for role matches and adds pm connected to matching roles.
+	*/
+	private function searchRole($query, $operator, $score) {
+		$role = Role::where('name', 'like', '%'.$query.'%')->get();
+		foreach ($role as $key => $value) {
+			$rolepms = $value->pms()->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+			foreach ($rolepms as $key => $v) {
+				$this->result = $this->updatePMScore($v, 10 * $score, $operator);
+			}
 		}
+	}
 
-		$titleResult = PM::where('title', 'like', '%'.$query.'%')->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+	/**
+	* Searches the database for matches from the column title
+	*/
+	private function searchTitle($query, $operator, $score) {
+		$titleResult = PM::where('title', 'like', '%'.$query.'%')->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 		foreach ($titleResult as $key => $v) {
 			$this->result = $this->updatePMScore($v, 15 * $score, $operator);
 		}
-		return;
+	}
+
+	/**
+	* Searches the database for matches from the column content
+	* 
+	* Is this function desireable? TODO remove maybe
+	* 
+	*/
+	private function searchContent($query, $operator, $score) {
+		$contentResult = Pm::where('content', 'like', '%'.$query.'%')->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		foreach ($contentResult as $key => $v) {
+			$this->result = $this->updatePMScore($v, 1 * $score, $operator);
+		}
 	}
 
 	/**
@@ -289,6 +348,7 @@ class Search {
 			foreach ($pms as $key => $pm) {
 				if (isset($this->result[$pm->id])) {
 					$this->result[$pm->id]['roles'][] = $role;
+					$this->updatePmScore($pm, 100);
 				}
 			}
 		}
@@ -320,22 +380,38 @@ class Search {
 		return $this->result;
 	}
 
+	/**
+	 * Get pms connected to the category and all child categories.
+	 *
+	 * @param Category $category Category to find all PMs under.
+	 */
 	public function categorySearch($category) {
 		$childcategories = $category->getAllChildren();
 
-		foreach ($childcategories as $key => $cat) {
-			$categoryPms = $cat->pms()->where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		foreach (array($category) + $childcategories as $key => $cat) {
+			$categoryPms = $cat->pms()->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 			foreach ($categoryPms as $key => $pm) {
 				$this->result[$pm->id]['pm'] = $pm;
 				$this->result[$pm->id]['score'] = 1;
 				$this->result[$pm->id]['operator'] = self::defaultOperator; 
 			}
-		// -------------------------------------------------------------------------------
+		}
+	}
+
+	/**
+	 * Get all pms sorted by revision_date
+	 */
+	public function latestUpdatedPMs() {
+		$latestPms = PM::where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->orderBy('revision_date', 'DESC')->get();
+		foreach ( $latestPms as $key => $pm) {
+			$this->result[$pm->id]['pm'] = $pm;
+			$this->result[$pm->id]['score'] = 1;
+			$this->result[$pm->id]['operator'] = self::defaultOperator; 
 		}
 	}
 
 	public function findAllPms() {
-		$allpms = PM::where('verified', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		$allpms = PM::where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 		foreach ( $allpms as $key => $pm) {
 			$this->result[$pm->id]['pm'] = $pm;
 			$this->result[$pm->id]['score'] = 1;
@@ -419,13 +495,12 @@ function cmpExpiration($res1, $res2)
 
 function cmpRevision($res1, $res2) 
 {
-	throw new Exception("We shuld use another column than updated_at");
 	if ($res1['operator'] == $res2['operator']) {
-		if ($res1['pm']->updated_at == $res2['pm']->updated_at) 
+		if ($res1['pm']->revision_date == $res2['pm']->revision_date) 
 		{
 			return 0;
 		}
-		return ($res1['pm']->updated_at < $res2['pm']->updated_at) ? -1 : 1;	
+		return ($res1['pm']->revision_date < $res2['pm']->revision_date) ? -1 : 1;	
 	} else {
 		throw new Exception('Unknown compare ' . $res1['operator'] . ' ' . $res2['operator']);
 	}
