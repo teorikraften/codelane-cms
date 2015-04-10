@@ -34,6 +34,18 @@
                     </td>
                 </tr>
                 <tr>
+                    <th>Normal giltighetsperiod: </th>
+                    <td>
+                        {{ $pm->validity_period }}
+                    </td>
+                </tr>
+                <tr>
+                    <th>Angivet giltighetsdatum: </th>
+                    <td>
+                        {{ $pm->validity_date }}
+                    </td>
+                </tr>
+                <tr>
                     <th>Upprättare: </th>
                     <td>
                         @foreach ($assignments as $assignment)

@@ -579,6 +579,20 @@ class PMController extends BaseController {
 		$endReviewers = $this->userify(Input::get('end-reviewer'));
 		$reminders = $this->userify(Input::get('reminder'));	
 
+		if (Input::get('validityType', 'time') == 'date') {
+			if (!$this->validateDate(Input::get('validityDate'))) {
+				return Redirect::back()
+					->with('error', 'Datumet du angav är felaktigt.')
+					->withInput();
+			}
+			$pm->validity_date = Input::get('validityDate');
+			$pm->validity_period = NULL;
+		} else {
+			$period = $this->checkPeriod(Input::get('validityTime'));
+			$pm->validity_period = $period;
+			$pm->validity_date = NULL;
+		}
+
 		$user = Auth::user();
 		$pm->users()->detach();
 		// TODO Fix! This is bad. Bättre att loopa igenom alla och ändra de som ska ändras istället. Då kan man köra soft deletes.
@@ -716,8 +730,8 @@ class PMController extends BaseController {
 	/**
 	 * Valid are '(\d+y)?(\d+m)?'.
 	 */
-	private function getPeriod($period) {
-	    if (preg_match('/^(\d+y)?(\d+m)?$/', $period, $matches)) {
+	private function checkPeriod($period) {
+	    if (preg_match('/^(\d+y)?(\d+m)?(\d+d)?$/', $period, $matches)) {
 	    	unset($matches[0]);
 	    	print_r($matches);
 	    }
@@ -741,14 +755,16 @@ class PMController extends BaseController {
 		$pm->token = $this->generateToken($pm->title);
 		if (Input::get('validityType', 'time') == 'date') {
 			if (!$this->validateDate(Input::get('validityDate'))) {
-				return Redirect::route('pm-assign')
+				return Redirect::back()
 					->with('error', 'Datumet du angav är felaktigt.')
 					->withInput();
 			}
 			$pm->validity_date = Input::get('validityDate');
+			$pm->validity_period = NULL;
 		} else {
 			$period = $this->checkPeriod(Input::get('validityTime'));
 			$pm->validity_period = $period;
+			$pm->validity_date = NULL;
 		}
 		$pm->save();
 
@@ -871,9 +887,13 @@ class PMController extends BaseController {
 		$pm->status = 'published';
 		if ($pm->validity_date != NULL) {
 			$pm->expiration_date = $pm->validity_date;
+			$now = new DateTime();
+			$then = new DateTime($pm->validity_date);
+			$pm->validity_period = $now->diff($then)->format('%a') . 'd';
+			$pm->validity_date = NULL;
 		} elseif ($pm->validity_period != NULL) {
 			// TODO Verify validity date
-			if (preg_match('/^(\d+y)?(\d+m)?$/', $pm->validity_period, $matches)) {
+			if (preg_match('/^(\d+y)?(\d+m)?(\d+d)?$/', $pm->validity_period, $matches)) {
 		    	unset($matches[0]);
 		    	print_r($matches);
 		    }
@@ -884,10 +904,15 @@ class PMController extends BaseController {
 					$date->add(new DateInterval('P' . intval(substr($match, 0, -1)) . 'Y'));
 		    	} else if (substr($match, -1) == 'm') {
 					$date->add(new DateInterval('P' . intval(substr($match, 0, -1)) . 'M'));
+		    	} else if (substr($match, -1) == 'd') {
+					$date->add(new DateInterval('P' . intval(substr($match, 0, -1)) . 'D'));
 		    	}
 		    }
 			$pm->expiration_date = $date->format('Y-m-d');
-		}
+		} else {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et har inget fastställt datum för revidering. Därför kunde det inte fastställas.');
+    	}
 		$pm->published = 1;
 		$pm->save();
 
