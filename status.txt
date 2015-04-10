@@ -12,8 +12,6 @@ OLIKA STATUSAR FÖR ETT PM I ORDNING
 		Nu måste slutgranskaren läsa igenom PM:et. Om slutgranskaren väljer att inte godkänna PM:et sätts status till (1) igen.
 		Om slutgranskaren godkänns byts status automatiskt till:
 
-3. Slutgranskat
-
 4. Publicerat fram till YYYY-MM-DD
 		PM:et är publicerat och syns i sökningar.
 		Om författaren går in och ändrar PM:et byts status till (7). 
@@ -31,8 +29,6 @@ OLIKA STATUSAR FÖR ETT PM I ORDNING
 
 8. Revidering - granskat
 		Slutgranskaren ska granska. När så är gjort hamnar den på (4).
-
-9. Revidering - slutgranskat
 
 
               ROLLER

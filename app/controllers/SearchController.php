@@ -4,8 +4,8 @@ class SearchController extends BaseController {
 	/**
 	 * Displays the search page view.
 	 */
-	public function getSearch() {
-		// TODO Används den här? @deprecated
+	public function showSearchPage()
+	{
 		return View::make('search.index');
 	}
 
@@ -14,9 +14,9 @@ class SearchController extends BaseController {
 	 * @param $searchQuery the query to search for
 	 * @param $order the sorting order, '' by default
 	 * @param $page the page number, 1 by default
-	 * @param $options Array with boolean serach options in the order: tags, roles, text
 	 */ 
-	public function getResult($searchQuery, $order = 'score', $page = 1, $options = NULL) {
+	public function showSearchResultPage($searchQuery, $order = 'score', $page = 1) 
+	{
 		$page = intval($page);
 
 		if ($searchQuery == '') {
@@ -27,24 +27,17 @@ class SearchController extends BaseController {
 
 			$search = Cache::get($searchQuery);
 
-			if (isset($options) && !$search->matchingOptions($options)) {
-				$search->setSearchOptions($options);
-				$search->pmSearch();
-				$search->findRoles();
-				Cache::add($searchQuery, $search, 5);
-			}
-
 		} else {
 			$search = new Search($searchQuery);
-
-			if (isset($options)) {
-				$search->setSearchOptions($options);
-			}
-
 			$search->pmSearch();
 			$search->findRoles();
 			Cache::put($searchQuery, $search, 5);
 		}
+
+		//$a = explode(" ", $searchQuery);
+		//$her = end($a);
+		//echo $her;
+		//exit;
 
 		$search->sortSearchResult($order);
 
@@ -59,46 +52,23 @@ class SearchController extends BaseController {
 	}
 
 	/**
-	 * 
-	 */
-	public function getLatest() {
-		$search = new Search('latestAddedPms');
-
-		$search->latestUpdatedPMs();
-		$returnResult = $search->getPage(1);
-
-		return View::make('search.result')
-		->with('searchQuery', "")
-		->with('result', $returnResult)
-		->with('order', $order)
-		->with('page', $page)
-		->with('maxPage', $search->maximumPage());
-	}
-
-	/**
 	 * Performs search with search request in POST.
 	 * @return a redirect to search result view
 	 */
-	public function postSearch() {
+	public function search() {
 		return Redirect::route('search-result', Input::get('search-query'));
 	}
 
-	public function getSearchAutocomplete() {
+	public function searchAutocomplete() {
 		$searchQuery = Input::get('term');
 
-		$splitPosition = strrpos($searchQuery, " ");
-		if ($splitPosition != false) {
-			$str1 = substr($searchQuery, 0, $splitPosition+1);
-			$str2 = substr($searchQuery, $splitPosition);
-		} else {
-			$str1 = '';
-			$str2 = $searchQuery;
-		}
+		$list = explode(' ', $searchQuery);
+		$searchQuery = end($list);
 
-		$tags = Tag::where('name', 'LIKE', '%' . $str2 . '%')->take(7)->get();
+		$tags = Tag::where('name', 'LIKE', '%' . $searchQuery . '%')->take(7)->get();
 		$result = array();
 		foreach($tags as $tag) {
-			$result[] = $str1 . $tag->name;
+			$result[] = $tag->name;
 		}
 		return json_encode($result);
 	}

@@ -1,29 +1,11 @@
 @extends('master')
 
 @section('head-title')
-    Ändra användare: {{ Auth::user()->name }}
+    Ändra användare: {{ Auth::user()->real_name }}
 @stop
 
-@section('head-extra')
-	<script type="text/javascript" src="/js/jquery.tokeninput.js"></script>
-    <link rel="stylesheet" href="/styles/token-input.css" type="text/css" />
-    <link rel="stylesheet" href="/styles/token-input-facebook.css" type="text/css" />
-
-    <script type="text/javascript">
-	    $(document).ready(function() {
-	        $("#roles_").tokenInput("/roller", {
-	        	'prePopulate' : [
-	        		@foreach($userRoles as $userRole)
-	        		{
-	        			'id' : {{ $userRole->id }}, 
-	        			'name' : '{{ $userRole->name }}'
-	        		},
-	        		@endforeach
-	        	],
-	        	'preventDuplicates' : true,
-	        });
-	    });
-    </script>
+@section('submenu')
+    @include('includes.admin-menu')
 @stop
 
 @section('body') 
@@ -36,19 +18,15 @@
 	@include("includes.success")
 	@include("includes.message")
 
-    {{ Form::model(Auth::user(), array('action' => array('UserController@postEditProfile', Auth::user()->id))) }}
+    {{ Form::model(Auth::user(), array('action' => array('UserController@editProfile', Auth::user()->id))) }}
     <div class="form">
 		<div class="row">
-			<div class="description">{{ Form::label('name', 'Namn') }}</div>
-			<div class="input">{{ Form::text('name', NULL, array('class' => 'text')) }}</div>
+			<div class="description">{{ Form::label('real_name', 'Namn') }}</div>
+			<div class="input">{{ Form::text('real_name', NULL, array('class' => 'text')) }}</div>
 		</div>
 		<div class="row">
 			<div class="description">{{ Form::label('email', 'E-postadress') }}</div>
 			<div class="input">{{ Form::text('email', NULL, array('class' => 'text')) }}</div>
-		</div>
-		<div class="row">
-			<div class="description">{{ Form::label('roles_', 'Roller') }}</div>
-			<div class="input">{{ Form::text('roles_', NULL, array('class' => 'text')) }}</div>
 		</div>
 		<div class="submit">
 			{{ Form::submit('Spara', array('class' => 'submit')) }}
@@ -62,7 +40,7 @@
     @if(Session::get('errorType') == 'password')
 		@include("includes.error")
 	@endif
-    {{ Form::open(array('action' => array('UserController@postChangePassword', Auth::user()->id))) }}
+    {{ Form::open(array('action' => array('UserController@changePassword', Auth::user()->id))) }}
     <div class="form">
 		<div class="row">
 			<div class="description">{{ Form::label('old_password', 'Gammalt lösenord') }}</div>

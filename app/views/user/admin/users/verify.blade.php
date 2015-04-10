@@ -10,12 +10,12 @@
 
 @section('body')
     <h1>Verifiera användare</h1>
-    <p>Vill du verkligen verifiera användaren {{ $user->name }} ({{ $user->email }})?</p>
+    <p>Vill du verkligen verifiera användaren {{ $user->real_name }} ({{ $user->email }})?</p>
     @include('includes.messages')
     <table>
 		<tr>
 			<td>Namn</td>
-			<td>{{ $user->name }}</td>
+			<td>{{ $user->real_name }}</td>
 		</tr>
 		<tr>
 			<td>E-postadress</td>

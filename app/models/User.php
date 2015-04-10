@@ -24,66 +24,52 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 */
 	protected $hidden = array('password', 'remember_token');
 
-	/**
-	 * The mass assignable fields for the model.
-	 *
-	 * @var array(string)
-	 */
-	protected $fillable = ['email', 'password', 'name', 'privileges', 'remember_token'];
-
-	/**
-	 * The deleted_at is protected.
-	 *
-	 * @var array(string)
-	 */
+	protected $fillable = array('email', 'password', 'real_name', 'privileges','remember_token');
 	protected $dates = ['deleted_at'];
 
-
-
-
-
 	/**
-	 * Defines relation to all the PM the user has favourited.
-	 *
-	 * @return Relation
+	 * favourite pms of the user.
 	 */
-	public function favourites() {
-		return $this->belongsToMany('PM', 'favourites', 'user', 'pm');
+	public function favorites() 
+	{
+		return $this->belongsToMany('Pm', 'favorites', 'user', 'pm');
 	}
 
 	/**
-	 * Defines relation to all roles the user has.
-	 *
-	 * @return Relation
+	 * Roles of the user.
 	 */
-	public function roles() {
+	public function roles() 
+	{
 		return $this->belongsToMany('Role', 'user_roles', 'user', 'role');
 	}
 
 	/**
-	 * Defines relation to all the PM:s (via assignment) the user is working with.
-	 *
-	 * @return Relation
+	 * Roles of the user.
 	 */
-	public function pms() {
+	public function pms() 
+	{
 		return $this->belongsToMany('Pm', 'assignments', 'user', 'pm')->withPivot('assignment');
 	}
 
 	/**
-	 * Defines relation to all the assignment the user has.
-	 *
-	 * @return Relation
+	 * Actions made by the user.
 	 */
 	public function assignment() {
 		return $this->hasMany('Assignment', 'user');
 	}
 
 	/**
-	 * Get a nice, Swedish, string of user privilege.
-	 *
-	 * @return string
+	 * The users last read pms
 	 */
-	public function privilegesString() {
+	public function lastReadPms() 
+	{
+		return $this->belongsToMany('Pm', 'last_read', 'user', 'pm');
+	}
+
+	/**
+	 * Returns user's privileges as a nice string word.
+	 */
+	public function privileges() {
 		if ($this->privileges == 'admin') 
 			return "systemadministatör";
 		if ($this->privileges == 'pm-admin') 
@@ -94,8 +80,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
-	 * Get user's privileges as an integer.
-	 *
+	 * Returns user's privileges as an integer.
 	 * @return 10 (admin), 8 (pm-admin), 2 (verifierad), 0 (overifierad)
 	 */
 	public function privilegesNum() {
@@ -109,111 +94,27 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
-	 * Get a nice, Swedish, string of user assignment.
-	 *
-	 * @return string
+	 * Returns user's privileges as a nice string word.
 	 */
 	public static function assignmentString($assignment) {
-		if ($assignment == 'creator') 
-			return "upprättare";
 		if ($assignment == 'author') 
-			return "inläggare";
-		if ($assignment == 'settler') 
-			return "fastställare";
+			return "författare";
+		if ($assignment == 'owner') 
+			return "ägare";
 		if ($assignment == 'reviewer') 
 			return "granskare";
-		if ($assignment == 'end-reviewer') 
-			return "slutgranskare";
-		if ($assignment == 'reminder') 
-			return "påminnare";
 		return "medlem";
 	}
 
 	/**
-	 *
+	 * Gets all events connected to this user.
 	 */
-	public function countEvents() {
-		$events = DB::table('pms')->join('assignments', 'assignments.pm', '=', 'pms.id')
-		->where('assignments.user', '=', $this->id)
-		->whereNull('pms.deleted_at')
-		->whereNull('done_at')
-		->where(function($validAssignment){
-			$validAssignment
-			->where(function($creator){
-				$creator->where('assignments.assignment', '=', 'creator')
-				->whereIn('pms.status', array('assigned', 'revision-assigned'));
-			})
-			->orWhere(function($author){
-				$author->where('assignments.assignment', '=', 'author')
-				->whereIn('pms.status', array('assigned', 'revision-assigned'));
-			})
-			->orWhere(function($settler){
-				$settler->where('assignments.assignment', '=', 'settler')
-				->whereIn('pms.status', array('end-reviewed', 'revision-end-reviewed'));
-			})
-			->orWhere(function($reviewer){
-				$reviewer->where('assignments.assignment', '=', 'reviewer')
-				->whereIn('pms.status', array( 'written', 'revision-written'));
-			})
-			->orWhere(function($end_reviewer){
-				$end_reviewer->where('assignments.assignment', '=', 'end-reviewer')
-				->whereIn('pms.status', array('reviewed', 'revision-reviewed'));
-			})
-			->orWhere(function($reminder){  // TODO maybe jämför dates $pm->expiration_date < Carbon::now() ||
-				$reminder->where('assignments.assignment', '=', 'reminder')
-				->whereIn('pms.status', array('revision-waiting', 'published-reminded'));
-			});
-		})
-		->count();
-		return $events;
-	}
-
-	/**
-	 * Gets all events that this user has to finish.
-	 *
-	 * @return array of events - array({ 'verb':string, 'pm':PM })
-	 */
-	public function allEvents() {
-		$res = DB::table('pms')->join('assignments', 'assignments.pm', '=', 'pms.id')
-		->where('assignments.user', '=', $this->id)
-		->whereNull('pms.deleted_at')
-		->whereNull('done_at')
-		->where(function($validAssignment){
-			$validAssignment
-			->where(function($creator){
-				$creator->where('assignments.assignment', '=', 'creator')
-				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written'));
-			})
-			->orWhere(function($author){
-				$author->where('assignments.assignment', '=', 'author')
-				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written'));
-			})
-			->orWhere(function($settler){
-				$settler->where('assignments.assignment', '=', 'settler')
-				->whereIn('pms.status', array('end-reviewed', 'revision-end-reviewed'));
-			})
-			->orWhere(function($reviewer){
-				$reviewer->where('assignments.assignment', '=', 'reviewer')
-				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written'));
-			})
-			->orWhere(function($end_reviewer){
-				$end_reviewer->where('assignments.assignment', '=', 'end-reviewer')
-				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written', 'reviewed', 'revision-reviewed'));
-			})
-			->orWhere(function($reminder){  // TODO maybe jämför dates $pm->expiration_date < Carbon::now() ||
-				$reminder->where('assignments.assignment', '=', 'reminder')
-				->whereIn('pms.status', array('revision-waiting', 'published-reminded'));
-			});
-		})
-		->get();
-
-
-		foreach ($res as $key => $value) {
-			$value->assignment = $this->assignmentString($value->assignment);
-		}
-
-		//var_dump($res);
-		//exit;
+	public static function allEvents() {
+		$res = array();
+		$obj = new stdClass; $obj->verb = 'skriva'; $obj->pm = PM::find(1); $res[] = $obj;
+		$obj = new stdClass; $obj->verb = 'granska'; $obj->pm = PM::find(2); $res[] = $obj;
+		$obj = new stdClass; $obj->verb = 'revidera'; $obj->pm = PM::find(4); $res[] = $obj;
+		$obj = new stdClass; $obj->verb = 'slutgranska'; $obj->pm = PM::find(3); $res[] = $obj;
 
 		return $res;
 	}

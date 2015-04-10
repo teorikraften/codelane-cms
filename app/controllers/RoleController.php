@@ -7,22 +7,22 @@ class RoleController extends BaseController {
 	/**
 	 * Displays a list of the roles for admin.	 
 	 */
-	public function getList() {
+	public function showRolesListPage() {
 		return View::make('user.admin.roles.index')
-			->with('roles', Role::orderBy('name', 'ASC')->paginate(20));
+			->with('roles', Role::take(100)->get()); // TODO Not only 100, pagination, fix roles as well
 	}
 
 	/**
 	 * Displays a page to add role for admin.
 	 */
-	public function getAdd() {
+	public function showAddRolePage() {
 		return View::make('user.admin.roles.new');
 	}
 
 	/**
 	 * Handles a post request of add role.
 	 */
-	public function postAdd() {
+	public function addRole() {
 		$name = Input::get('name', '');
 		if (!(strlen($name) > 0))
 			return Redirect::back()
@@ -44,7 +44,7 @@ class RoleController extends BaseController {
 	 * Displays a page to add role for admin.
 	 * @param $id id of the role to delete
 	 */
-	public function getDelete($id) 
+	public function showDeleteRolePage($id) 
 	{
 		try {
 			$role = Role::findOrFail($id); 
@@ -59,7 +59,7 @@ class RoleController extends BaseController {
 	/**
 	 * Handles a post request of delete role.
 	 */
-	public function postDelete() 
+	public function deleteRole() 
 	{
 		// Only yes-button should make this continue
 		if (!Input::get('yes'))
@@ -82,7 +82,7 @@ class RoleController extends BaseController {
 	 * Displays a page to edit role for admin.
 	 * @param $id id of the role to edit
 	 */
-	public function getEdit($id) 
+	public function showEditRolePage($id) 
 	{
 		try {
 			$role = Role::findOrFail($id); 
@@ -98,7 +98,7 @@ class RoleController extends BaseController {
 	/**
 	 * Handles a post request of edit role.
 	 */
-	public function postEdit() 
+	public function editRole() 
 	{
 		$id = Input::get('id');
 		try {
@@ -125,7 +125,7 @@ class RoleController extends BaseController {
 	 * @param $role the role
 	 * @param $page the page, 1 by deafult
 	 */
-	public function getPMList($role, $page = 1)
+	public function showRolePMListPage($role, $page = 1)
 	{
 		return View::make('role.show')->with('role', $role)->with('page', $page);
 	}
@@ -149,36 +149,4 @@ class RoleController extends BaseController {
 		return $clean;
 	}
 
-	/**
-	 * Returns list of roles matching the query in json.
-	 */
-	public function getRolesAutocomplete() {
-		$searchQuery = Input::get('q');
-		$tags = Role::where('name', 'LIKE', '%' . $searchQuery . '%')->take(7)->get();
-		$result = array();
-		foreach($tags as $tag) {
-			$obj = new stdClass();
-			$obj->id = $tag->id;
-			$obj->name = $tag->name;
-			$result[] = $obj;
-		}
-		return json_encode($result);
-	}
-
-	public function postFilter() {
-		$users = Role::select('*');
-
-		if (Input::has('filter')) {
-			// Search in id and title to start with
-			$users->where('name', 'LIKE', '%' . Input::get('filter') . '%');
-		}
-			
-		$resp = $users->orderBy('name', 'ASC')->take(100)->get();
-
-		foreach($resp as $res) {
-			$res->persons = $res->users;
-		}
-
-		return Response::json($resp);
-	}
 }

@@ -18,7 +18,7 @@
 
 @section('body')
     <h1>Bekräfta: ta bort användare</h1>
-    <p>Vill du verkligen ta bort användaren {{ $user->name }} ({{ $user->email }})?</p>
+    <p>Vill du verkligen ta bort användaren {{ $user->real_name }} ({{ $user->email }})?</p>
     @include('includes.messages')
     {{ Form::open(array('action' => 'post-admin-users-delete', 'method' => 'post')) }}
     {{ Form::hidden('user-id', $user->id) }}

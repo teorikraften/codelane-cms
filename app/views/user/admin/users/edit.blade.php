@@ -18,7 +18,7 @@
 
 @section('body')
     <h1>Ändra användare</h1>
-    <p>Du håller på att ändra användaren {{ $user->name }}.</p>
+    <p>Du håller på att ändra användaren {{ $user->real_name }}.</p>
     @include('includes.messages')
     {{ Form::model($user, array('action' => 'post-admin-users-edit', 'method' => 'post')) }}
         {{ Form::hidden('id') }}
@@ -30,8 +30,8 @@
                 </div>
             </div>
             <div class="row">
-                <div class="description">{{ Form::label('name', 'Namn') }}</div>
-                <div class="input">{{ Form::text('name', NULL, array('class' => 'text')) }}</div>
+                <div class="description">{{ Form::label('real_name', 'Namn') }}</div>
+                <div class="input">{{ Form::text('real_name', NULL, array('class' => 'text')) }}</div>
             </div>
             <div class="row">
                 <div class="description">{{ Form::label('email', 'E-postadress') }}</div>

@@ -13,65 +13,37 @@ class Category extends Eloquent {
 	 */
 	protected $table = 'categories';
 
-	/**
-	 * The mass assignable fields for the model.
-	 *
-	 * @var array(string)
-	 */
-	protected $fillable = ['name', 'token', 'parent'];
+	protected $fillable = array('name', 'token', 'parent');
 
-	/**
-	 * The deleted_at is protected.
-	 *
-	 * @var array(string)
-	 */
 	protected $dates = ['deleted_at'];
 
-
-	
 	/**
-	 * Defines relation to PM.
-	 *
-	 * @return Relation
+	 * All pms with the tag.
 	 */
-	public function pms() {
-		return $this->belongsToMany('PM', 'pm_categories', 'category', 'pm');
+	public function pms() 
+	{
+		return $this->belongsToMany('Pm', 'pm_categories', 'category', 'pm');
 	}
 
-	/**
-	 * Defines relation to children categories.
-	 *
-	 * @return Relation
-	 */
-	public function children() {
+	public function children() 
+	{
 		return $this->hasMany('Category', 'parent', 'id');
 	}
 
-	/**
-	 * Defines relation to parent categories.
-	 *
-	 * @return Relation
-	 */
-	public function parent() {
+	public function parent() 
+	{
 		return $this->belongsTo('Category', 'parent');
 	}
 
+
 	/**
-	 * Finds all categories that are below this category in the hierarcy.
-	 * Wrapper to recChildren
-	 *
-	 * @return a flat list of all children of the category and its children and so on
+	 * @return a flat list of all childs for this category
 	 */
-	public function getAllChildren() {
+	public function getAllChildren() 
+	{
 		return $this->recChildren(array());
 	}
 
-	/**
-	 * Finds all children and glues together with all their children.
-	 * 
-	 * @param list the list to build on
-	 * @return array of children, and their children, added to $list
-	 */
 	private function recChildren($list) {
 		$children = $this->children;
 
@@ -84,21 +56,29 @@ class Category extends Eloquent {
 	}
 
 	/**
-	 * Finds all parents to the current category.
-	 * Wrapper to recParents.
-	 *
-	 * @return all parents in a flat list to the category
+	 * @deprecated
+	 */
+	public function allChildren() 
+	{
+		$children = array();
+		foreach ($this->childs as $key => $value) {
+			$children[$value->id] = $value->allChildren();
+		}
+		
+		$list = array();
+		$list[$this->id]['category'] = $this;
+		$list[$this->id]['children'] = $children;
+
+		return $list;
+	}
+
+	/**
+	 * Find all parents to the current category
 	 */
 	public function allParents() {
 		return array_reverse($this->recParents(array()));
 	}
 
-	/**
-	 * Finds the parent and adds to list.
-	 * 
-	 * @param list the list to build on
-	 * @return array of parents, and their parnts, added to $list
-	 */
 	private function recParents($list) {
 		$parent = $this->getParent;
 		if (!is_null($parent)) {

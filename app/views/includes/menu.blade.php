@@ -22,6 +22,7 @@
 				@else
 					<li><a href="{{ URL::route('user') }}">Din sida</a></li>
 					<li><a href="{{ URL::route('category-show-all') }}">Kategorier</a></li>
+					<li><a href="{{ URL::route('sign-out') }}">Logga ut</a></li>
 				@endif
 			</ul>
 		</div>

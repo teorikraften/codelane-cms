@@ -7,7 +7,8 @@ class RemindersController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function getRemind() {
+	public function getRemind()
+	{
 		return View::make('password.remind');
 	}
 
@@ -16,7 +17,8 @@ class RemindersController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function postRemind() {
+	public function postRemind()
+	{
 		switch ($response = Password::remind(Input::only('email'), function($message)
 			{
 				$message->from('no-reply@ds.se', 'Danderyds Sjukhus'); // TODO Change
@@ -37,7 +39,8 @@ class RemindersController extends Controller {
 	 * @param  string  $token
 	 * @return Response
 	 */
-	public function getReset($token = null) {
+	public function getReset($token = null)
+	{
 		if (is_null($token)) App::abort(404);
 
 		return View::make('password.reset')->with('token', $token);
@@ -48,10 +51,8 @@ class RemindersController extends Controller {
 	 *
 	 * @return Response
 	 */
-	public function postReset() {
-
-		// USE validateResetPassword()
-
+	public function postReset()
+	{
 		$credentials = Input::only(
 			'email', 'password', 'password_confirmation', 'token'
 		);
