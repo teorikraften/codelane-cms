@@ -292,7 +292,7 @@ Route::get('/kategori/top/{order?}/{page?}', ['as' => 'category-show-all-sorted'
 	->before('auth')
 	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)')
 	->where('page', '[0-9]*');
-Route::get('/kategori/{token}/{order?}/{page?}', ['as' => 'category-show', 'uses' => 'CategoryController@getShowCategory'])
+Route::get('/kategori/{token}/{order?}/{page?}', ['as' => 'category-show', 'uses' => 'CategoryController@getShow'])
 	->before('auth')
 	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)')
 	->where('page', '[0-9]*');
