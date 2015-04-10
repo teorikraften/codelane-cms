@@ -7,13 +7,12 @@ class UserAdminController extends BaseController {
 	/**
 	 * Displays a list of all the users for admin.
 	 */
-	public function showUsersListPage() {
+	public function getList() {
 		return View::make('user.admin.users.index')
 			->with('users', 
 				User::orderBy('privileges', 'DESC')
-				->orderBy('real_name', 'ASC')
-				->take(100)
-				->get()
+				->orderBy('name', 'ASC')
+				->paginate(20)
 			); 
 			// TODO Not only 100, pagination, fix users as well
 	}
@@ -22,7 +21,7 @@ class UserAdminController extends BaseController {
 	 * Displays the dialog page where admin can verify a user.	 
 	 * @param $id the id of the user to verify
 	 */
-	public function showVerifyUserPage($id) {
+	public function getVerify($id) {
 		try {
 		    $user = User::findOrFail($id);
 		} catch(ModelNotFoundException $e) {
@@ -37,7 +36,7 @@ class UserAdminController extends BaseController {
 	/**
 	 * Handles a post request of verify user. Called when admin has verified a user.
 	 */
-	public function verifyUser() {
+	public function postVerify() {
 		// If the admin did not click 'yes', we should not verify
 		if (!Input::get('yes'))
 			return Redirect::route('admin-users')
@@ -55,9 +54,9 @@ class UserAdminController extends BaseController {
 		$user->save();
 
 		// Send mail to inform user that the account has been created and waiting for verification
-		Mail::send('emails.welcome-verified', array('name' => $user->real_name, 'email' => $user->email), function($message) use($user) {
+		Mail::send('emails.welcome-verified', array('name' => $user->name, 'email' => $user->email), function($message) use($user) {
 		    $message
-		    	->to($user->email, $user->real_name)
+		    	->to($user->email, $user->name)
 		    	->from('no-reply@ds.se', 'Danderyds Sjukhus')
 		    	->subject('Du är nu godkänd!');
 		});
@@ -69,23 +68,23 @@ class UserAdminController extends BaseController {
 	/**
 	 * Displays a page to add a user for admin.
 	 */
-	public function showAddUserPage() {
+	public function getAdd() {
 		return View::make('user.admin.users.new');
 	}
 
 	/**
 	 * Handles a post request of adding a user.
 	 */
-	public function addUser() {
-		$real_name = Input::get('real_name');
+	public function postAdd() {
+		$name = Input::get('name');
 		$email = Input::get('email');
 		$privileges = Input::get('privileges');
 		$password = "NULL";
 
-		// Check if input is OK
+		// Check if input is OK USE validateProfileInfoWithPrivileges($name, $email, $privileges) 
 		$validator = Validator::make(
 		[
-			'name' => $real_name,
+			'name' => $name,
 			'email' => $email,
 			'privileges' => $privileges,
 		],
@@ -113,16 +112,16 @@ class UserAdminController extends BaseController {
 
 		// Create a user, set all attributes, and save
 		$user = new User;
-		$user->real_name = $real_name;
+		$user->name = $name;
 		$user->email = $email;
 		$user->privileges = $privileges;
 		$user->password = $password;
 		$user->save();
 
 		// Email the password to the user
-		Mail::send('emails.welcome', array('user' => $user), function($message) use($real_name, $email) {
+		Mail::send('emails.welcome', array('user' => $user), function($message) use($name, $email) {
 		    $message
-		    	->to($email, $real_name)
+		    	->to($email, $name)
 		    	->from('no-reply@ds.se', 'Danderyds Sjukhus')
 		    	->subject('Välkommen - välj lösenord!');
 		});
@@ -134,7 +133,7 @@ class UserAdminController extends BaseController {
 	/**
 	 * Displays a page to add user for admin.
 	 */
-	public function showDeleteUserPage($id) 
+	public function getDelete($id) 
 	{
 		try {
 			$user = User::findOrFail($id);
@@ -149,7 +148,7 @@ class UserAdminController extends BaseController {
 	/**
 	 * Handles a post request of delete user.
 	 */
-	public function deleteUser() 
+	public function postDelete() 
 	{
 		// Only 'yes' should make us continue
 		if (!Input::get('yes'))
@@ -172,7 +171,7 @@ class UserAdminController extends BaseController {
 	/**
 	 * Displays a page to edit user for admin.
 	 */
-	public function showEditUserPage($id) 
+	public function getEdit($id) 
 	{
 		try {
 			$user = User::findOrFail($id);
@@ -188,17 +187,39 @@ class UserAdminController extends BaseController {
 	/**
 	 * Handles a post request of edit user.
 	 */
-	public function editUser() 
+	public function postEdit() 
 	{
 		// TODO Better
 		// TODO Is this really going to work this way? Waiting to implement it until that time
 		$id = Input::get('id');
 		$user = User::findOrFail($id);
-		$user->real_name = Input::get('real_name');
+		$user->name = Input::get('name');
 		$user->email = Input::get('email');
 		$user->privileges = Input::get('privileges');
 		// TODO Send mail to user
 		$user->save();
 		return Redirect::route('admin-users')->with('success', 'Användaren uppdaterades.'); // TODO Show
+	}
+
+	public function postFilter() {
+		$users = User::select('*');
+
+		if (Input::has('filter')) {
+			// Search in id and title to start with
+			$users->where('email', 'LIKE', '%' . Input::get('filter') . '%')
+				->orWhere('name', 'LIKE', '%' . Input::get('filter') . '%');
+		}
+			
+		$resp = $users->orderBy('name', 'ASC')->take(100)->get();
+
+		foreach($resp as $res) {
+			$res->persons = $res->users;
+		}
+
+		foreach($resp as $r) {
+			$r->privileges = ucfirst($r->privilegesString());
+		}
+
+		return Response::json($resp);
 	}
 }

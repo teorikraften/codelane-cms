@@ -13,15 +13,29 @@ class Tag extends Eloquent {
 	 */
 	protected $table = 'tags';
 
-	protected $fillable = array('name', 'token');
-
-	protected $dates = ['deleted_at'];
+	/**
+	 * The mass assignable fields for the model.
+	 *
+	 * @var array(string)
+	 */
+	protected $fillable = ['name', 'token'];
 
 	/**
-	 * All pms with the tag.
+	 * The deleted_at is protected.
+	 *
+	 * @var array(string)
 	 */
-	public function pm() 
-	{
+	protected $dates = ['deleted_at'];
+
+
+
+
+	/**
+	 * Defines relation to PM, ie all pm that has the tag.
+	 *
+	 * @return Relation
+	 */
+	public function pm() {
 		return $this->belongsToMany('Pm', 'pm_tags', 'tag', 'pm');
 	}
 }
