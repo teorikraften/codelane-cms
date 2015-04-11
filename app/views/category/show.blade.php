@@ -12,7 +12,10 @@
 @section('body')
 	<div class="breadcrumb">
 		Du är här: {{ $breadcrumb or '' }} 
+		<button onclick="show('infoWindow')">?</button>
+
 	</div>
+
 
 	@if(isset($category))
 		<h1>{{ $category }}</h1>
@@ -25,14 +28,15 @@
 		{{ $catList }}
 	</div>
 
-<!--infoWindow-->    
+
+	<!--infoWindow-->    
     <div id="infoWindow" style="display:none;"><h3>
-<button onclick="show('infoWindow')">X</button> Hjälp :: Kategori</h3>
+		<button onclick="show('infoWindow')">X</button> Hjälp :: Kategori</h3>
         <p>Du kan 
         	<b><ins>markera</ins></b> en kategori för att visa de PM som ingår i kategorin och
         	<b><ins>filtrera</ins></b> resultaten.</p>
     </div>  
-    <button onclick="show('infoWindow')">?</button>
+    
 <!-- end of infoWindow-->    
 
 	<div id="category-output">
@@ -87,11 +91,8 @@
 				</li>
 			@endforeach
 		</ul>
-	</div>
 
-	<div class="clear"></div>
-
-	<div class="pagination">
+		<div class="pagination">
 		<ul class="pagination">
 			@if($page > 1)
 				<li>
@@ -119,7 +120,12 @@
 				</li>
 			@endif
 		</ul>
+		</div>
 	</div>
+
+	<div class="clear"></div>
+
+
 <?php /*
 			<tbody>
 				<tr>

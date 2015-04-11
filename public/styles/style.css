@@ -1027,6 +1027,10 @@ div.breadcrumb {
 	font-size: .9em;
 }
 
+div.breadcrumb button {
+	float: right;
+}
+
 .centrator #categories > a {
 	display: inline-block;
 	padding: 50px 0;
