@@ -107,7 +107,7 @@
             <div class="input">{{ Form::textarea('comment', $assignment->content, array('class' => 'text', 'style' => 'padding: 10px 1%;  height: 200px; width: 102%;')) }}</div>
         </div>
         <div class="row same">
-            <div class="input" style="width:30px">{{ Form::checkbox('accept', 'yes', $assignment->accepted, array('style' => 'width: 30px', 'class' => 'checkbox', 'id' => 'accept')) }}</div>
+            <div class="input" style="width:30px">{{ Form::radio('accept', 'yes', $assignment->accepted, array('style' => 'width: 30px', 'class' => 'checkbox', 'id' => 'accept')) }}</div>
             <div class="description" style="float: left;">
                 <label for="accept">
                     Jag godkänner detta PM. <span style="font-weight:normal;">(Klicka inte i rutan om du inte godkänner. Din kommentar sparas ändå när du trycker på knappen nedan.)</span>
@@ -115,6 +115,7 @@
             </div>
             <div class="clear" style="height: 20px;"></div>
         </div>
+        
         <div class="submit">
             {{ Form::submit('Spara', array('class' => 'submit')) }}
         </div>
