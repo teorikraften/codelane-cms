@@ -14,7 +14,7 @@
             $('#inline-comments').html('<b>För att göra en kommentar i texten</b>: markera stycket du vill kommentera med musen och klicka på knappen "Skapa kommentar". Du kan också skriva en övergripande kommentar om hela texten längst ner på sidan.');
             @foreach ($comments as $comment)
                 @if ($comment->parent_comment == 0)
-                    addCommentBox({{ $comment->id }}, '{{ $comment->name }}', document.getElementById({{ $comment->id }}), '{{ $review->content }}', false);
+                    addCommentBox({{ $comment->id }}, '{{ $comment->name }}', '{{ $comment->content }}', false);
                 @endif;
             @endforeach
             $('.comment').removeClass('active');

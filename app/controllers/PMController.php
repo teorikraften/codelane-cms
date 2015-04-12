@@ -337,18 +337,17 @@ class PMController extends BaseController {
 			if (Input::get('id') == 'none') {
 				$comment = new Comment;
 				$comment->user = Auth::user()->id;
-				$comment->parent_comment = 0;
+				$comment->parent = 0;
 				$comment->pm = $pm->id;
 			} else {
 				return Response::json(null);
 			}
 		}
 
+		$comment->position_start = 0;
+		$comment->position_end = 10;
 		$comment->content = Input::get('content');
 		$comment->save();
-
-		$pm->content = str_replace('id="none"', 'id="'.intval($comment->id).'"', Input::get('pmc'));
-		$pm->save();
 
 		return Response::json($comment->id);
 

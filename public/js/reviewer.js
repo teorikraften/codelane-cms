@@ -1,4 +1,13 @@
 /**
+ *
+ */
+String.prototype.splice = function( idx, rem, s ) {
+    return (this.slice(0,idx) + s + this.slice(idx + Math.abs(rem)));
+};
+
+var result = "foo baz".splice( 4, 0, "bar " );
+
+/**
  * Checks if a is vertically overlapping b. 
  * Returns the amount of pixels a must move 
  * down to get away from b if b moves the same 
@@ -120,7 +129,7 @@ Selection.prototype.commentize = function(userName) {
     }
 
     // Adds the box
-    addCommentBox(thisId, userName, document.getElementById(thisId));
+    addCommentBox(thisId, userName);
     
     // Make sure it doesn't overlap
     rearrange('.comment-outer');
@@ -138,7 +147,7 @@ Selection.prototype.commentize = function(userName) {
 /**
  * Creates and adds a comment box with given id
  */
-function addCommentBox(thisId, userName, placeHolder, content, focus) {
+function addCommentBox(thisId, userName, start, end, content, focus) {
     content = typeof content !== 'undefined' ? content : '';
     focus = typeof focus !== 'undefined' ? focus : true;
 
@@ -180,6 +189,9 @@ function addCommentBox(thisId, userName, placeHolder, content, focus) {
     commentOuter.className = 'comment-outer inactive';
     commentOuter.appendChild(image);
     commentOuter.appendChild(commentBox);
+
+    // Create placeholder
+
 
     // Place it correctly
     align(commentOuter, placeHolder);
