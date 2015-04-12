@@ -33,7 +33,7 @@
     <div id="infoWindow" style="display:none;"><h3>
 		<button onclick="show('infoWindow')">X</button> Hjälp :: Kategori</h3>
         <p>Du kan 
-        	<b><ins>markera</ins></b> en kategori för att visa de PM som ingår i kategorin och
+        	<b><ins>välja</ins></b> en kategori för att visa de PM som ingår i kategorin och
         	<b><ins>filtrera</ins></b> resultaten.</p>
     </div>  
     
