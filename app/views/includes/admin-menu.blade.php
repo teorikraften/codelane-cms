@@ -4,8 +4,10 @@
 	<?php $countEvents = Auth::user()->countEvents(); ?>
 	<div class="submenu">
 	    <ul>
-	    	@if ($countEvents)
+	    	@if ($countEvents > 1)
 				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ $countEvents }} saker att göra</a></li>
+			@elseif ($countEvents > 0)
+				<li class="notif"><a href="{{ URL::route('to-do') }}">1 sak att göra</a></li>
 			@endif
 			<li><a href="{{ URL::route('favourites-show') }}">Dina favoriter</a></li>
 	        <!--<li><a href="{{ URL::route('pm-import') }}">Importera PM</a></li>-->
@@ -22,8 +24,10 @@
 	<?php $countEvents = Auth::user()->countEvents(); ?>
 	<div class="submenu">
 	    <ul>
-	    	@if ($countEvents)
+	    	@if ($countEvents > 1)
 				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ $countEvents }} saker att göra</a></li>
+			@elseif ($countEvents > 0)
+				<li class="notif"><a href="{{ URL::route('to-do') }}">1 sak att göra</a></li>
 			@endif
 			<li><a href="{{ URL::route('favourites-show') }}">Dina favoriter</a></li>
 	        <li><a href="{{ URL::route('admin-pm') }}">PM</a></li>
@@ -35,8 +39,10 @@
 	<?php $countEvents = Auth::user()->countEvents(); ?>
 	<div class="submenu">
 	    <ul>
-	    	@if ($countEvents)
+	    	@if ($countEvents > 1)
 				<li class="notif"><a href="{{ URL::route('to-do') }}">{{ $countEvents }} saker att göra</a></li>
+			@elseif ($countEvents > 0)
+				<li class="notif"><a href="{{ URL::route('to-do') }}">1 sak att göra</a></li>
 			@endif
 	        <li><a href="{{ URL::route('user') }}">Din sida</a></li>
 			<li><a href="{{ URL::route('favourites-show') }}">Dina favorit-PM</a></li>

@@ -202,7 +202,7 @@ Route::get('/admin/pm/information/{token}', ['as' => 'pm-info', 'uses' => 'PMCon
 |
 */
 Route::post('/sok', ['as' => 'post-search', 'uses' => 'SearchController@postSearch']);
-Route::get('/sok/{searchQuery}/{order?}/{page?}/{options?}', ['as' => 'search-result', 'uses' => 'SearchController@getResult'])
+Route::get('/sok/{searchQuery?}/{order?}/{page?}/{options?}', ['as' => 'search-result', 'uses' => 'SearchController@getResult'])
 	->where('page', '[0-9]*')
 	->where('order', '(alphabetical)|(score)|(view_count)|(expiration_date)|(revision_date)');
 

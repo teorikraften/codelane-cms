@@ -1,0 +1,50 @@
+@page {
+    size: auto;   /* auto is the initial value */
+    margin: 0 0 17mm 0;  /* this affects the margin in the printer settings man ska tydligen kunna sätta top och bottom margin till 0 och undvika urlerna, men då blir det konstigt med flersidorspm,testa vetja // DAHL */
+    line-height: 1;
+}
+body {
+	background: none;
+	margin: 0;
+	font-size: 12pt;
+}
+nav, .submenu, #footer, .tags, a.action {
+	display: none;
+}
+.page-wrap:after {
+	margin: 0;
+	padding: 0;
+	height: 0;
+}
+.centrator {
+	float: left;
+}
+.pm-content, .page-wrap, .centrator, #container, #pmc, .space {
+	border: 0;
+	padding: 0;
+	margin: 0;
+	min-height: 0;
+}
+.pm-info {
+	margin: -15mm -20mm 0;
+}
+.pm-info img {
+	margin-right: 10mm;
+	margin-top: 2mm;
+	width: 40mm;
+}
+.pm-info table {
+	width: 130mm;
+}
+#pmc {
+	line-height: 1.2;
+	padding: 25mm;
+    font-family: 'Times New Roman', serif;
+	font-size: 12pt;
+}
+#pmc h1, #pmc h2, #pmc h3, #pmc h4 {
+    font-family: 'Arial', sans-serif;
+}
+.goldenstar, .greystar {
+	display: none;
+}

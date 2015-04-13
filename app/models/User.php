@@ -136,14 +136,10 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		$events = DB::table('pms')->join('assignments', 'assignments.pm', '=', 'pms.id')
 		->where('assignments.user', '=', $this->id)
 		->whereNull('pms.deleted_at')
-		->whereNull('done_at')
+		//->whereNull('done_at') TODO
 		->where(function($validAssignment){
 			$validAssignment
-			->where(function($creator){
-				$creator->where('assignments.assignment', '=', 'creator')
-				->whereIn('pms.status', array('assigned', 'revision-assigned'));
-			})
-			->orWhere(function($author){
+			->where(function($author){
 				$author->where('assignments.assignment', '=', 'author')
 				->whereIn('pms.status', array('assigned', 'revision-assigned'));
 			})
@@ -177,16 +173,12 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		$res = DB::table('pms')->join('assignments', 'assignments.pm', '=', 'pms.id')
 		->where('assignments.user', '=', $this->id)
 		->whereNull('pms.deleted_at')
-		->whereNull('done_at')
+		//->whereNull('done_at') TODO
 		->where(function($validAssignment){
 			$validAssignment
-			->where(function($creator){
-				$creator->where('assignments.assignment', '=', 'creator')
-				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written'));
-			})
-			->orWhere(function($author){
+			->where(function($author){
 				$author->where('assignments.assignment', '=', 'author')
-				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written'));
+				->whereIn('pms.status', array('assigned', 'revision-assigned'));
 			})
 			->orWhere(function($settler){
 				$settler->where('assignments.assignment', '=', 'settler')
@@ -194,11 +186,11 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 			})
 			->orWhere(function($reviewer){
 				$reviewer->where('assignments.assignment', '=', 'reviewer')
-				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written'));
+				->whereIn('pms.status', array( 'written', 'revision-written'));
 			})
 			->orWhere(function($end_reviewer){
 				$end_reviewer->where('assignments.assignment', '=', 'end-reviewer')
-				->whereIn('pms.status', array('assigned', 'revision-assigned', 'written', 'revision-written', 'reviewed', 'revision-reviewed'));
+				->whereIn('pms.status', array('reviewed', 'revision-reviewed'));
 			})
 			->orWhere(function($reminder){  // TODO maybe jämför dates $pm->expiration_date < Carbon::now() ||
 				$reminder->where('assignments.assignment', '=', 'reminder')
@@ -207,13 +199,9 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 		})
 		->get();
 
-
 		foreach ($res as $key => $value) {
-			$value->assignment = $this->assignmentString($value->assignment);
+			$value->assignmentString = $this->assignmentString($value->assignment);
 		}
-
-		//var_dump($res);
-		//exit;
 
 		return $res;
 	}

@@ -25,10 +25,12 @@
 		</ol>
 
 	@else
+	<!-- TODO Filtrera -->
 		<table class="list sortable">
 			<thead>
 				<tr>
 					<th class="sorttable_nosort action"></th>
+					<th>Nummer</th>
 					<th>Rubrik</th>
 				</tr>
 			</thead>
@@ -39,6 +41,9 @@
 							<a href="{{ URL::route('get-favourite-edit', array('goto' => 'fav', 'token' => $pm->token)) }}" title="Favorit" class="goldenstar">
 								&#9733;
 							</a>
+						</td>
+						<td>
+							<a href="{{ URL::route('pm-show', $pm->token) }}">{{ $pm->code }}</a>
 						</td>
 						<td>
 							<a href="{{ URL::route('pm-show', $pm->token) }}">{{ $pm->title }}</a>

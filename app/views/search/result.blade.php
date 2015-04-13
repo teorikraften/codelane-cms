@@ -24,7 +24,6 @@
 @stop
 
 @section('body')
-@include('includes.messages')
 	{{ Form::open(array('url' => route('post-search'), 'method' => 'post')) }}
 		<div class="form big-search">
 			<div class="search-field">
@@ -37,7 +36,7 @@
 	<div id="search-autocomplete-list"></div>
 	<div class="clear"></div>
 
-	<div class="result">Sökresultat
+	<div class="result" style="margin-top: 30px">Sökresultat
 		<ul class="sortby">
 			<li <?php if ($order == 'score') echo "class='active'"?> >
 				<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'score'))}}">
@@ -49,11 +48,13 @@
 					Namn
 				</a>
 			</li>
+			<!--
 			<li <?php if ($order == 'view_count') echo "class='active'"?> >
 				<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, /* TODO  'order' => 'view_count' */))}}">
 					Mest sedda
 				</a>
 			</li>
+		-->
 			<li <?php if ($order == 'revision_date') echo "class='active'"?> >
 				<a href="{{ URL::route('search-result', array('searchQuery' => $searchQuery, 'order' => 'revision_date'))}}">
 					Senast uppdaterad

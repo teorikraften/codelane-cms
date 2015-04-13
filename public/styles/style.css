@@ -46,6 +46,9 @@ input.text {
 .clear {
 	clear: both;
 }
+.space {
+	height: 20px;
+}
 .pull-left {
 	float: left;
 }
@@ -421,6 +424,7 @@ div.form.wide {
 div.form input.text, div.form textarea {
 	background: #fff;
 	width: 100%;
+	max-width: 880px;
 	border: 1px solid #ccc;
 	padding: 10px 10px;
 	border-radius: 0px; /* TODO Fix browser comp */
@@ -567,26 +571,10 @@ ul.result .tags a {
 }
 
 /*===============================
-=           PM-info             =
-===============================*/
-
-.pm-info {
-	margin-left: auto;
-	margin-right: auto;
-	width: 300px;
-	padding: 10px 0px 0px 0px;
-}
-
-.pm-info table, .pm-info td {
-	border: 1px dotted #454545;
-	width: 300px;
-}
-
-/*===============================
 =           PM-review           =
 ===============================*/
 #pmc {
-	padding: 10px 30px 30px;
+	padding: 30px 50px 30px;
 	background: #fff;
 	font-size: 14px;
 	line-height: 1.5;
@@ -598,12 +586,12 @@ ul.result .tags a {
 }
 
 #pmc #pmc-text {
-	width: 700px;
+	max-width: 700px;
 	float: left;
 }
 
 #pmc #pm-comments {
-	width: 300px;
+	max-width: 300px;
 	float: left;
 }
 
@@ -724,6 +712,21 @@ a.action {
 	max-width: 400px;
 	margin: 5px 1px 10px 0;
 }
+a.action:hover {
+	background: #33aa99;
+}
+a.action img {
+	border: 0;
+	background: #eee;
+	padding: 3px;
+	margin: -4px 10px -3px -10px;
+	vertical-align: middle;
+	display: inline-block;
+}
+
+a.action:hover img {
+	background: #fff;
+}
 
 
 
@@ -738,8 +741,35 @@ a.inline-action {
 .pm-content {
 	margin: 15px 0;
 	font-family: 'Merriweather';
-	max-width: 700px;
 	font-size: 1.2em;
+	min-height: 900px;
+	max-width: 800px;
+}
+.pm-content .pm-info {
+	clear: both;
+	border-bottom: 1px solid #ccc;
+	padding-bottom: 20px;
+}
+.pm-content .pm-info img {
+	float: left;
+	max-height: 100px;
+	max-width: 20%;
+}
+.pm-content .pm-info table {
+	max-width: 80%;
+	float: right;
+    border-spacing: 0;
+    border-collapse: separate;
+	border-top: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	font-size: 0.9em;
+}
+.pm-content .pm-info table td {
+	border: 1px solid #ccc;
+	border-top: 0;
+	border-left: 0;
+	padding: 3px;
+	vertical-align: top;
 }
 
 .pm-content ul ol, .pm-content ul ul, .pm-content ol ul, .pm-content ol ol {
@@ -1105,7 +1135,7 @@ table.list th.filter {
 	text-align: right;
 }
 table.list td, table.list th {
-	padding: 10px 1px 0px 11px;
+	padding: 10px 1px 10px 11px;
 	margin: 0;
 	vertical-align: top;
 }
@@ -1138,6 +1168,9 @@ table.list a img {
 }
 table.list a img:hover {
 	background: #eee;
+}
+table.list a {
+	margin-bottom: -10px;
 }
 table.list table {
 	margin-left: -15px;

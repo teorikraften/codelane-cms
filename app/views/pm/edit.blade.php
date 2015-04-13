@@ -29,7 +29,7 @@
 	        $("#tags").tokenInput("/taggar", {
 	        	'prePopulate' : [
 	        		@foreach($pm->tags as $tag)
-	        		{'id' : '{{ $tag->id }}', 'name' : '{{ $tag->name }}'},
+	        		{'id' : {{ $tag->id }}, 'name' : '{{ $tag->name }}'},
 	        		@endforeach
 	        	]
 	        });
@@ -56,6 +56,58 @@
 	    </div>
     @endif
 
+    <p><a href="#" onclick="$('#persons').slideToggle();return false;">Visa/dölj personer kopplade till detta PM</a></p>
+        <div id="persons" style="display: none">
+            <b>Upprättare</b>
+            <ul style="padding-top: 0">
+                @foreach ($assignments as $ass)
+                    @if ($ass->pivot->assignment == 'creator')
+                        <li>{{ $ass->name }} ({{ $ass->email }})</li>
+                    @endif
+                @endforeach
+            </ul>
+            <b>Fastställare</b>
+            <ul style="padding-top: 0">
+                @foreach ($assignments as $ass)
+                    @if ($ass->pivot->assignment == 'settler')
+                        <li>{{ $ass->name }} ({{ $ass->email }})</li>
+                    @endif
+                @endforeach
+            </ul>
+            <b>Författare</b>
+            <ul style="padding-top: 0">
+                @foreach ($assignments as $ass)
+                    @if ($ass->pivot->assignment == 'author')
+                        <li>{{ $ass->name }} ({{ $ass->email }})</li>
+                    @endif
+                @endforeach
+            </ul>
+            <b>Granskare</b> 
+            <ul style="margin-top: 0">
+                @foreach ($assignments as $ass)
+                    @if ($ass->pivot->assignment == 'reviewer')
+                        <li>{{ $ass->name }} ({{ $ass->email }})</li>
+                    @endif
+                @endforeach
+            </ul>
+            <b>Slutgranskare</b>
+            <ul>
+                @foreach ($assignments as $ass)
+                    @if ($ass->pivot->assignment == 'end-reviewer')
+                        <li>{{ $ass->name }} ({{ $ass->email }})</li>
+                    @endif
+                @endforeach
+            </ul>
+            <b>Påminnare</b>
+            <ul style="padding-top: 0">
+                @foreach ($assignments as $ass)
+                    @if ($ass->pivot->assignment == 'reminder')
+                        <li>{{ $ass->name }} ({{ $ass->email }})</li>
+                    @endif
+                @endforeach
+            </ul>
+        </div>
+
     {{ Form::model($pm, array('action' => 'post-pm-edit', 'method' => 'post')) }}
     	{{ Form::hidden('id') }}
     	<div class="form">
@@ -68,10 +120,14 @@
 				<div class="description">{{ Form::label('title', 'PM:ets rubrik') }}</div>
 				<div class="input">{{ Form::text('title', NULL, array('class' => 'text')) }}</div>
 			</div>
-			<div class="row">
-				<div class="description">{{ Form::label('draft', 'Innehåll') }}</div>
-				<div class="input">{{ Form::textarea('draft', NULL, array('class' => 'textarea fullwidth')) }}</div>
-			</div>
+            <div class="row">
+                <div class="description">{{ Form::label('draft', 'Innehåll') }}</div>
+                <div class="input">{{ Form::textarea('draft', NULL, array('class' => 'textarea fullwidth')) }}</div>
+            </div>
+            <div class="row">
+                <div class="description">{{ Form::label('tags', 'Taggar') }}</div>
+                <div class="input">{{ Form::text('tags', NULL, array('class' => 'text')) }}</div>
+            </div>
 			<div class="submit">
 				{{ Form::submit('Spara', array('class' => 'submit', 'name' => 'save')) }}
 				{{ Form::submit('Spara och markera som klart', array('class' => 'submit', 'name' => 'done')) }}

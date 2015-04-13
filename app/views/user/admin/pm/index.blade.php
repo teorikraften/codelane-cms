@@ -102,7 +102,7 @@
                             echo $ua === reset($userAssignments[$pm->id]) ? ucfirst(User::assignmentString($ua)) : ($ua === end($userAssignments[$pm->id]) ? ', ' . User::assignmentString($ua) : ', ' . User::assignmentString($ua));
                         ?>@endforeach
                     </td>
-                    <td>{{ $pm->status }}</td>
+                    <td>{{ ucfirst($pm->statusString()) }}</td>
                 </tr>
             @endforeach
         </table>

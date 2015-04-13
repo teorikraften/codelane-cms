@@ -14,7 +14,7 @@ class Assignment extends Eloquent {
 	 * 
 	 * @var array(string)
 	 */
-	protected $fillable = array('user', 'pm', 'assignment', 'accepted', 'content');
+	protected $fillable = array('user', 'pm', 'assignment', 'accepted', 'content', 'done_at');
 
 	/**
 	 * The PM the assignment affects.

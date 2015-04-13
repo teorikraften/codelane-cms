@@ -91,7 +91,7 @@ class PM extends Eloquent {
 	 */
 	public function users() {
 		return $this->belongsToMany('User', 'assignments', 'pm', 'user')
-			->withPivot('assignment');
+			->withPivot('assignment', 'done_at');
 	}
 
 	/**
@@ -113,5 +113,27 @@ class PM extends Eloquent {
 			return false;
 
 		return count($this->favouriteUsers()->where('user', '=', Auth::user()->id)->get()) > 0;
+	}
+
+	public function statusString() {
+		if ($this->status == 'published')
+			return 'publicerad';
+		if ($this->status == 'assigned')
+			return 'roller tilldelade';
+		if ($this->status == 'written')
+			return 'författad';
+		if ($this->status == 'reviewed')
+			return 'granskad';
+		if ($this->status == 'end-reviewed')
+			return 'slutgranskad';
+		if ($this->status == 'revision-assigned')
+			return 'revision inledd';
+		if ($this->status == 'revision-written')
+			return 'ändrad i revidering';
+		if ($this->status == 'revision-reviewed')
+			return 'granskad i revidering';
+		if ($this->status == 'revision-end-reviewed')
+			return 'slutgranskad i revision';
+		return 'existerar';
 	}
 }

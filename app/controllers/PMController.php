@@ -21,9 +21,29 @@ class PMController extends BaseController {
 
 		$user = User::find(Auth::user()->id);
 		$fav = (!empty($user->favourites()->where('pm', '=', $pm->id)->first())) ? true : false;
+
+		$settler = $pm->users()->where('assignment', '=', 'settler')->first();
+
+		$persons = array();
+
+		foreach($pm->users as $user) {
+			if ($user->pivot->assignment == 'creator')
+				$persons['creators'][] = $user;
+			elseif ($user->pivot->assignment == 'author')
+				$persons['authors'][] = $user;
+			elseif ($user->pivot->assignment == 'settler')
+				$persons['settlers'][] = $user;
+			elseif ($user->pivot->assignment == 'reviewer')
+				$persons['reviewers'][] = $user;
+			elseif ($user->pivot->assignment == 'end-reviewer')
+				$persons['end-reviewers'][] = $user;
+			elseif ($user->pivot->assignment == 'reminder')
+				$persons['reminders'][] = $user;
+		}
 		
 		return View::make('pm.show')
 		->with('pm', $pm)
+		->with('persons', $persons)
 		->with('assignments', $pm->users)
 		->with('favourite' , $fav);
 	}
@@ -244,6 +264,10 @@ class PMController extends BaseController {
 		}
 
 		$reviews = Assignment::where('pm', '=', $pm->id)
+			->where(function($query) {
+				$query->where('content', '!=', '')
+					->orWhere('accepted', '=', 'false');
+			})
 			->where('assignment', 'LIKE', '%reviewer%')
 			->join('users', 'users.id', '=', 'assignments.user')
 			->get();
@@ -251,6 +275,7 @@ class PMController extends BaseController {
 		return View::make('pm.edit')
 		->with('categorySelect', $this->getChildrenList(0, NULL))
 		->with('reviews', $reviews)
+		->with('assignments', $pm->users)
 		->with('pm', $pm);
 	}
 
@@ -258,6 +283,8 @@ class PMController extends BaseController {
 	 * Handles post request to edit PM.
 	 */
 	public function postEdit() {
+		$tags = $this->tagify(Input::get('tags', ''));
+
 		try {
 			$pm = PM::findOrFail(Input::get('id'));
 		} catch(ModelNotFoundException $e) {
@@ -273,11 +300,31 @@ class PMController extends BaseController {
 		$pm->title = Input::get('title');
 		$pm->draft = Input::get('draft');
 
+		$status = 'written';
+		if (Assignment::where('pm', '=', $pm->id)
+				->where('assignment', '=', 'reviewer')
+				->count() == 0) {
+
+			$status = 'reviewed';
+
+			if (Assignment::where('pm', '=', $pm->id)
+					->where('assignment', '=', 'end-reviewer')
+					->count() == 0) {
+
+				$status = 'end-reviewed';
+			}
+		}
+
+		$pm->tags()->detach();
+		foreach ($tags as $tag) {
+			$pm->tags()->attach([$tag->id => ['added_by' => Auth::user()->id]]);
+		}
+
 		if (Input::has('done')) {
 			if (substr($pm->status, 0, 8) == 'revision') {
-				$pm->status = 'revision-written';
+				$pm->status = 'revision-' . $status;
 			} else {
-				$pm->status = 'written';
+				$pm->status = $status;
 			}
 		}
 		$pm->save();
@@ -322,9 +369,27 @@ class PMController extends BaseController {
 		$authors = $pm->users; // TODO Not all users
 		$assignments = $pm->users; 
 
+		$persons['creators'] = $persons['authors'] = $persons['settlers'] = $persons['reviewers'] = $persons['end-reviewers'] = $persons['reminders'] = array();
+
+		foreach($pm->users as $user) {
+			if ($user->pivot->assignment == 'creator')
+				$persons['creators'][] = $user;
+			elseif ($user->pivot->assignment == 'author')
+				$persons['authors'][] = $user;
+			elseif ($user->pivot->assignment == 'settler')
+				$persons['settlers'][] = $user;
+			elseif ($user->pivot->assignment == 'reviewer')
+				$persons['reviewers'][] = $user;
+			elseif ($user->pivot->assignment == 'end-reviewer')
+				$persons['end-reviewers'][] = $user;
+			elseif ($user->pivot->assignment == 'reminder')
+				$persons['reminders'][] = $user;
+		}
+
 		return View::make('pm.review')
 			->with('assignment', $assignment)
 			->with('assignments', $assignments)
+			->with('persons', $persons)
 			->with('authors', $authors)
 			->with('comments', $comments)
 			->with('pm', $pm);
@@ -393,6 +458,7 @@ class PMController extends BaseController {
 
 		$assignment->accepted = $accepted ? 'true' : 'false';
 		$assignment->content = $content;
+		$assignment->done_at = date("Y-m-d H:i:s");
 		$assignment->save();
 		
 		$allAss = Assignment::where('pm', '=', $pm->id)
@@ -409,11 +475,20 @@ class PMController extends BaseController {
 			}
 		}
 
+		// TODO Nicer
+		$status = 'reviewed';
+		if (Assignment::where('pm', '=', $pm->id)
+				->where('assignment', '=', 'end-reviewer')
+				->count() == 0) {
+
+			$status = 'end-reviewed';
+		}
+
 		if ($accepted) {
 			if (substr($pm->status, 0, 8) == 'revision') {
-				$pm->status = 'revision-reviewed';
+				$pm->status = 'revision-'.$status;
 			} else {
-				$pm->status = 'reviewed';
+				$pm->status = $status;
 			}
 			$pm->save();
 			return Redirect::route('admin-pm')
@@ -467,12 +542,30 @@ class PMController extends BaseController {
 				->with('error', 'Det verkar inte som du har behörighet att slutgranska detta PM.');
 		}
 
+		$persons['creators'] = $persons['authors'] = $persons['settlers'] = $persons['reviewers'] = $persons['end-reviewers'] = $persons['reminders'] = array();
+
+		foreach($pm->users as $user) {
+			if ($user->pivot->assignment == 'creator')
+				$persons['creators'][] = $user;
+			elseif ($user->pivot->assignment == 'author')
+				$persons['authors'][] = $user;
+			elseif ($user->pivot->assignment == 'settler')
+				$persons['settlers'][] = $user;
+			elseif ($user->pivot->assignment == 'reviewer')
+				$persons['reviewers'][] = $user;
+			elseif ($user->pivot->assignment == 'end-reviewer')
+				$persons['end-reviewers'][] = $user;
+			elseif ($user->pivot->assignment == 'reminder')
+				$persons['reminders'][] = $user;
+		}
+
 		$comments = $pm->comments;
 		$authors = $pm->users; // TODO Not all users
 		$assignments = $pm->users; 
 
 		return View::make('pm.end-review')
 			->with('assignment', $assignment)
+			->with('persons', $persons)
 			->with('assignments', $assignments)
 			->with('authors', $authors)
 			->with('comments', $comments)
@@ -513,6 +606,7 @@ class PMController extends BaseController {
 
 		$assignment->accepted = $accepted ? 'true' : 'false';
 		$assignment->content = $content;
+		$assignment->done_at = date("Y-m-d H:i:s");
 		$assignment->save();
 		
 		$allAss = Assignment::where('pm', '=', $pm->id)
@@ -749,6 +843,19 @@ class PMController extends BaseController {
 		foreach($userIds as $userId) {
 			if (($user = User::find(intval(trim($userId)))) != NULL)
 				$res[] = $user;
+		}
+		return $res;
+	}
+
+	/**
+	 * Returns an array of tags from the comma-separated $string of tag ids
+	 */
+	private function tagify($string) {
+		$tagIds = array_filter(explode(',', $string));
+		$res = array();
+		foreach($tagIds as $tagId) {
+			if (($tag = User::find(intval(trim($tagId)))) != NULL)
+				$res[] = $tag;
 		}
 		return $res;
 	}

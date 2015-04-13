@@ -16,13 +16,13 @@ class SearchController extends BaseController {
 	 * @param $page the page number, 1 by default
 	 * @param $options Array with boolean serach options in the order: tags, roles, text
 	 */ 
-	public function getResult($searchQuery, $order = 'score', $page = 1, $options = NULL) {
+	public function getResult($searchQuery = '', $order = 'score', $page = 1, $options = NULL) {
 		$page = intval($page);
-
+/*
 		if ($searchQuery == '') {
-			return View::make('search.index')->with('error', 'Empty searchQuery');
+			return View::make('search.index')->with('error', 'Du måste ange en sökfras.');
 		}
-
+*/
 		if (Cache::has($searchQuery)) {
 
 			$search = Cache::get($searchQuery);

@@ -115,9 +115,10 @@
             </ul>
         </div>
     </div>
+    <!--
     <a href="#" onclick="gText()" class="action">Skapa kommentar</a>
-    <div class="clear"></div>
-    <div id="pmc" class="pm-content review">
+    <div class="clear"></div>-->
+    <!--<div id="pmc" class="pm-content review">
 	    <div id="pmc-text">
             <h1 id="h1">{{ $pm->title }}</h1>
             <div id="pmcc">
@@ -127,15 +128,64 @@
         <div id="pm-comments">
         </div>
         <div class="clear"></div>
-	</div>
+	</div>-->
+    <div id="pmc" class="pm-content">
+        <div class="pm-info">
+            {{ HTML::image('images/logo.png') }}
+            <table>
+                <tr>
+                    <td colspan="4">
+                        <b>
+                            Fastställd av
+
+                            {{ $persons['settlers'][0]->name or 'någon' }}
+
+                            den 
+
+                            {{ date("Y-m-d") }}
+                        </b>
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Författare: </b></td>
+                    <td colspan="3">
+                        @foreach ($persons['authors'] as $key => $author)
+                            {{ $author->name . ($author === end($persons['authors']) ? ' ' : ', ') }}
+                        @endforeach
+                    </td>
+                </tr>
+                <tr>
+                    <td><b>Granskare: </b></td>
+                    <td>
+                        @foreach ($persons['reviewers'] as $key => $reviewer)
+                            {{ $reviewer->name . ($reviewer === end($persons['reviewers']) ? ' ' : ', ') }}
+                        @endforeach
+                    </td>
+                    <td>
+                        <b>Slutgranskare: </b>
+                    </td>
+                    <td>
+                        @foreach ($persons['end-reviewers'] as $key => $reviewer)
+                            {{ $reviewer->name . ($reviewer === end($persons['end-reviewers']) ? ' ' : ', ') }}
+                        @endforeach
+                    </td>
+                </tr>
+            </table>
+            <div class="clear"></div>
+        </div>
+        <h1>
+            {{ $pm->title }}
+        </h1>
+        {{ $pm->draft }}
+    </div>
     <h2>Övergripande kommentar</h2>
-    <p>Här kan du skriva en övergripande kommentar om texten som författaren kan se och förbättra texten efter. Om du godkänner PM:et måste du klicka i rutan längst ner och sedan trycka på "Spara".</p>
+    <p>Här kan du skriva en övergripande kommentar om texten som författaren kan se och förbättra texten efter.</p>
     {{ Form::model($assignment, array('action' => 'post-save-end-review', 'method' => 'post')) }}
     {{ Form::hidden('pm-id', $pm->id) }}
     <div class="form" style="width: 100%; max-width: none;">
         <div class="row">
             <div class="description">{{ Form::label('comment', 'Din kommentar') }}</div>
-            <div class="input">{{ Form::textarea('comment', $assignment->content, array('class' => 'text', 'style' => 'padding: 10px 1%;  height: 200px; width: 102%;')) }}</div>
+            <div class="input">{{ Form::textarea('comment', $assignment->content, array('class' => 'text', 'style' => 'padding: 10px 1%;  height: 200px; max-width: 900px;')) }}</div>
         </div>
 
         <div class="submit">
