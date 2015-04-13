@@ -460,6 +460,12 @@ div.form input.submit.no {
 	border: 1px solid #008472;
 	background: #fff;
 }
+div.form input.submit.good {
+	background: #494;
+}
+div.form input.submit.bad {
+	background: #d22;
+}
 div.form input.checkbox {
 	margin: 18px 10px;
 	display: block;
@@ -693,10 +699,17 @@ span.placeholder {
 	display: block;
 }
 
-canvas {
-	position: absolute;
-	top: 0;
-	left: 0;
+.accepted {
+	color: #2a2;
+}
+.denied {
+	color: #d22;
+}
+.show-comments-box {
+	border-top: 3px solid #ccc;
+	border-bottom: 3px solid #ccc;
+	margin: 20px 0;
+	padding: 10px 0 20px;
 }
 
 /*===============================

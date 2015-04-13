@@ -10,6 +10,7 @@
         /**
          * Initializes the comment functionality and loads earlier comments.
          */
+         /*
         $(document).ready(function() {
             $('#inline-comments').html('<b>För att göra en kommentar i texten</b>: markera stycket du vill kommentera med musen och klicka på knappen "Skapa kommentar". Du kan också skriva en övergripande kommentar om hela texten längst ner på sidan.');
             @foreach ($comments as $comment)
@@ -22,7 +23,7 @@
             // Make sure they don't overlap
             rearrange('.comment-outer');
         });
-
+        */
         /**
          * Starts the whole comment process onclick
          */
@@ -60,30 +61,60 @@
     @include('includes.messages')
     <div style="width: 750px">
         <h2>Information</h2>
-        <p>Nedan kan du kommentera texten och ge förslag till {{ count($authors) == 1 ? 'författaren' : 'författarna' }}.</p>
-        <p id="inline-comments">Textfältet där du skriver din kommentar ligger längst ner på denna sida, efter själva texten.</p>
-        <p>
-            Författare är 
-            <ul>
+        <p>Nedan kan du kommentera texten och ge förslag till {{ count($authors) == 1 ? 'författaren' : 'författarna' }}. <span id="inline-comments">Textfältet där du skriver din kommentar ligger längst ner på denna sida, efter själva texten.</span></p>
+        <p><a href="#" onclick="$('#persons').slideToggle();return false;">Visa/dölj personer kopplade till detta PM</a></p>
+        <div id="persons" style="display: none">
+            <b>Upprättare</b>
+            <ul style="padding-top: 0">
                 @foreach ($assignments as $ass)
-                    @if ($ass->pivot->ass == 'author')
+                    @if ($ass->pivot->assignment == 'creator')
                         <li>{{ $ass->name }} ({{ $ass->email }})</li>
                     @endif
                 @endforeach
             </ul>
-        </p>
-        <p>
-            Granskare är 
-            <ul>
+            <b>Fastställare</b>
+            <ul style="padding-top: 0">
+                @foreach ($assignments as $ass)
+                    @if ($ass->pivot->assignment == 'settler')
+                        <li>{{ $ass->name }} ({{ $ass->email }})</li>
+                    @endif
+                @endforeach
+            </ul>
+            <b>Författare</b>
+            <ul style="padding-top: 0">
+                @foreach ($assignments as $ass)
+                    @if ($ass->pivot->assignment == 'author')
+                        <li>{{ $ass->name }} ({{ $ass->email }})</li>
+                    @endif
+                @endforeach
+            </ul>
+            <b>Granskare</b> 
+            <ul style="margin-top: 0">
                 @foreach ($assignments as $ass)
                     @if ($ass->pivot->assignment == 'reviewer')
                         <li>{{ $ass->name }} ({{ $ass->email }})</li>
                     @endif
                 @endforeach
             </ul>
-        </p>
+            <b>Slutgranskare</b>
+            <ul>
+                @foreach ($assignments as $ass)
+                    @if ($ass->pivot->assignment == 'end-reviewer')
+                        <li>{{ $ass->name }} ({{ $ass->email }})</li>
+                    @endif
+                @endforeach
+            </ul>
+            <b>Påminnare</b>
+            <ul style="padding-top: 0">
+                @foreach ($assignments as $ass)
+                    @if ($ass->pivot->assignment == 'reminder')
+                        <li>{{ $ass->name }} ({{ $ass->email }})</li>
+                    @endif
+                @endforeach
+            </ul>
+        </div>
     </div>
-    <a href="#" onclick="gText()" class="action">Skapa kommentar</a>
+    <!--<a href="#" onclick="gText()" class="action">Skapa kommentar</a>-->
     <div class="clear"></div>
     <div id="pmc" class="pm-content review">
 	    <div id="pmc-text">
@@ -96,7 +127,6 @@
         </div>
         <div class="clear"></div>
 	</div>
-    <div class="clear" style="height: 100px"></div>
     <h2>Övergripande kommentar</h2>
     <p>Här kan du skriva en övergripande kommentar om texten som författaren kan se och förbättra texten efter. Om du godkänner PM:et måste du klicka i rutan längst ner och sedan trycka på "Spara".</p>
     {{ Form::model($assignment, array('action' => 'post-save-review', 'method' => 'post')) }}
@@ -106,18 +136,10 @@
             <div class="description">{{ Form::label('comment', 'Din kommentar') }}</div>
             <div class="input">{{ Form::textarea('comment', $assignment->content, array('class' => 'text', 'style' => 'padding: 10px 1%;  height: 200px; width: 102%;')) }}</div>
         </div>
-        <div class="row same">
-            <div class="input" style="width:30px">{{ Form::radio('accept', 'yes', $assignment->accepted, array('style' => 'width: 30px', 'class' => 'checkbox', 'id' => 'accept')) }}</div>
-            <div class="description" style="float: left;">
-                <label for="accept">
-                    Jag godkänner detta PM. <span style="font-weight:normal;">(Klicka inte i rutan om du inte godkänner. Din kommentar sparas ändå när du trycker på knappen nedan.)</span>
-                </label>
-            </div>
-            <div class="clear" style="height: 20px;"></div>
-        </div>
         
         <div class="submit">
-            {{ Form::submit('Spara', array('class' => 'submit')) }}
+            {{ Form::submit('Spara och godkänn PM', array('class' => 'submit good', 'name' => 'accept')) }}
+            {{ Form::submit('Spara och neka PM', array('class' => 'submit bad', 'name' => 'deny')) }}
         </div>
     </div>
     {{ Form::close() }}

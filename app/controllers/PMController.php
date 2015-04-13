@@ -243,8 +243,14 @@ class PMController extends BaseController {
 			->with('error', 'PM:et som skulle visas hittades inte.');
 		}
 
+		$reviews = Assignment::where('pm', '=', $pm->id)
+			->where('assignment', 'LIKE', '%reviewer%')
+			->join('users', 'users.id', '=', 'assignments.user')
+			->get();
+
 		return View::make('pm.edit')
 		->with('categorySelect', $this->getChildrenList(0, NULL))
+		->with('reviews', $reviews)
 		->with('pm', $pm);
 	}
 
@@ -358,7 +364,7 @@ class PMController extends BaseController {
 	 */
 	public function postReview() {
 		$content = Input::get('comment');
-		$accepted = Input::get('accept', 'no');
+		$accepted = Input::has('accept') && !Input::has('deny');
 
 		try {
 			$pm = PM::findOrFail(Input::get('pm-id'));
@@ -385,7 +391,7 @@ class PMController extends BaseController {
 				->with('error', 'Det verkar inte som du har behörighet att granska detta PM.');
 		}
 
-		$assignment->accepted = $accepted == 'yes' ? 1 : 0;
+		$assignment->accepted = $accepted ? 'true' : 'false';
 		$assignment->content = $content;
 		$assignment->save();
 		
@@ -393,11 +399,13 @@ class PMController extends BaseController {
 			->where('assignment', '=', $assignment->assignment)
 			->get();
 
-		$accepted = true;
+		$denied = $accepted = true;
 		foreach($allAss as $ass) {
-			if ($ass->accepted == 0) {
+			if ($ass->accepted == 'false' || $ass->accepted == 'unknown') {
 				$accepted = false;
-				break;
+			}
+			if ($ass->accepted == 'true' || $ass->accepted == 'unknown') {
+				$denied = false;
 			}
 		}
 
@@ -412,10 +420,21 @@ class PMController extends BaseController {
 				->with('success', 'Kommentaren sparades och PM:et är nu godkänt av alla!');
 		}
 
+		if ($denied) {
+			if (substr($pm->status, 0, 8) == 'revision') {
+				$pm->status = 'revision-assigned';
+			} else {
+				$pm->status = 'assigned';
+			}
+			$pm->save();
+			return Redirect::route('admin-pm')
+				->with('success', 'Kommentaren sparades och PM:et kommer nu ändras av författaren.');
+		}
+
 		// TODO Check if last to accept, then change PM status
 
 		return Redirect::route('pm-review', $pm->token)
-			->with('success', 'Kommentaren sparades!');
+			->with('success', 'Kommentaren och din bedömning sparades!');
 	}
 
 	/**
@@ -465,7 +484,7 @@ class PMController extends BaseController {
 	 */
 	public function postEndReview() {
 		$content = Input::get('comment');
-		$accepted = Input::get('accept', 'no');
+		$accepted = Input::has('accept') && !Input::has('deny');
 
 		try {
 			$pm = PM::findOrFail(Input::get('pm-id'));
@@ -492,7 +511,7 @@ class PMController extends BaseController {
 				->with('error', 'Det verkar inte som du har behörighet att slutgranska detta PM.');
 		}
 
-		$assignment->accepted = $accepted == 'yes' ? 1 : 0;
+		$assignment->accepted = $accepted ? 'true' : 'false';
 		$assignment->content = $content;
 		$assignment->save();
 		
@@ -500,11 +519,13 @@ class PMController extends BaseController {
 			->where('assignment', '=', $assignment->assignment)
 			->get();
 
-		$accepted = true;
+		$denied = $accepted = true;
 		foreach($allAss as $ass) {
-			if ($ass->accepted == 0) {
+			if ($ass->accepted == 'false' || $ass->accepted == 'unknown') {
 				$accepted = false;
-				break;
+			}
+			if ($ass->accepted == 'true' || $ass->accepted == 'unknown') {
+				$denied = false;
 			}
 		}
 
@@ -519,8 +540,19 @@ class PMController extends BaseController {
 				->with('success', 'Kommentaren sparades och PM:et är nu helt färdiggranskat!');
 		}
 
-		return Redirect::route('pm-end-review', $pm->token)
-			->with('success', 'Kommentaren sparades!');
+		if ($denied) {
+			if (substr($pm->status, 0, 8) == 'revision') {
+				$pm->status = 'revision-assigned';
+			} else {
+				$pm->status = 'assigned';
+			}
+			$pm->save();
+			return Redirect::route('admin-pm')
+				->with('success', 'Kommentaren sparades och PM:et kommer nu ändras av författaren.');
+		}
+
+		return Redirect::route('admin-pm')
+			->with('success', 'Kommentaren sparades och PM:et nekades.');
 	}
 
 	/**

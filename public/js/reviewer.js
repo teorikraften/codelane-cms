@@ -1,11 +1,13 @@
 /**
- *
+ * Inserts third param into string, removing rem chars at the idx place.
+ * @param idx the offset where to insert s
+ * @param rem the number of characters to remove at the same time
+ * @param s the string to insert
+ * @return the newly created string
  */
-String.prototype.splice = function( idx, rem, s ) {
+String.prototype.splice = function(idx, rem, s) {
     return (this.slice(0,idx) + s + this.slice(idx + Math.abs(rem)));
 };
-
-var result = "foo baz".splice( 4, 0, "bar " );
 
 /**
  * Checks if a is vertically overlapping b. 
@@ -189,8 +191,6 @@ function addCommentBox(thisId, userName, start, end, content, focus) {
     commentOuter.className = 'comment-outer inactive';
     commentOuter.appendChild(image);
     commentOuter.appendChild(commentBox);
-
-    // Create placeholder
 
 
     // Place it correctly

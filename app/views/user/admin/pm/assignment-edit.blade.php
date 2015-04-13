@@ -35,7 +35,7 @@
 	        });
 	        $("#reviewers").tokenInput("/personer", {
 	        	'prePopulate' : [
-	        		@foreach($settlers as $person)
+	        		@foreach($reviewers as $person)
 	        			{'id' : '{{ $person->id }}', 'name' : '{{ $person->name . ' (' . $person->email . ')' }}'},
 	        		@endforeach
 	        	]
