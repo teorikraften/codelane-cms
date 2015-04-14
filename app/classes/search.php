@@ -9,6 +9,7 @@ class Search {
 	private $searchTags = true;
 	private $searchText = true;
 	private $searchRoles = true;
+	private $searchUsers = true;
 
 
 
@@ -16,15 +17,16 @@ class Search {
 		$this->searchTags = (boolean)$options[0];
 		$this->searchRoles = (boolean)$options[1];
 		$this->searchText = (boolean)$options[2];
+		$this->searchUsers = true;//issset((boolean)$options[3]) ? (boolean)$options[3] : $searchUsers;
 	}
 
 	public function matchingOptions($options) {
 		if ($this->searchTags == (boolean)$options[0] 
-				&& $this->searchRoles == (boolean)$options[1] && $this->searchText == (boolean)$options[2]) {
+			&& $this->searchRoles == (boolean)$options[1] && $this->searchText == (boolean)$options[2]) {
 			return true;
-		}
-		return false;
 	}
+	return false;
+}
 
 	/**
 	*Operator ENUM
@@ -120,7 +122,7 @@ class Search {
 	 * Searches and returns the highest rated search results from the $searchQuery
 	 */
 	public function pmSearch() {
-		
+
 		// TODO keep improving
 		// TODO fungerar inte med ÅÄÖ
 		$searchQuery = $this->query;
@@ -194,7 +196,16 @@ class Search {
 						$operator = self::defaultOperator;
 					}	
 
-					$this->searchQueryPart($query, $operator,$score, $this->result);
+					$this->searchQueryPart($query, $operator,$score);
+
+					// TOOD MOVE AND IMPROVE
+					if (!preg_match("/(\s)|(^$)/", $query) && $this->searchUsers) {
+						if ($key == 0) {
+							$this->searchUsers($splitQuery[$key], $query, $operator, $score);
+						} else {
+							$this->searchUsers($splitQuery[$key - 1] . ' ' . $splitQuery[$key], $query, $operator, $score);
+						}
+					}
 				} 
 			}
 		}
@@ -304,11 +315,36 @@ class Search {
 	* 
 	*/
 	private function searchContent($query, $operator, $score) {
-		$contentResult = Pm::where('content', 'like', '%'.$query.'%')->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		$contentResult = PM::where('content', 'like', '%'.$query.'%')->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
 		foreach ($contentResult as $key => $v) {
 			$this->result = $this->updatePMScore($v, 1 * $score, $operator);
 		}
 	}
+
+	private function searchUsers($qName, $qEmail, $operator, $score) {
+		$users = User::where('name', 'LIKE', '%'.$qName.'%')->orWhere('email', 'LIKE', '%'.$qEmail.'%')->get();
+		foreach ($users as $key => $u) {
+			$pms = $u->pms;
+			foreach ($pms as $key => $pm) {
+				$this->result = $this->updatePMScore($pm, 10 * $score, $operator);
+			}
+		}
+
+		/*
+		$userResult = DB::table('users')->where(function($joinUser) use ($query){
+			$joinUser->where('name', 'LIKE', '%'.$query.'%')->orWhere('email', 'LIKE', '%'.$query.'%');
+		})
+		->join('assignments', 'assignments.user', '=', 'users.id')->join('pms', 'assignments.pm', '=', 'pms.id')
+		->whereNull('pms.deleted_at')->where('published', '=', 1)->where('expiration_date', '<' , 'CURDATE()')
+		->select('pms.*', 'user', 'users.name', 'assignments.assignment')
+		->get();
+		foreach ($userResult as $key => $pm) {
+			$pm = new PM($pm);
+			$this->result = $this->updatePMScore($pm, 1 * $score, $operator);
+		}
+		*/
+	}
+
 
 	/**
 	 * Removes unwanted search results from the result list. 
