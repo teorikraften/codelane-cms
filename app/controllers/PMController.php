@@ -830,7 +830,7 @@ class PMController extends BaseController {
 		->with('pms', PM::orderBy('id', 'ASC')->paginate(15))
 		->with('userAssignments', $assignments)
 			->with('userPms', $userPms); // TODO Pagination
-		}
+	}
 
 	public function getAssign() {
 		return View::make('user.admin.pm.assign');
@@ -1154,5 +1154,48 @@ class PMController extends BaseController {
 			}
 		}
 		return $res;
+	}
+
+	public function getTag($token) {		
+		try {
+			$pm = PM::where('token', '=', $token)->firstOrFail();
+		} catch (ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et som skulle redigeras hittades inte.');
+		}
+
+		return View::make('user.admin.pm.tag')
+			->with('tags', $pm->tags)
+			->with('roles', $pm->roles)
+			->with('pm', $pm);
+	}
+
+	public function postTag() {		
+		try {
+			$pm = PM::findOrFail(Input::get('id'));
+		} catch (ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+				->with('error', 'PM:et som skulle taggas hittades inte.');
+		}
+
+		$tags = $this->tagify(Input::get('tags'));	
+		$roles = $this->tagify(Input::get('roles'));	
+
+		$user = Auth::user();
+		$pm->tags()->detach();
+		$pm->roles()->detach();
+		// TODO Fix! This is bad. Bättre att loopa igenom alla och ändra de som ska ändras istället. Då kan man köra soft deletes.
+
+		foreach ($tags as $tag) {
+			$pm->tags()->attach([$tag->id => ['added_by' => Auth::user()->id]]);
+		}
+		foreach ($roles as $role) {
+			$pm->roles()->attach([$role->id => ['added_by' => Auth::user()->id]]);
+		}
+
+		$pm->save();
+
+		return Redirect::route('admin-pm')
+			->with('success', 'Taggar och roller ändrades!');
 	}
 }

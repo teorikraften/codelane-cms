@@ -225,6 +225,12 @@ Route::get('/pm/{token}/andra', ['as' => 'pm-edit', 'uses' => 'PMController@getE
 Route::post('/pm/andra', ['as' => 'post-pm-edit', 'uses' => 'PMController@postEdit'])
 	->before('auth.verified');
 
+Route::get('/pm/{token}/tagga', ['as' => 'pm-tag', 'uses' => 'PMController@getTag'])
+	->where('token', '.+')
+	->before('auth.verified');
+Route::post('/pm/tagga', ['as' => 'post-tag', 'uses' => 'PMController@postTag'])
+	->before('auth.verified');
+
 Route::get('/pm/{token}/granska', ['as' => 'pm-review', 'uses' => 'PMController@getReview'])
 	->where('token', '.+')
 	->before('auth.verified');

@@ -41,6 +41,7 @@
                 <th class="action"></th>
                 <th class="action"></th>
                 <th class="action"></th>
+                <th class="action"></th>
                 <th>Rubrik</th>
                 <th>Dina uppgifter</th>
                 <th>Status</th>
@@ -95,6 +96,11 @@
                                 {{ HTML::image('images/settle.png', 'Fastställ') }}
                             </a>
                         @endif
+                    </td>
+                    <td>
+                        <a href="{{ URL::route('pm-tag', $pm->token) }}" title="Ange taggar och roller">
+                            {{ HTML::image('images/tag.png', 'Ange taggar och roller') }}
+                        </a>
                     </td>
                     <td>{{ $pm->title }}</td>
                     <td>
