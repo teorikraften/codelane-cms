@@ -10,9 +10,8 @@ Visa PM "{{ $pm->title }}"
 
 @section('body')
     <div class="pm-inf">
-        @include('includes.messages')
-
         <div class="clear space"></div>
+        @include('includes.messages')
         <a class="action" href="javascript:window.print()">{{ HTML::image('images/print.png') }}Skriv ut</a>
         <a class="action" href="{{ URL::route('pm-download', $pm->token) }}">Ladda ner som .docx</a>
         <div class="clear"></div>

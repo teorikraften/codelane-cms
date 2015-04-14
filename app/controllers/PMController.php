@@ -131,7 +131,9 @@ class PMController extends BaseController {
 	 * Displays the PM download page view.
 	 * @param $token the PM token
 	 */
-	public function getDownload($token) {
+	public function getDownload($token, $draft = '') {
+		$draft = $draft == 'utkast' ? true : false;
+
 		try {
 			$pm = PM::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
@@ -142,7 +144,7 @@ class PMController extends BaseController {
 
 		$resp = "";
 		foreach($assignments as $assignment) {
-			if ($assignment->pivot->assignment == 'owner') {
+			if ($assignment->pivot->assignment == 'creator') {
 				$resp .= $assignment->name . " ";
 			}
 		}
@@ -211,7 +213,7 @@ class PMController extends BaseController {
 		// HTML Dom object:
 		$html_dom = new simple_html_dom();
 		$html_dom->load('<html><body><h1>' . $pm->title . '</h1>' 
-			. $pm->content . '</body></html>');
+			. ($draft ? $pm->draft : $pm->content) . '</body></html>');
 
 		// Create the dom array of elements which we are going to work on:
 		$html_dom_array = $html_dom->find('html',0)->children();
@@ -889,6 +891,7 @@ class PMController extends BaseController {
 		$user = Auth::user();
 		$pm = new PM;
 		$pm->title = Input::get('title');
+		$pm->code = Input::get('code');
 		$pm->created_by = $user->id;
 		$pm->token = $this->generateToken($pm->title);
 		if (Input::get('validityType', 'time') == 'date') {

@@ -8,7 +8,7 @@ body {
 	margin: 0;
 	font-size: 12pt;
 }
-nav, .submenu, #footer, .tags, a.action {
+nav, .submenu, #footer, .tags, a.action, .space, .review-info {
 	display: none;
 }
 .page-wrap:after {
@@ -19,7 +19,7 @@ nav, .submenu, #footer, .tags, a.action {
 .centrator {
 	float: left;
 }
-.pm-content, .page-wrap, .centrator, #container, #pmc, .space {
+.pm-content, .page-wrap, .centrator, #container, #pmc {
 	border: 0;
 	padding: 0;
 	margin: 0;

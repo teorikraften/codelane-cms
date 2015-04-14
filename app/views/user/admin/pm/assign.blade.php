@@ -61,6 +61,10 @@
 				<div class="input">{{ Form::text('title', NULL, array('class' => 'text')) }}</div>
 			</div>
 			<div class="row">
+				<div class="description">{{ Form::label('code', 'PM-nummer') }}</div>
+				<div class="input">{{ Form::text('code', NULL, array('class' => 'text')) }}</div>
+			</div>
+			<div class="row">
 				<div class="description">{{ Form::label('validityTime', 'Giltighetstid') }}</div>
 				<div class="input">
 					<table>

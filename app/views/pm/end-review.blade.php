@@ -5,6 +5,7 @@
 @stop
 
 @section('head-extra')
+    {{ HTML::style('styles/print-pm.css', array('media' => 'print')) }}
     <script type="text/javascript" src="/js/reviewer.js"></script>
     <script type="text/javascript">
         /**
@@ -57,9 +58,9 @@
 @stop
 
 @section('body')
-    <h1>Slutgranska "{{ $pm->title }}"</h1>
+    <h1 class="review-info">Slutgranska "{{ $pm->title }}"</h1>
     @include('includes.messages')
-    <div style="width: 750px">
+    <div style="width: 750px" class="review-info">
         <h2>Information</h2>
         <p>Nedan kan du kommentera texten och ge förslag till {{ count($authors) == 1 ? 'författaren' : 'författarna' }}.</p>
         <p id="inline-comments">Textfältet där du skriver din kommentar ligger längst ner på denna sida, efter själva texten.</p>
@@ -115,6 +116,8 @@
             </ul>
         </div>
     </div>
+    <a class="action" href="javascript:window.print()">{{ HTML::image('images/print.png') }}Skriv ut</a>
+    <a class="action" href="{{ URL::route('pm-download', array($pm->token, 'utkast')) }}">Ladda ner som .docx</a>
     <!--
     <a href="#" onclick="gText()" class="action">Skapa kommentar</a>
     <div class="clear"></div>-->
@@ -129,6 +132,7 @@
         </div>
         <div class="clear"></div>
 	</div>-->
+    <div class="clear"></div>
     <div id="pmc" class="pm-content">
         <div class="pm-info">
             {{ HTML::image('images/logo.png') }}
@@ -178,20 +182,22 @@
         </h1>
         {{ $pm->draft }}
     </div>
-    <h2>Övergripande kommentar</h2>
-    <p>Här kan du skriva en övergripande kommentar om texten som författaren kan se och förbättra texten efter.</p>
-    {{ Form::model($assignment, array('action' => 'post-save-end-review', 'method' => 'post')) }}
-    {{ Form::hidden('pm-id', $pm->id) }}
-    <div class="form" style="width: 100%; max-width: none;">
-        <div class="row">
-            <div class="description">{{ Form::label('comment', 'Din kommentar') }}</div>
-            <div class="input">{{ Form::textarea('comment', $assignment->content, array('class' => 'text', 'style' => 'padding: 10px 1%;  height: 200px; max-width: 900px;')) }}</div>
-        </div>
+    <div class="review-info">
+        <h2>Övergripande kommentar</h2>
+        <p>Här kan du skriva en övergripande kommentar om texten som författaren kan se och förbättra texten efter.</p>
+        {{ Form::model($assignment, array('action' => 'post-save-end-review', 'method' => 'post')) }}
+        {{ Form::hidden('pm-id', $pm->id) }}
+        <div class="form" style="width: 100%; max-width: none;">
+            <div class="row">
+                <div class="description">{{ Form::label('comment', 'Din kommentar') }}</div>
+                <div class="input">{{ Form::textarea('comment', $assignment->content, array('class' => 'text', 'style' => 'padding: 10px 1%;  height: 200px; max-width: 900px;')) }}</div>
+            </div>
 
-        <div class="submit">
-            {{ Form::submit('Spara och godkänn PM', array('class' => 'submit good', 'name' => 'accept')) }}
-            {{ Form::submit('Spara och neka PM', array('class' => 'submit bad', 'name' => 'deny')) }}
+            <div class="submit">
+                {{ Form::submit('Spara och godkänn PM', array('class' => 'submit good', 'name' => 'accept')) }}
+                {{ Form::submit('Spara och neka PM', array('class' => 'submit bad', 'name' => 'deny')) }}
+            </div>
         </div>
+        {{ Form::close() }}
     </div>
-    {{ Form::close() }}
 @stop

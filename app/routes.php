@@ -216,7 +216,7 @@ Route::get('/sok/{searchQuery?}/{order?}/{page?}/{options?}', ['as' => 'search-r
 */
 Route::get('/pm/nytt', ['as' => 'pm-add', 'uses' => 'PMController@getAdd'])
 	->before('auth.verified');
-Route::get('/pm/{token}/ladda-ner', ['as' => 'pm-download', 'uses' => 'PMController@getDownload'])
+Route::get('/pm/{token}/ladda-ner/{draft?}', ['as' => 'pm-download', 'uses' => 'PMController@getDownload'])
 	->where('token', '.+');
 
 Route::get('/pm/{token}/andra', ['as' => 'pm-edit', 'uses' => 'PMController@getEdit'])
