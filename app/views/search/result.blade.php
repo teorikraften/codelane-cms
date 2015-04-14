@@ -73,15 +73,21 @@
     				</a>
         			<a href="{{ URL::route('pm-show', $pm['pm']->token) }}">{{ $pm['pm']->title }}</a>
         		</h3>
-				@if(count($pm['pm']->tags) > 0)
-					<div class="tags">
+				<div class="tags">
+					@if(count($pm['pm']->tags) > 0)
 						<b>Taggar:</b>
 						@foreach($pm['pm']->tags as $tag)
 							<a href="{{ URL::route('tag-show', $tag->token) }}">{{ $tag->name }}</a>
 						@endforeach
-						<div class="clear"></div>
-					</div>
-				@endif
+					@endif
+					@if(count($pm['pm']->roles) > 0)
+						<b>Roller:</b>
+						@foreach($pm['pm']->roles as $role)
+							<a href="{{ URL::route('search-result', array('searchQuery' => $role->name, 'order' => 'alphabetical', 'page' => 1, 'options' => '010')) }}">{{ $role->name }}</a>
+						@endforeach
+					@endif
+					<div class="clear"></div>
+				</div>
 				<p class="description">{{ substr(trim(strip_tags($pm['pm']->content)), 0, 200) }}...</p>
 			</li>
 		@endforeach

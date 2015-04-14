@@ -59,6 +59,11 @@
                         </a>
                     </td>
                     <td>
+                        <a href="{{ URL::route('pm-tag', $pm->token) }}" title="Ange taggar och roller">
+                            {{ HTML::image('images/tag.png', 'Ange taggar och roller') }}
+                        </a>
+                    </td>
+                    <td>
                         @if (substr($pm->status, 0, 8) != 'revision' && (in_array('reminder', $userAssignments[$pm->id]) || Auth::user()->privilegesNum() > 2 /* More than verified */)) 
                             <a href="{{ URL::route('pm-revise', $pm->token) }}" title="Öppna för revidering">
                                 {{ HTML::image('images/revision.png', 'Revidera') }}
@@ -97,11 +102,6 @@
                             </a>
                         @endif
                     </td>
-                    <td>
-                        <a href="{{ URL::route('pm-tag', $pm->token) }}" title="Ange taggar och roller">
-                            {{ HTML::image('images/tag.png', 'Ange taggar och roller') }}
-                        </a>
-                    </td>
                     <td>{{ $pm->title }}</td>
                     <td>
                         @foreach($userAssignments[$pm->id] as $ua)<?php
@@ -137,13 +137,13 @@
             	@foreach($pms as $pm)
             		<tr valign="top">
                         <td>
-                            <a href="{{ URL::route('pm-show', $pm->token) }}" title="Visa">
-                                {{ HTML::image('images/view.png', 'Visa')  }}
+                            <a href="{{ URL::route('pm-tag', $pm->token) }}" title="Ange taggar och roller">
+                                {{ HTML::image('images/tag.png', 'Ange taggar och roller') }}
                             </a>
                         </td>
                         <td>
-                            <a href="{{ URL::route('pm-edit', $pm->token) }}" title="Ändra">
-                                {{ HTML::image('images/edit.png', 'Ändra')  }}
+                            <a href="{{ URL::route('pm-show', $pm->token) }}" title="Visa">
+                                {{ HTML::image('images/view.png', 'Visa')  }}
                             </a>
                         </td>
                         <td>

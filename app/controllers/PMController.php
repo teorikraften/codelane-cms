@@ -1023,6 +1023,18 @@ class PMController extends BaseController {
 			->with('error', 'PM:et som skulle fastställas hittades inte.');
 		}
 
+		try {
+			$admAssignment = Assignment::where('user', '=', Auth::user()->id)
+				->where('pm', '=', $pm->id)
+				->where('assignment', '=', 'settler')
+				->firstOrFail();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('admin-pm')
+				->with('error', 'Det verkar inte som du har behörighet att fastställa detta PM.');
+		}
+		$admAssignment->done_at = date("Y-m-d H:i:s");
+		$admAssignment->save();
+
 		$pm->content = $pm->draft;
 		$pm->draft = NULL;
 		$pm->status = 'published';
