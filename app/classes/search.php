@@ -430,14 +430,20 @@ class Search {
 	public function categorySearch($category) {
 		$childcategories = $category->getAllChildren();
 
-		foreach (array($category) + $childcategories as $key => $cat) {
-			$categoryPms = $cat->pms()->where('published', '=' , 1)->whereNull('pms.deleted_at')->where('expiration_date', '<' , 'CURDATE()')->get();
+		foreach (array(count($childcategories) => $category) + $childcategories as $key => $cat) {
+			$categoryPms = $cat->pms()
+				->where('published', '=' , 1)
+				->whereNull('pms.deleted_at')
+				->where('expiration_date', '<' , 'CURDATE()')
+				->get();
+
 			foreach ($categoryPms as $key => $pm) {
 				$this->result[$pm->id]['pm'] = $pm;
 				$this->result[$pm->id]['score'] = 1;
 				$this->result[$pm->id]['operator'] = self::defaultOperator; 
 			}
 		}
+		//exit;
 	}
 
 	/**

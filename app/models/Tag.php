@@ -36,6 +36,6 @@ class Tag extends Eloquent {
 	 * @return Relation
 	 */
 	public function pm() {
-		return $this->belongsToMany('Pm', 'pm_tags', 'tag', 'pm');
+		return $this->belongsToMany('PM', 'pm_tags', 'tag', 'pm');
 	}
 }

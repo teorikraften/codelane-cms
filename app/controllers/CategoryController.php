@@ -172,7 +172,7 @@ class CategoryController extends BaseController {
 				->withInput()
 				->with('error', 'Du måste ange kategorins namn.');
 
-		if (Category::where('name', '=', $name)->count() > 0)
+		if (Category::where('name', '=', $name)->where('parent', '=', intval(Input::get('parent', '0')))->count() > 0)
 			return Redirect::route('admin-categories')
 				->withInput()
 				->with('error', 'Kategorin fanns redan och lades därför inte till.');
@@ -280,7 +280,7 @@ class CategoryController extends BaseController {
 		$clean = strtolower(trim($clean, '-'));
 		$clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
 
-		$n = Tag::where('token', '=', $clean)->count();
+		$n = Category::where('token', '=', $clean)->count();
 		if ($n > 0) {
 			$clean = $this->generateToken($clean . '-' . rand(0, 9), $delimiter);
 		}

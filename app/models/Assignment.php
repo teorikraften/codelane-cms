@@ -22,7 +22,7 @@ class Assignment extends Eloquent {
 	 * @return Relation
 	 */
 	public function assignedPm() {
-		return $this->hasOne('Pm', 'id', 'pm');
+		return $this->hasOne('PM', 'id', 'pm');
 	}
 
 	/**

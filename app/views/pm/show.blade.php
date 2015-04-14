@@ -1,7 +1,7 @@
 ﻿@extends('master')
 
 @section('head-title')
-Visa PM "{{ $pm->title }}"
+    Visa PM "{{ $pm->title }}"
 @stop
 
 @section('head-extra')
@@ -14,6 +14,7 @@ Visa PM "{{ $pm->title }}"
         @include('includes.messages')
         <a class="action" href="javascript:window.print()">{{ HTML::image('images/print.png') }}Skriv ut</a>
         <a class="action" href="{{ URL::route('pm-download', $pm->token) }}">Ladda ner som .docx</a>
+        <a class="action" href="{{ URL::route('get-favourite-edit', array('goto' => 'pm', 'token' => $pm->token)) }}">{{ $favourite ? '&#9733; Ta bort som favorit' : '&#9734; Favoritmarkera' }}</a>
         <div class="clear"></div>
 
         <div id="pmc" class="pm-content">

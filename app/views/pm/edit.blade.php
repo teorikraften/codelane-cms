@@ -122,7 +122,7 @@
 			</div>
             <div class="row">
                 <div class="description">{{ Form::label('draft', 'Innehåll') }}</div>
-                <div class="input">{{ Form::textarea('draft', NULL, array('class' => 'textarea fullwidth')) }}</div>
+                <div class="input">{{ Form::textarea('draft', (!empty($pm->draft) ? $pm->draft : $pm->content), array('class' => 'textarea fullwidth')) }}</div>
             </div>
             <div class="row">
                 <div class="description">{{ Form::label('tags', 'Taggar') }}</div>

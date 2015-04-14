@@ -40,7 +40,13 @@
 <!-- end of infoWindow-->    
 
 	<div id="category-output">
+		
 		<div class="result">
+			<ul class="sortby">
+				<li{{ $order == 'alphabetical' ? " class='active'" : '' }} >
+				<a href="">Namn</a></li>
+			</ul>
+			<!--
 			@if (isset($token))
 				<ul class="sortby">
 					<li{{ $order == 'alphabetical' ? " class='active'" : '' }} >
@@ -64,6 +70,7 @@
 					<a href="{{ URL::route('category-show-all-sorted', array('token' => $token , 'order' => 'revision_date') )}}">Senast uppdaterad</a>
 				</ul>
 			@endif
+		-->
 			<div class="clear"></div>
 		</div>
 

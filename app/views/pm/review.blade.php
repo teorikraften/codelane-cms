@@ -166,9 +166,7 @@
             </table>
             <div class="clear"></div>
         </div>
-        <h1>
-            {{ $pm->title }}
-        </h1>
+        <h1>{{ $pm->title }}</h1>
         {{ $pm->draft }}
     </div>
     <!--<div id="pmc" class="pm-content review">

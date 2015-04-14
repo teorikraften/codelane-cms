@@ -65,9 +65,13 @@ function createResultUsers(data) {
 	for (var i = 0; i < data.length; i++) {
 		res += '<tr>' + 
 			'<td><a href="/admin/personer/andra/' + data[i].id + '" title="Ändra"><img src="/images/edit.png" alt="Ändra"></a></td>' +
-			'<td><a href="/admin/personer/ta-bort/' + data[i].id + '" title="Ta bort"><img src="/images/delete.png" alt="Ta bort"></a></td>' +
-			'<td><a href="/admin/personer/verifiera/' + data[i].id + '" title="Verifiera"><img src="/images/check.png" alt="Verifiera"></a></td>' + 
-			'<td>' + data[i].name + '</td>' +
+			'<td><a href="/admin/personer/ta-bort/' + data[i].id + '" title="Ta bort"><img src="/images/delete.png" alt="Ta bort"></a></td>';
+		if (data[i].privileges == 'Overifierad')
+			res += '<td><a href="/admin/personer/verifiera/' + data[i].id + '" title="Verifiera"><img src="/images/check.png" alt="Verifiera"></a></td>';
+		else
+			res += '<td></td>'; 
+
+		res += '<td>' + data[i].name + '</td>' +
 			'<td>' + data[i].email + '</td>' +
 			'<td>' + data[i].privileges + '</td>' +
 		'</tr>';

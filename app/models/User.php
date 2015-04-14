@@ -66,7 +66,7 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	 * @return Relation
 	 */
 	public function pms() {
-		return $this->belongsToMany('Pm', 'assignments', 'user', 'pm')->withPivot('assignment');
+		return $this->belongsToMany('PM', 'assignments', 'user', 'pm')->withPivot('assignment');
 	}
 
 	/**

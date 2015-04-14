@@ -77,6 +77,12 @@
 					{{ Form::text('roles', NULL, array('class' => 'text')) }}
 				</div>
 			</div>
+			<div class="row">
+				<div class="description">{{ Form::label('category', 'Kategori') }}</div>
+				<div class="input">
+					{{ Form::select('category', $catTree) }}
+				</div>
+			</div>
 			<div class="submit">
 				{{ Form::submit('Spara', array('class' => 'submit')) }}
 			</div>

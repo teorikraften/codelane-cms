@@ -13,7 +13,7 @@ class PMController extends BaseController {
 	 */
 	public function getShow($token) {
 		try {
-			$pm = Pm::where('token', '=', $token)->firstOrFail();
+			$pm = PM::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
 			return Redirect::back()
 			->with('error', 'PM:et som skulle visas hittades inte.');
@@ -54,7 +54,7 @@ class PMController extends BaseController {
 	 */
 	public function getInfo($token) {
 		try {
-			$pm = Pm::where('token', '=', $token)->firstOrFail();
+			$pm = PM::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
 			return Redirect::back()
 			->with('error', 'PM:et som skulle visas hittades inte.');
@@ -259,7 +259,7 @@ class PMController extends BaseController {
 	 */
 	public function getEdit($token) {
 		try {
-			$pm = Pm::where('token', '=', $token)->firstOrFail();
+			$pm = PM::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
 			return Redirect::back()
 			->with('error', 'PM:et som skulle visas hittades inte.');
@@ -300,7 +300,11 @@ class PMController extends BaseController {
 				->with('error', 'Du måste ange PM:ets rubrik.');
 
 		$pm->title = Input::get('title');
-		$pm->draft = Input::get('draft');
+
+		$doc = new DOMDocument();
+        $doc->loadHTML(Input::get('draft'));
+        $draft = $doc->saveHTML();
+		$pm->draft = $draft;
 
 		$status = 'written';
 		if (Assignment::where('pm', '=', $pm->id)
@@ -657,7 +661,7 @@ class PMController extends BaseController {
 	 */
 	public function getEditAssignments($token) {
 		try {
-			$pm = Pm::where('token', '=', $token)->firstOrFail();
+			$pm = PM::where('token', '=', $token)->firstOrFail();
 		} catch(ModelNotFoundException $e) {
 			return Redirect::route('index')
 			->with('error', 'PM:et som skulle ändras hittades inte.');
@@ -766,7 +770,7 @@ class PMController extends BaseController {
 
 	public function getImportVerify() {
 		if (Input::get('title', 'fail') != 'fail') {
-			$pm = new Pm;
+			$pm = new PM;
 			$pm->title = Input::get('title');
 			$pm->token = urlencode(str_replace(array('å', 'ä', 'ö', ' '), array('a', 'a', 'o', '-'), (strtolower(Input::get('title')))));
 			$pm->content = Input::get('contents');
@@ -818,10 +822,10 @@ class PMController extends BaseController {
 	public function getList() {
 		$userAssignments = Auth::user()->pms;
 
-		$userPms = $assignments = array();
+		$userPMs = $assignments = array();
 		foreach($userAssignments as $ua) {
-			if (!array_key_exists($ua->id, $userPms)) {
-				$userPms[$ua->id] = $ua;
+			if (!array_key_exists($ua->id, $userPMs)) {
+				$userPMs[$ua->id] = $ua;
 			}
 			$assignments[$ua->id][] = $ua->pivot->assignment;
 		}
@@ -829,7 +833,7 @@ class PMController extends BaseController {
 		return View::make('user.admin.pm.index')
 		->with('pms', PM::orderBy('id', 'ASC')->paginate(15))
 		->with('userAssignments', $assignments)
-			->with('userPms', $userPms); // TODO Pagination
+		->with('userPms', $userPMs); // TODO Pagination
 	}
 
 	public function getAssign() {
@@ -1177,6 +1181,7 @@ class PMController extends BaseController {
 		}
 
 		return View::make('user.admin.pm.tag')
+			->with('catTree', $this->getChildrenList(0, NULL))
 			->with('tags', $pm->tags)
 			->with('roles', $pm->roles)
 			->with('pm', $pm);
@@ -1195,6 +1200,7 @@ class PMController extends BaseController {
 
 		$user = Auth::user();
 		$pm->tags()->detach();
+		$pm->categories()->detach();
 		$pm->roles()->detach();
 		// TODO Fix! This is bad. Bättre att loopa igenom alla och ändra de som ska ändras istället. Då kan man köra soft deletes.
 
@@ -1204,6 +1210,7 @@ class PMController extends BaseController {
 		foreach ($roles as $role) {
 			$pm->roles()->attach([$role->id => ['added_by' => Auth::user()->id]]);
 		}
+		$pm->categories()->attach([intval(Input::get('category')) => ['added_by' => Auth::user()->id]]);
 
 		$pm->save();
 

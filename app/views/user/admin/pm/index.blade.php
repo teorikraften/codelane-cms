@@ -12,6 +12,7 @@
             $("#filter-p").show();
             $("#filter").keyup(function() { 
                 fetchData($(this).val(), "/pm-filter", 'pms'); 
+                $("#filter-pag").hide();
             });
         });
     </script>
@@ -30,7 +31,7 @@
 
     <div class="clear"></div>
 
-    @if(count($userPms) > 0)
+    @if(isset($userPms) && count($userPms) > 0)
         <h2>Dina PM</h2>
         <table class="list">
             <tr>
@@ -42,6 +43,7 @@
                 <th class="action"></th>
                 <th class="action"></th>
                 <th class="action"></th>
+                <th>Nummer</th>
                 <th>Rubrik</th>
                 <th>Dina uppgifter</th>
                 <th>Status</th>
@@ -102,6 +104,7 @@
                             </a>
                         @endif
                     </td>
+                    <td>{{ $pm->code }}</td>
                     <td>{{ $pm->title }}</td>
                     <td>
                         @foreach($userAssignments[$pm->id] as $ua)<?php
@@ -128,7 +131,7 @@
                     <th class="action sorttable_nosort"></th>
                     <th class="action sorttable_nosort"></th>
                     <th class="action sorttable_nosort"></th>
-                    <th>ID</th>
+                    <th>Nummer</th>
         			<th>Rubrik</th>
                     <th>Personer</th>
         		</tr>
@@ -156,7 +159,7 @@
                                 {{ HTML::image('images/delete.png', 'Ta bort')  }}
                             </a>
                         </td>
-                        <td>{{ $pm->id }}</td>
+                        <td>{{ $pm->code }}</td>
                         <td>{{ $pm->title }}</td>
                         <td>
                             <a href="javascript:void()" onclick="$('#pm{{ $pm->id }}').toggle();">Visa</a>

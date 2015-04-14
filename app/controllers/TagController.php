@@ -117,8 +117,8 @@ class TagController extends BaseController {
 				->withInput()
 				->with('error', 'Du måste ange taggens namn.');
 
-		$tag->name = Input::get('name');
-		$tag->token = $this->generateToken($name); // TODO Move function to own class
+		$tag->name = Input::get('name', '');
+		$tag->token = $this->generateToken(Input::get('name', '')); // TODO Move function to own class
 		$tag->save();
 
 		return Redirect::route('admin-tags')->with('success', 'Taggen uppdaterades.');
