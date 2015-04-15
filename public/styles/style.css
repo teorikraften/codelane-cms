@@ -1319,3 +1319,20 @@ ul.pagination li a:hover, ul.pagination li.active span {
 		display: block;
 	}
 }
+
+/*=====================================
+=            Notes styling            =
+=====================================*/
+
+div.input-note{
+	height: 300px;
+	overflow-y: auto;
+	overflow-x: hidden; 
+}
+
+.note-textarea {
+	resize: none;
+}
+
+
+
