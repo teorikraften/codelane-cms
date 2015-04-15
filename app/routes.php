@@ -286,6 +286,20 @@ Route::get('/tagg/{tag}/{page?}', ['as' => 'tag-show', 'uses' => 'TagController@
 
 /*
 |--------------------------------------------------------------------------
+| Notes functionality
+|--------------------------------------------------------------------------
+|
+| Functionality directly connected to notes.
+|
+*/
+Route::get('/anteckningar', ['as' => 'note-show-all', 'uses' => 'NoteController@getShowall'])
+	->before('auth.verified');
+Route::get('/anteckningar/{token}', ['as' => 'note-show', 'uses' => 'NoteController@getShow'])
+	->before('auth.verified');
+
+
+/*
+|--------------------------------------------------------------------------
 | Category functionality
 |--------------------------------------------------------------------------
 |

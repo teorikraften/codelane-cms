@@ -70,6 +70,15 @@ class User extends Eloquent implements UserInterface, RemindableInterface {
 	}
 
 	/**
+	 * Defines relation to all the personal notes.
+	 *
+	 * @return Relation
+	 */
+	public function notes() {
+		return $this->hasMany('Note');
+	}
+
+	/**
 	 * Defines relation to all the assignment the user has.
 	 *
 	 * @return Relation
