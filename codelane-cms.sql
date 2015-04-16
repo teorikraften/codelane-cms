@@ -1,13 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 3.4.10.1deb1
+-- version 4.1.14
 -- http://www.phpmyadmin.net
 --
--- Värd: 10.209.1.136
--- Skapad: 14 apr 2015 kl 23:46
--- Serverversion: 5.5.32
--- PHP-version: 5.3.10-1ubuntu3.11
+-- Värd: 127.0.0.1
+-- Tid vid skapande: 16 apr 2015 kl 13:09
+-- Serverversion: 5.6.17
+-- PHP-version: 5.5.12
 
-SET SQL_MODE="NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET time_zone = "+00:00";
 
 
@@ -17,7 +17,7 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8 */;
 
 --
--- Databas: `184115-test`
+-- Databas: `codelane-cms`
 --
 
 -- --------------------------------------------------------
@@ -283,6 +283,28 @@ CREATE TABLE IF NOT EXISTS `files` (
 -- --------------------------------------------------------
 
 --
+-- Tabellstruktur `notes`
+--
+
+CREATE TABLE IF NOT EXISTS `notes` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `title` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
+  `content` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
+  `user_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+
+--
+-- Dumpning av Data i tabell `notes`
+--
+
+INSERT INTO `notes` (`id`, `title`, `content`, `user_id`) VALUES
+(1, 'Test note ändrad', 'Test... haha', 1),
+(2, 'hejhej', 'kbry', 1);
+
+-- --------------------------------------------------------
+
+--
 -- Tabellstruktur `password_reminders`
 --
 
@@ -330,7 +352,7 @@ CREATE TABLE IF NOT EXISTS `pms` (
 --
 
 INSERT INTO `pms` (`id`, `code`, `status`, `safetystatus`, `title`, `content`, `draft`, `token`, `department`, `published`, `validity_period`, `validity_date`, `created_by`, `revision_date`, `expiration_date`, `first_published_date`, `created_at`, `updated_at`, `deleted_at`) VALUES
-(1, 'VO-5', 'published', NULL, 'Ansvarsarbete', '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">\n<html><body><p>&nbsp;Ansvarsarbete - riktlinjer</p>\r\n<div title="Page 1">\r\n<ul><li>\r\n<p>Tiden ska la&Igrave;&circ;ggas in i Heroma som ansvarstid</p>\r\n</li>\r\n<li>\r\n<p>Ansvarstidens omfattning diskuteras med na&Igrave;&circ;rmaste chef</p>\r\n</li>\r\n<li>\r\n<p>Anso&Igrave;&circ;kan om ansvarsarbete sker i dialog med na&Igrave;&circ;rmaste chef som till- eller avstyrker i samra&Igrave;&Scaron;d med bemanningsassistent</p>\r\n</li>\r\n<li>\r\n<p>Om ansvarstid inte lagts in i Heroma fa&Igrave;&Scaron;r ansvarstid endast tas ut om personalbemanning bedo&Igrave;&circ;ms vara ho&Igrave;&circ;g</p>\r\n</li>\r\n<li>\r\n<p>Ansvarsarbete utfo&Igrave;&circ;rs pa&Igrave;&Scaron; arbetsplatsen. Man byter om och sta&Igrave;&circ;mplar in/ut som vanligt</p>\r\n</li>\r\n<li>\r\n<p>Den som utfo&Igrave;&circ;r ansvarsarbete ska kunna rycka in i va&Igrave;&Scaron;rden pa&Igrave;&Scaron; bega&Igrave;&circ;ran av arbetsledningen</p>\r\n</li>\r\n<li>\r\n<p>Om ansvarsarbete ska utfo&Igrave;&circ;ras utanfo&Igrave;&circ;r sjukhuset, t ex fo&Igrave;&circ;r studiebeso&Igrave;&circ;k eller benchmarking, ska detta godka&Igrave;&circ;nnas i fo&Igrave;&circ;rva&Igrave;&circ;g&nbsp;</p>\r\n</li>\r\n</ul></div></body></html>\n', NULL, 'ansvarsarbete', 0, 1, '1y', NULL, 1, NULL, '2016-04-14', '0000-00-00', '2015-04-14 16:21:09', '2015-04-14 16:33:26', NULL),
+(1, 'VO-5', 'revision-written', NULL, 'Ansvarsarbete', '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">\n<html><body><p>&nbsp;Ansvarsarbete - riktlinjer</p>\r\n<div title="Page 1">\r\n<ul><li>\r\n<p>Tiden ska la&Igrave;&circ;ggas in i Heroma som ansvarstid</p>\r\n</li>\r\n<li>\r\n<p>Ansvarstidens omfattning diskuteras med na&Igrave;&circ;rmaste chef</p>\r\n</li>\r\n<li>\r\n<p>Anso&Igrave;&circ;kan om ansvarsarbete sker i dialog med na&Igrave;&circ;rmaste chef som till- eller avstyrker i samra&Igrave;&Scaron;d med bemanningsassistent</p>\r\n</li>\r\n<li>\r\n<p>Om ansvarstid inte lagts in i Heroma fa&Igrave;&Scaron;r ansvarstid endast tas ut om personalbemanning bedo&Igrave;&circ;ms vara ho&Igrave;&circ;g</p>\r\n</li>\r\n<li>\r\n<p>Ansvarsarbete utfo&Igrave;&circ;rs pa&Igrave;&Scaron; arbetsplatsen. Man byter om och sta&Igrave;&circ;mplar in/ut som vanligt</p>\r\n</li>\r\n<li>\r\n<p>Den som utfo&Igrave;&circ;r ansvarsarbete ska kunna rycka in i va&Igrave;&Scaron;rden pa&Igrave;&Scaron; bega&Igrave;&circ;ran av arbetsledningen</p>\r\n</li>\r\n<li>\r\n<p>Om ansvarsarbete ska utfo&Igrave;&circ;ras utanfo&Igrave;&circ;r sjukhuset, t ex fo&Igrave;&circ;r studiebeso&Igrave;&circ;k eller benchmarking, ska detta godka&Igrave;&circ;nnas i fo&Igrave;&circ;rva&Igrave;&circ;g&nbsp;</p>\r\n</li>\r\n</ul></div></body></html>\n', '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">\n<html><body><p>&nbsp;Ansvarsarbete - riktlinjer</p>\r\n<div title="Page 1">\r\n<ul><li>\r\n<p>Tiden ska la&Igrave;&circ;ggas in i Heroma som ansvarstid</p>\r\n</li>\r\n<li>\r\n<p>Ansvarstidens omfattning diskuteras med na&Igrave;&circ;rmaste chef</p>\r\n</li>\r\n<li>\r\n<p>Anso&Igrave;&circ;kan om ansvarsarbete sker i dialog med na&Igrave;&circ;rmaste chef som till- eller avstyrker i samra&Igrave;&Scaron;d med bemanningsassistent</p>\r\n</li>\r\n<li>\r\n<p>Om ansvarstid inte lagts in i Heroma fa&Igrave;&Scaron;r ansvarstid endast tas ut om personalbemanning bedo&Igrave;&circ;ms vara ho&Igrave;&circ;g</p>\r\n</li>\r\n<li>\r\n<p>Ansvarsarbete utfo&Igrave;&circ;rs pa&Igrave;&Scaron; arbetsplatsen. Man byter om och sta&Igrave;&circ;mplar in/ut som vanligt</p>\r\n</li>\r\n<li>\r\n<p>Den som utfo&Igrave;&circ;r ansvarsarbete ska kunna rycka in i va&Igrave;&Scaron;rden pa&Igrave;&Scaron; bega&Igrave;&circ;ran av arbetsledningen</p>\r\n</li>\r\n<li>\r\n<p>Om ansvarsarbete ska utfo&Igrave;&circ;ras utanfo&Igrave;&circ;r sjukhuset, t ex fo&Igrave;&circ;r studiebeso&Igrave;&circ;k eller benchmarking, ska detta godka&Igrave;&circ;nnas i fo&Igrave;&circ;rva&Igrave;&circ;g&nbsp;</p>\r\n</li>\r\n</ul></div></body></html>\n', 'ansvarsarbete', 0, 1, '1y', NULL, 1, NULL, '2016-04-14', '0000-00-00', '2015-04-14 16:21:09', '2015-04-16 08:53:38', NULL),
 (2, 'VO-1', 'published', NULL, 'Ansvarsfördelning chefer kassan - receptionen', '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">\n<html><body><p>&nbsp;</p>\r\n<div title="Page 1">\r\n<div>\r\n<div>\r\n<p>Sekreterarchef ansvarar o&Igrave;&#136;ver akutens kassa enligt fo&Igrave;&#136;ljande:</p>\r\n<ul><li>\r\n<p>Avgifter &ndash; asyl, asylso&Igrave;&#136;kande, utomla&Igrave;&#136;nspatienter, inomla&Igrave;&#136;nspatienter, utomlandspatienter</p>\r\n</li>\r\n<li>\r\n<p>Taxakoder - enligt lista SLL avgiftshandboken, turisthandboken</p>\r\n</li>\r\n<li>\r\n<p>Makuleringar av fakturor/beso&Igrave;&#136;k</p>\r\n</li>\r\n<li>\r\n<p>DRG</p>\r\n</li>\r\n<li>\r\n<p>Remisshantering</p>\r\n</li>\r\n<li>\r\n<p>Nyansta&Igrave;&#136;llda &ndash; beho&Igrave;&#136;righet till PU-web, kassan samt boka sjukreseutbildning</p>\r\n</li>\r\n<li>\r\n<p>Tja&Igrave;&#136;nsteresor</p>\r\n</li>\r\n<li>\r\n<p>Parkeringstillsta&Igrave;&#138;nd fo&Igrave;&#136;r patienter och kriminalva&Igrave;&#138;rd</p>\r\n</li>\r\n<li>\r\n<p>RES &ndash; system som visar om fakturan a&Igrave;&#136;r betald eller inte</p>\r\n</li>\r\n<li>\r\n<p>Frikort, ho&Igrave;&#136;gkostnadskort</p>\r\n</li>\r\n<li>\r\n<p>Sammankoppling av identitet och reservnummer pa&Igrave;&#138; oka&Igrave;&#136;nda pat. Samverka med o&Igrave;&#136;vriga kliniker i</p>\r\n<p>denna fra&Igrave;&#138;ga</p>\r\n</li>\r\n<li>\r\n<p>Felregistrerade patienter</p>\r\n</li>\r\n<li>\r\n<p>Ka&Igrave;&#136;nnedom om registrering av patienter i ha&Igrave;&#136;ndelse av katastrof</p>\r\n</li>\r\n<li>\r\n<p>Reception/kassa mo&Igrave;&#136;ten</p>\r\n<p>Chefsjuksko&Igrave;&#136;terska fo&Igrave;&#136;r akutens reception ansvarar enligt fo&Igrave;&#136;ljande:</p>\r\n</li>\r\n</ul><ul><li>\r\n<p>Arbetssa&Igrave;&#136;tt</p>\r\n</li>\r\n<li>\r\n<p>Flo&Igrave;&#136;de</p>\r\n</li>\r\n<li>\r\n<p>Pretriage och samverkan med SLSO</p>\r\n</li>\r\n<li>\r\n<p>SLA</p>\r\n</li>\r\n<li>\r\n<p>Arbetssa&Igrave;&#136;tt receptionen i ha&Igrave;&#136;ndelse av katastrof i samra&Igrave;&#138;d med katastrofansvarig chefsjuksko&Igrave;&#136;terska</p>\r\n</li>\r\n<li>\r\n<p>Reception/kassa mo&Igrave;&#136;ten&nbsp;</p>\r\n</li>\r\n</ul></div>\r\n</div>\r\n</div></body></html>\n', NULL, 'ansvarsfordelning-chefer-kassan-receptionen', 0, 1, '1y', NULL, 1, NULL, '2016-04-14', '0000-00-00', '2015-04-14 16:50:58', '2015-04-14 16:52:31', NULL),
 (3, 'VO-7', 'published', NULL, 'Arbetsbeskrivning larmteam', '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">\n<html><body><p>&nbsp;</p>\r\n<div title="Page 1">\r\n<div>\r\n<div>\r\n<ul><li>\r\n<p>Larmteamet (sjuksko&Igrave;&#136;terska samt undersko&Igrave;&#136;terska) ska handla&Igrave;&#136;gga larmpatienter pa&Igrave;&#138; alla sektioner pa&Igrave;&#138; larm/akutrummen tillsammans med la&Igrave;&#136;kare</p>\r\n</li>\r\n<li>\r\n<p>Ba&Igrave;&#136;ra varsin larmtelefon</p>\r\n</li>\r\n<li>\r\n<p>Utsedd larmsjuksko&Igrave;&#136;terska att ta na&Igrave;&#136;stkommande larm ba&Igrave;&#136;r &rdquo;hotline&rdquo; tfn 581 89, se Flo&Igrave;&#136;de larmkedja</p>\r\n</li>\r\n<li>\r\n<p>Vid behov samt om mo&Igrave;&#136;jlighet finns, hja&Igrave;&#136;lpa va&Igrave;&#138;rdlagen med o&Igrave;&#136;vervakning av patienter pa&Igrave;&#138; ro&Igrave;&#136;ntgen samt under patientens transport till avdelning</p>\r\n</li>\r\n<li>\r\n<p>Info&Igrave;&#136;r varje larm se till att incheckning sker enligt Incheckning vid larm</p>\r\n</li>\r\n<li>\r\n<p>Rapport fra&Igrave;&#138;n ambulanssjuksko&Igrave;&#136;terska mottages innan o&Igrave;&#136;verflyttning av patienten sker.</p>\r\n<p>OBS! Detta ga&Igrave;&#136;ller ej vid hja&Igrave;&#136;rtstopp</p>\r\n</li>\r\n<li>\r\n<p>Ansvarar fo&Igrave;&#136;r att iordningssta&Igrave;&#136;lla akutrummet efter varje patient.</p>\r\n</li>\r\n<li>\r\n<p>I bo&Igrave;&#136;rjan av sitt arbetspass utfo&Igrave;&#136;ra dagliga rutiner enligt checklistor</p>\r\n</li>\r\n<li>\r\n<p>Larmteamet a&Igrave;&#136;ger ra&Igrave;&#136;tten att begra&Igrave;&#136;nsa antalet a&Igrave;&#138;ska&Igrave;&#138;dare pa&Igrave;&#138; akutrummet</p>\r\n<p>Na&Igrave;&#136;r larm inte pa&Igrave;&#138;ga&Igrave;&#138;r a&Igrave;&#136;r teamet i na&Igrave;&#136;ra dialog med SLA fo&Igrave;&#136;r att v.b va&Igrave;&#136;xla mellan olika positioner och vara flexibel, t.ex.</p>\r\n</li>\r\n</ul><ul><li>\r\n<p>V ara behja&Igrave;&#136;lplig pa&Igrave;&#138; sektionerna i patientarbete</p>\r\n</li>\r\n<li>\r\n<p>Triagera pa&Igrave;&#138; sektion i syfte att fo&Igrave;&#136;rhindra &rdquo;stoppat flo&Igrave;&#136;de&rdquo;</p>\r\n</li>\r\n<li>\r\n<p>Triagera i central triage vid &rdquo;ho&Igrave;&#136;gflo&Igrave;&#136;de&rdquo;&nbsp;</p>\r\n</li>\r\n</ul></div>\r\n</div>\r\n</div></body></html>\n', NULL, 'arbetsbeskrivning-larmteam', 0, 1, '1y', NULL, 1, NULL, '2016-04-14', '0000-00-00', '2015-04-14 16:59:47', '2015-04-14 17:00:33', NULL),
 (4, 'HK-234', 'published', NULL, 'Arbetsbeskrivning dagbakjour på hjärkliniken', '<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN" "http://www.w3.org/TR/REC-html40/loose.dtd">\n<html><body><p>Dagbakjour&nbsp;</p>\r\n<p>Dagbakjouren &auml;r minst enkelspecialist och &auml;r l&auml;kare med ledningsansvar. Denne har som huvudsaklig uppgift att styra de andra l&auml;karnas arbete, vara behj&auml;lplig vid fr&aring;gor, st&ouml;tta vid larm samt ta hand om konsultfr&aring;gor.</p>\r\n<p>V&aring;rdlagsarbetet: Dagbakjouren tillh&ouml;r inget v&aring;rdlag men har det yttersta ansvaret f&ouml;r att v&aring;rdlagens arbete framskrider. F&ouml;r att v&aring;rdlagen ska prestera optimalt b&ouml;r dagbakjouren arbeta enligt f&ouml;ljande princip:</p>\r\n<p>&middot; &nbsp; &nbsp; &nbsp; St&ouml;tta v&aring;rdlagsl&auml;karna vid medicinska och praktiska fr&aring;gor</p>\r\n<p>Dagbakjouren ska alltid vara antr&auml;ffbar personligen eller p&aring; DECT telefon 58174 som st&aring;r intill &nbsp; &nbsp; &nbsp; specialistens dator mellan kl 08.00&ndash;16.30</p>\r\n<p>&middot; &nbsp; &nbsp; &nbsp; Om arbetet stannar av eller g&aring;r l&aring;ngsamt i ett v&aring;rdlag g&ouml;r dagbakjouren bed&ouml;mning om och hur hj&auml;lp beh&ouml;ver tillskjutas</p>\r\n<p>&middot; &nbsp; &nbsp; &nbsp; Ansvara f&ouml;r vem som skall b&auml;ra larms&ouml;kare 007</p>\r\n<p>&middot; &nbsp; &nbsp; &nbsp; &Ouml;vervaka prioriteringar av patienter och vid behov prioritera upp eller ned.</p>\r\n<p>&middot; &nbsp; &nbsp; &nbsp; I st&ouml;rsta m&ouml;jliga m&aring;n ha med sig UL vid prelimin&auml;r bed&ouml;mning.</p>\r\n<p>&middot; &nbsp; &nbsp; &nbsp; Ansvara f&ouml;r &auml;ndring av initial prioritering dvs om patienter skall prioriteras av v&aring;rdpersonal enligt RETTS p&aring; sektionen eller om fl&ouml;det till sektionen bromsas och hj&auml;rtpatienter prioriteras genom den centrala RETTS-triageringen.</p>\r\n<p>&middot; &nbsp; &nbsp; &nbsp; Signera EKG s&aring; fort detta &auml;r taget.</p>\r\n<p>&middot; &nbsp; &nbsp; &nbsp; N&auml;rvara och om m&ouml;jligt leda uppstartsm&ouml;te kl 09.00 och avst&auml;mningsm&ouml;te kl 14.45 dagligen.</p>\r\n<p>Larm: Larm handl&auml;ggs av larml&auml;kare (l&auml;kare med s&ouml;k 007). Dagbakjour f&ouml;ljer vid behov med in p&aring; larmen till dess att situationen &auml;r kontrollerad. P&aring; avd 70 sal 3 har ansvarig l&auml;kare s&ouml;k 400 och kan efter kontakt l&auml;kare till l&auml;kare vara behj&auml;lplig att handl&auml;gga larm p&aring; akuten.&nbsp;</p>\r\n<p>Handl&auml;ggning av egna patienter: Dagbakjouren kan och b&ouml;r ta egna patienter n&auml;r tiden till&aring;ter. L&auml;mpligen v&auml;ljer man som dagbakjour patienter d&auml;r sjuksk&ouml;terskans insats &auml;r liten och sannolikhet f&ouml;r hemg&aring;ng &auml;r stor.</p>\r\n<p>Konsultationer: Alla konsultationer fr&aring;n andra sektioner p&aring; akuten ska handl&auml;ggas av dagbakjouren. Om patienten bed&ouml;ms beh&ouml;va &ouml;verf&ouml;ras fr&aring;n en sektion till en annan ska dock vidare handl&auml;ggning sk&ouml;tas av det v&aring;rdlag patienten i s&aring; fall tilldelas, i st&ouml;rsta m&ouml;jliga m&aring;n skall dock patienter inte flyttas mellan sektioner utan handl&auml;ggas mha konsultation fr&aring;n annan sektion om s&aring; kr&auml;vs. Undantag vid tidig identifierad felsortering.</p>\r\n<p>&Ouml;verbelastning: Vid h&ouml;gt infl&ouml;de av patienter &auml;r dagbakjouren ansvarig f&ouml;r hurvida extra personal b&ouml;r inkallas fr&aring;n annan position eller via sms, VG se separat PM.</p>\r\n<p>Direktinskrivning: Dagbakjouren &auml;r ansvarig f&ouml;r att hitta l&auml;mpliga patienter f&ouml;r direktinskrivning p&aring; avdelning mellan kl 13.00&ndash;15.00 varje vardag. Det g&auml;ller i normall&auml;ge 1 pat/avdelning och denna patient beh&ouml;ver id-band men i &ouml;vrigt inga utf&ouml;rda aktiviteter, VG se separat PM &rdquo;direktinskrivning p&aring; hj&auml;rtkliniken&rdquo;. &nbsp; &nbsp;</p></body></html>\n', NULL, 'arbetsbeskrivning-dagbakjour-pa-hjarkliniken', 0, 1, '1y', NULL, 1, NULL, '2016-04-14', '0000-00-00', '2015-04-14 17:03:10', '2015-04-14 17:06:11', NULL),
@@ -467,15 +489,15 @@ CREATE TABLE IF NOT EXISTS `pm_tags` (
   KEY `pm_tags_pm_foreign` (`pm`),
   KEY `pm_tags_tag_foreign` (`tag`),
   KEY `pm_tags_added_by_foreign` (`added_by`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=42 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=46 ;
 
 --
 -- Dumpning av Data i tabell `pm_tags`
 --
 
 INSERT INTO `pm_tags` (`id`, `pm`, `tag`, `added_by`, `deleted_at`, `created_at`, `updated_at`, `not_published`) VALUES
-(5, 1, 1, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0),
-(6, 1, 2, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0),
+(45, 1, 1, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0),
+(44, 1, 2, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0),
 (9, 2, 2, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0),
 (10, 2, 1, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0),
 (11, 2, 3, 1, NULL, '0000-00-00 00:00:00', '0000-00-00 00:00:00', 0),
