@@ -40,7 +40,7 @@
     <p>Du kan <a href="{{ URL::route('user-edit') }}" class="inline-action">ändra informationen</a>.</p>  
     <!--infoWindow-->    
     <div id="infoWindow" style="display:none;"><h3>
-<button onclick="show('infoWindow')">X</button> Hjälp :: Profil</h3>
+<button onclick="hide('infoWindow')">X</button> Hjälp :: Profil</h3>
         <p>Det här är profilsidan, du kan se vad du har för information och ändra information.</p>
     </div>  
     <button onclick="show('infoWindow')">?</button>

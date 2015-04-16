@@ -12,7 +12,7 @@
 @section('body')
 	<div class="breadcrumb">
 		Du är här: {{ $breadcrumb or '' }} 
-		<button onclick="show('infoWindow')">?</button>
+		<button onclick="enable('infoWindow')">?</button>
 
 	</div>
 
@@ -31,7 +31,7 @@
 
 	<!--infoWindow-->    
     <div id="infoWindow" style="display:none;"><h3>
-		<button onclick="show('infoWindow')">X</button> Hjälp :: Kategori</h3>
+		<button onclick="disable('infoWindow')">X</button> Hjälp :: Kategori</h3>
         <p>Du kan 
         	<b><ins>välja</ins></b> en kategori för att visa de PM som ingår i kategorin och
         	<b><ins>filtrera</ins></b> resultaten.</p>
