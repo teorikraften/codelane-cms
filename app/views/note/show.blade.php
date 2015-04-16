@@ -7,8 +7,15 @@
 
 @section('body')
 @include('includes.messages')
+    <a href="{{ URL::route('note-add') }}" class="btn-note">Ny anteckning</a>
+    <br>
     @foreach($notes as $note)
                 <tr>
+                	<td>
+                        <a href="{{ URL::route('note-delete', $note->id) }}" title="Ta bort">
+                            {{ HTML::image('images/delete.png', 'Ta bort')  }}
+                        </a>
+                    </td>
                 	<td>
                         <a href="{{ URL::route('note-edit', $note->id) }}" title="Ändra">
                             {{ HTML::image('images/edit.png', 'Ändra') }}

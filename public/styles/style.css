@@ -1334,5 +1334,18 @@ div.input-note{
 	resize: none;
 }
 
+a.btn-note {
+	font-family: 'Oxygen', sans-serif;
+	font-weight: normal;
+	padding: 8px;
+	font-size: 14px;
+	background-color: #008472;
+	border: 0;
+	display: inline-block;
+	margin: 15px 0 15px 0px;
+	color: #fff;
+	text-decoration: none;
+}
+
 
 
