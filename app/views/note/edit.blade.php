@@ -18,7 +18,7 @@
                 <div class="input-note">{{ Form::textarea('content', NULL, array('class' => 'note-textarea')) }}</div>
             </div>
 			<div class="submit">
-				{{ Form::submit('Spara', array('class' => 'submit', 'name' => 'save')) }}
+				{{ Form::submit('Spara ändringar', array('class' => 'submit', 'name' => 'save')) }}
 			</div>
 		</div>
     {{ Form::close() }}
