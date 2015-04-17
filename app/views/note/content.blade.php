@@ -6,10 +6,10 @@
 
 
 @section('body')
-                <a href="{{ URL::route('note-show', $note->id) }}">{{ $note->title }}</a>
-                <a href="{{ URL::route('note-edit', $note->id) }}" title="Ändra">
+                <h1>{{ ucfirst($note->title) }}
+				<a href="{{ URL::route('note-edit', $note->id) }}" title="Ändra">
                     {{ HTML::image('images/edit.png', 'Ändra') }}
 				</a>
-                <br>
+                </h1>
                 <p>{{ $note->content }}</p>
 @stop
