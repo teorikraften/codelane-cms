@@ -40,7 +40,7 @@ Route::filter('auth', function() {
 		}
 
 		return Redirect::guest(route('index'))
-			->with('error', 'Du har måste logga in för att komma åt denna sida.');
+			->with('error', 'Du måste logga in för att komma åt denna sida.');
 	}
 });
 
@@ -57,7 +57,7 @@ Route::filter('auth.verified', function () {
 		}
 
 		return Redirect::guest(route('index'))
-			->with('error', 'Du har måste vara verifierad för att komma åt denna sida.');
+			->with('error', 'Du måste vara verifierad för att komma åt denna sida.');
 	}
 });
 
@@ -69,7 +69,7 @@ Route::filter('auth.admin', function() {
 		}
 		
 		return Redirect::guest(route('index'))
-			->with('error', 'Du har måste vara administratör för att komma åt denna sida.');
+			->with('error', 'Du måste vara administratör för att komma åt denna sida.');
 	}
 });
 
