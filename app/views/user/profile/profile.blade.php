@@ -13,7 +13,12 @@
 @stop
 
 @section('body') 
-    <h1>Ditt konto, {{ Auth::user()->name }}</h1>  
+    <h1>Ditt konto, {{ Auth::user()->name }}
+    <a class="icon" href="{{ URL::route('user-edit') }}" title="Ändra information">
+                    {{ HTML::image('images/edit.png', 'Ändra') }}
+    </a> 
+    </h1> 
+     
     <table>
         <tr>
             <th>Namn:</th>
