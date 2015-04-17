@@ -1,13 +1,12 @@
 @extends('master')
 
 @section('head-title')
-    Anteckning {{ $note->title }}
+    Lägg till anteckning
 @stop
 
 @section('body')
 @include('includes.messages')
-    {{ Form::model($note, array('action' => 'post-note-edit', 'method' => 'post')) }}
-    	{{ Form::hidden('id') }}
+{{ Form::open(array('action' => 'post-note-add', 'method' => 'post')) }}
     	<div class="form">
 			<div class="row">
 				<div class="description">{{ Form::label('title', 'Titel') }}</div>
@@ -18,8 +17,8 @@
                 <div class="input-note">{{ Form::textarea('content', NULL, array('class' => 'note-textarea')) }}</div>
             </div>
 			<div class="submit">
-				{{ Form::submit('Spara ändringar', array('class' => 'submit', 'name' => 'save')) }}
+				{{ Form::submit('Skapa anteckning', array('class' => 'submit', 'name' => 'save')) }}
 			</div>
 		</div>
-    {{ Form::close() }}
+{{ Form::close() }}
 @stop

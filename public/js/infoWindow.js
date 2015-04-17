@@ -1,7 +1,11 @@
-function toggle(div_id) {
+// Will comment code at a later stage, this is a alpha version
+function enable(div_id) {
 	var el = document.getElementById(div_id);
-	if ( el.style.display == 'none' ) {	el.style.display = 'block';}
-	else {el.style.display = 'none';}
+	el.style.display = 'block';
+}
+function disable(div_id) {
+	var el = document.getElementById(div_id);
+	el.style.display = 'none';
 }
 function window_pos(infoWindow) {
 	if (typeof window.innerWidth != 'undefined') {
@@ -24,5 +28,9 @@ function window_pos(infoWindow) {
 }
 function show(windowname) {
 	window_pos(windowname);
-	toggle(windowname);		
+	enable(windowname);		
+}
+function hide(windowname) {
+	window_pos(windowname);
+	disable(windowname);		
 }
