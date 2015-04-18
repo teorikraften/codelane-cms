@@ -6,6 +6,7 @@
 
 
 @section('body')
+    <h1>Dina anteckningar</h1>
     <a href="{{ URL::route('note-add') }}" class="btn-note">Ny anteckning</a>
     <p>Detta är dina personliga anteckningar som kan associeras med PM för att komma ihåg vad du ska göra.</p>
     @include('includes.messages')
