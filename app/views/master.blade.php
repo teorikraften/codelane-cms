@@ -12,6 +12,7 @@
 	    {{ HTML::script('js/jquery-1.11.2.js'); }}
 	    {{ HTML::script('js/jquery-ui.js'); }}
 	    {{ HTML::script('js/responsive-menu.js'); }}
+	    {{ HTML::script('js/infoWindow.js'); }}
 		@yield('head-extra')
 	</head>
 	<body>

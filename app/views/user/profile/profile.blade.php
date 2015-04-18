@@ -5,7 +5,7 @@
 @stop
 
 @section('head-extra')
-    {{ HTML::script('js/infoWindow.js'); }}
+
 @stop
 
 @section('submenu')

@@ -6,13 +6,12 @@
 
 @section('head-extra')
 	{{ HTML::script('js/category.js') }}
-    {{ HTML::script('js/infoWindow.js'); }}
 @stop
 
 @section('body')   
 	<div class="breadcrumb">
 		Du är här: {{ $breadcrumb or '' }} 
-		<button onclick="enable('infoWindow')">?</button>
+		<button onclick="show('infoWindow')">?</button>
 
 	</div>
 
@@ -29,14 +28,13 @@
 	</div>
 
 
-	<!--infoWindow-->  
+	<!--infoWindow-->
     <div id="infoWindow" style="display:none;"><h3>
-		<button onclick="disable('infoWindow')">X</button> Hjälp :: Kategori</h3>
+		<button onclick="hide('infoWindow')">X</button> Hjälp :: Kategori</h3>
         <p>Du kan 
         	<b><ins>välja</ins></b> en kategori för att visa de PM som ingår i kategorin och
         	<b><ins>filtrera</ins></b> resultaten.</p>
-    </div>  
-    
+    </div>
 <!-- end of infoWindow-->    
 
 	<div id="category-output">
