@@ -5,6 +5,7 @@
 @stop
 
 @section('body')
+<h1>Skapa anteckning</h1>
 @include('includes.messages')
 {{ Form::open(array('action' => 'post-note-add', 'method' => 'post')) }}
     	<div class="form">
@@ -21,7 +22,7 @@
                 <div class="input-note-content">{{ Form::textarea('content', NULL, array('class' => 'note-textarea')) }}</div>
             </div>
 			<div class="submit">
-				{{ Form::submit('Skapa anteckning', array('class' => 'submit', 'name' => 'save')) }}
+				{{ Form::submit('Skapa', array('class' => 'submit', 'name' => 'save')) }}
 			</div>
 		</div>
 {{ Form::close() }}

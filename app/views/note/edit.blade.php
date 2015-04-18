@@ -5,7 +5,7 @@
 @stop
 
 @section('body')
-<br>
+<h1>Ändra anteckning</h1>
 @include('includes.messages')
     {{ Form::model($note, array('action' => 'post-note-edit', 'method' => 'post')) }}
     	{{ Form::hidden('id') }}
