@@ -201,7 +201,7 @@ ul.menu {
 	float: left;
     margin: 0;
     padding-right: 40px;
-    width: 550px; /* Changed from 350px to make room for categories */
+    width: 350px; /* Changed from 350px to make room for categories */
     height: 60px;
     font-size: 0;
 }
@@ -281,12 +281,12 @@ ul.menu {
 	display: none !important;
 }
 /* Changed responsive limit to fit advanced search */
-@media (min-width: 927px){
+@media (min-width: 768px){
 	.responsive-menu{
 		display: block !important;
 	}
 }
-@media (max-width: 926px){
+@media (max-width: 767px){
 	ul.menu {
 		position: relative;
 		display: block;
