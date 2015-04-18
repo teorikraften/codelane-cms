@@ -5,15 +5,17 @@ function blanket_size(bg) {
 	blanket_height = document.body.parentNode.clientHeight;
 	var blanket = document.getElementById('blanket');
 	blanket.style.height = blanket_height + 'px';
+	var heighter = window.getComputedStyle(document.getElementById("infoWindow"), null).getPropertyValue("height");
 	var blanketDiv = document.getElementById(bg);
-	blanketDiv_height=blanket_height/2-50;
+	blanketDiv_height=blanket_height/2-parseInt(heighter)/2;
 	blanketDiv.style.top = blanketDiv_height + 'px';
 }
 
 function window_pos(infoWindow) {
 	window_width = document.body.parentNode.clientWidth;
 	var infoWindow = document.getElementById(infoWindow);
-	window_width=window_width/2-150;// TODO: Better and smarter for adaption 
+	var widther = window.getComputedStyle(document.getElementById("infoWindow"), null).getPropertyValue("width");
+	window_width=window_width/2-parseInt(widther)/2;// TODO: Better and smarter for adaption 
 	infoWindow.style.left = window_width + 'px';
 }
 function show(windowname) {

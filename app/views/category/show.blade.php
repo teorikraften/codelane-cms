@@ -11,7 +11,6 @@
 @section('body')   
 	<div class="breadcrumb">
 		Du är här: {{ $breadcrumb or '' }} 
-		<button onclick="show('infoWindow')">?</button>
 
 	</div>
 
