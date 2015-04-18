@@ -2,12 +2,12 @@
 
 // TODO: Make it fade, and decrease double code.
 function blanket_size(bg) {
-	blanket_height = document.body.parentNode.clientHeight;
+	blanket_height = document.body.parentNode.scrollHeight;
 	var blanket = document.getElementById('blanket');
 	blanket.style.height = blanket_height + 'px';
 	var heighter = window.getComputedStyle(document.getElementById("infoWindow"), null).getPropertyValue("height");
 	var blanketDiv = document.getElementById(bg);
-	blanketDiv_height=blanket_height/2-parseInt(heighter)/2;
+	blanketDiv_height = document.body.parentNode.clientHeight/2-parseInt(heighter)/2;
 	blanketDiv.style.top = blanketDiv_height + 'px';
 }
 
