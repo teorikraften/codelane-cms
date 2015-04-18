@@ -61,6 +61,11 @@ p {
 a {
 	color: #008247;
 }
+a.clickable-title {
+	text-decoration: none;
+	font-weight: bold;
+	color: #004231; 
+}
 
 /*================================
 =             Tables             =

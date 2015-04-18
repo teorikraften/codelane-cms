@@ -105,7 +105,7 @@
                         @endif
                     </td>
                     <td>{{ $pm->code }}</td>
-                    <td>{{ $pm->title }}</td>
+                    <td><a class="clickable-title" href="{{ URL::route('pm-show', $pm->token) }}" title="Visa">{{ $pm->title }}</a></td>
                     <td>
                         @foreach($userAssignments[$pm->id] as $ua)<?php
                             echo $ua === reset($userAssignments[$pm->id]) ? ucfirst(User::assignmentString($ua)) : ($ua === end($userAssignments[$pm->id]) ? ', ' . User::assignmentString($ua) : ', ' . User::assignmentString($ua));
@@ -160,7 +160,7 @@
                             </a>
                         </td>
                         <td>{{ $pm->code }}</td>
-                        <td>{{ $pm->title }}</td>
+                        <td><a class="clickable-title" href="{{ URL::route('pm-show', $pm->token) }}" title="Visa">{{ $pm->title }}</a></td>
                         <td>
                             <a href="javascript:void()" onclick="$('#pm{{ $pm->id }}').toggle();">Visa</a>
                             <table style="display: none" id="pm{{ $pm->id }}">
