@@ -52,6 +52,7 @@ class NoteController extends BaseController {
 			$pm_id = PM::where('title', '=', Input::get('pm'))->firstOrFail()[0]->id;
 		} catch(ModelNotFoundException $e) {
 			return Redirect::back()
+			->withInput()
 			->with('error', 'PM:et du angav hittades inte.');
 		}
 		$note->pm_id = $pm_id;
@@ -85,6 +86,7 @@ class NoteController extends BaseController {
 			$pm_id = PM::where('title', '=', Input::get('pm'))->firstOrFail()[0]->id;
 		} catch(ModelNotFoundException $e) {
 			return Redirect::back()
+			->withInput()
 			->with('error', 'PM:et du angav hittades inte.');
 		}
 		$note->pm_id = $pm_id;
