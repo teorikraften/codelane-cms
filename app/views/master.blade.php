@@ -22,13 +22,13 @@
 			@include('includes.admin-menu')
 			<div class="clear"></div>
 			<div id="container" class="centrator">
-			    <div class="breadcrumb">
-	       			<button onclick="show('infoWindow')">?</button>
-	   			</div>
 				@yield('body')
 			</div>
 			<div id="blanket" style="display:none;" onclick="hide('infoWindow')"></div>
 			<div class="clear"></div>
+		</div>
+		<div class="breadcrumb">
+	    	<button onclick="show('infoWindow')">?</button>
 		</div>
 		@include('includes.footer')
 	</body>
