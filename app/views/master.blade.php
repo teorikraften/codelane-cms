@@ -23,6 +23,7 @@
 			<div id="container" class="centrator">
 				@yield('body')
 			</div>
+			<div id="blanket" style="display:none;" onclick="hide('infoWindow')"></div>
 			<div class="clear"></div>
 		</div>
 		@include('includes.footer')

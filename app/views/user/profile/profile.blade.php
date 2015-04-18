@@ -43,7 +43,7 @@
     </table>
     <p>Roller är ord som beskriver dina arbetsuppgifter. Alla PM är taggade med målgruppsroller, vilket gör att ett PM som ser ut att matcha dina roller hamnar högre upp i sökresultaten för dig. Du kan även söka enbart på en roll.</p>
     <p>Du kan <a href="{{ URL::route('user-edit') }}" class="inline-action">ändra informationen</a>.</p>  
-    <!--infoWindow-->    
+    <!--infoWindow-->   
     <div id="infoWindow" style="display:none;"><h3>
 <button onclick="hide('infoWindow')">X</button> Hjälp :: Profil</h3>
         <p>Det här är profilsidan, du kan se vad du har för information och ändra information.</p>

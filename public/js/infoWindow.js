@@ -1,12 +1,28 @@
 // Will comment code at a later stage, this is a alpha version
-function enable(div_id) {
-	var el = document.getElementById(div_id);
-	el.style.display = 'block';
+
+// TODO: Make it fade, and decrease copy-paste code.
+function blanket_size(bg) {
+	if (typeof window.innerWidth != 'undefined') {
+		viewportheight = window.innerHeight;
+	} else {
+		viewportheight = document.documentElement.clientHeight;
+	}
+	if ((viewportheight > document.body.parentNode.scrollHeight) && (viewportheight > document.body.parentNode.clientHeight)) {
+		blanket_height = viewportheight;
+	} else {
+		if (document.body.parentNode.clientHeight > document.body.parentNode.scrollHeight) {
+			blanket_height = document.body.parentNode.clientHeight;
+		} else {
+			blanket_height = document.body.parentNode.scrollHeight;
+		}
+	}
+	var blanket = document.getElementById('blanket');
+	blanket.style.height = blanket_height + 'px';
+	var blanketDiv = document.getElementById(bg);
+	blanketDiv_height=blanket_height/2-100;
+	blanketDiv.style.top = blanketDiv_height + 'px';
 }
-function disable(div_id) {
-	var el = document.getElementById(div_id);
-	el.style.display = 'none';
-}
+
 function window_pos(infoWindow) {
 	if (typeof window.innerWidth != 'undefined') {
 		viewportwidth = window.innerHeight;
@@ -28,9 +44,36 @@ function window_pos(infoWindow) {
 }
 function show(windowname) {
 	window_pos(windowname);
-	enable(windowname);		
+	blanket_size(windowname);
+	enable(windowname);
+	enableBG('blanket');
 }
 function hide(windowname) {
 	window_pos(windowname);
-	disable(windowname);		
+	blanket_size(windowname);
+	disable(windowname);
+	disable('blanket');
+}
+
+
+function enable(div_id) {
+		var el = document.getElementById(div_id);
+		var time = 1;
+		el.style.opacity = 0;
+		el.style.display = 'block';
+		var intval = setInterval(function(){
+			time++;
+			el.style.opacity = 0.10 * time;
+			if(el.style.opacity > 0.90){
+				clearInterval(intval);
+			}
+		},30);
+}
+function disable(div_id) {
+	var el = document.getElementById(div_id);
+	el.style.display = 'none';
+}
+function enableBG(div_id) {
+	var el = document.getElementById(div_id);
+	el.style.display = 'block';
 }
