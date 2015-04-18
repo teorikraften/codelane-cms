@@ -884,14 +884,52 @@ class PMController extends BaseController {
 	}
 
 	public function postAssign() {
+
+		$data = Input::all();
+
+		// TODO: Move validation
+		$validator = Validator::make($data,
+		[
+			'title' => 'required',
+			'creator' => 'required',
+			'authors' => 'required',
+			'settler' => 'required',
+			'reviewers' => 'required',
+			'end-reviewer' => 'required',
+			'reminder' => 'required'
+		],
+		[
+    		'title.required' => 'Fyll i en titel.',
+    		'creator.required' => 'Ange en upprättare.',
+    		'authors.required' => 'Ange en inläggare.',
+    		'settler.required' => 'Ange en fastställare.',
+    		'reviewers.required' => 'Ange en granskare.',
+    		'end-reviewer.required' => 'Ange en slutgranskare.',
+    		'reminder.required' => 'Ange en påminnare.',
+		]);
+
+		if ($validator->fails()) {
+			$messages = $validator->messages();
+
+			// If not successful, set error and ask user to change input
+			return Redirect::back()
+				->with('error', $messages->all())
+				// How to do withinput with javascript input?
+				->withInput();
+		} 
+
 		// TODO Validering & en eller flera personer på vad?
 		$creators = $this->userify(Input::get('creator'));
 		$authors = $this->userify(Input::get('authors'));
 		$settlers = $this->userify(Input::get('settler'));
 		$reviewers = $this->userify(Input::get('reviewers'));	
 		$endReviewers = $this->userify(Input::get('end-reviewer'));
-		$reminders = $this->userify(Input::get('reminder'));	
-
+		$reminders = $this->userify(Input::get('reminder'));
+/*
+		if(!$this->userExists(array(Input::get('creator'), Input::get('authors'), Input::get('settler'), Input::get('reviewers'), Input::get('end-reviewer'), Input::get('reminder')))) {
+			return Redirect::back()->withInput()->with('error', 'En eller flera av personerna angivna finns inte registrerade.');
+		}
+*/
 		$user = Auth::user();
 		$pm = new PM;
 		$pm->title = Input::get('title');
@@ -933,6 +971,17 @@ class PMController extends BaseController {
 		}
 
 		return Redirect::route('admin-pm')->with('success', 'PM:et lades till och personerna sparades!');
+	}
+	/**
+	* Check if users exist in database.
+	*/
+	public function userExists($users) {
+		foreach($users as $user) {
+			if(!User::where('email', '=', $user)) {
+				return false;
+			}	
+		}
+		return true;
 	}
 
 	/**
