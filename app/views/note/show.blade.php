@@ -32,7 +32,7 @@
             		<a href="{{ URL::route('note-show', $note->id) }}">{{ $note->title }}</a>
             	</td>
                 <td>
-                    <a href="{{ URL::route('pm-show', $note->pm['title']) }}">{{ $note->pm['title'] }}</a>
+                    <a href="{{ URL::route('pm-show', $note->pm['token']) }}">{{ $note->pm['title'] }}</a>
                 </td>
        	    </tr>
     @endforeach

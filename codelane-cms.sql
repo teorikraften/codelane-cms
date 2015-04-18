@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: 127.0.0.1
--- Tid vid skapande: 16 apr 2015 kl 13:09
+-- Tid vid skapande: 18 apr 2015 kl 13:47
 -- Serverversion: 5.6.17
 -- PHP-version: 5.5.12
 
@@ -40,7 +40,7 @@ CREATE TABLE IF NOT EXISTS `assignments` (
   PRIMARY KEY (`id`),
   KEY `assignments_user_foreign` (`user`),
   KEY `assignments_pm_foreign` (`pm`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=142 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=148 ;
 
 --
 -- Dumpning av Data i tabell `assignments`
@@ -181,7 +181,13 @@ INSERT INTO `assignments` (`id`, `accepted`, `user`, `pm`, `content`, `assignmen
 (138, 'unknown', 1, 23, '', 'settler', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
 (139, 'unknown', 1, 23, '', 'reviewer', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
 (140, 'unknown', 1, 23, '', 'end-reviewer', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
-(141, 'unknown', 1, 23, '', 'reminder', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL);
+(141, 'unknown', 1, 23, '', 'reminder', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
+(142, 'unknown', 1, 25, '', 'creator', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
+(143, 'unknown', 4, 25, '', 'author', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
+(144, 'unknown', 1, 25, '', 'settler', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
+(145, 'unknown', 16, 25, '', 'reviewer', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
+(146, 'unknown', 16, 25, '', 'end-reviewer', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL),
+(147, 'unknown', 16, 25, '', 'reminder', '0000-00-00 00:00:00', '0000-00-00 00:00:00', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -289,18 +295,21 @@ CREATE TABLE IF NOT EXISTS `files` (
 CREATE TABLE IF NOT EXISTS `notes` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `title` varchar(30) COLLATE utf8_unicode_ci NOT NULL,
-  `content` varchar(500) COLLATE utf8_unicode_ci NOT NULL,
+  `content` text COLLATE utf8_unicode_ci NOT NULL,
   `user_id` int(11) NOT NULL,
+  `pm_id` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=3 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=11 ;
 
 --
 -- Dumpning av Data i tabell `notes`
 --
 
-INSERT INTO `notes` (`id`, `title`, `content`, `user_id`) VALUES
-(1, 'Test note ändrad', 'Test... haha', 1),
-(2, 'hejhej', 'kbry', 1);
+INSERT INTO `notes` (`id`, `title`, `content`, `user_id`, `pm_id`) VALUES
+(1, 'Kom ihåg att skriva ut', 'Läsa på remisshantering', 1, 2),
+(2, 'Ladda ner innan jag går hem', 'Hur går det till när någon inte kan betala med kontokort?', 1, 7),
+(5, 'Läs på rutiner vid kontakt med', 'Hur gör SLA?', 1, 11),
+(6, 'Kom ihåg att sova', 'Påminn Adrian att sluta raida.', 1, 15);
 
 -- --------------------------------------------------------
 
@@ -345,7 +354,7 @@ CREATE TABLE IF NOT EXISTS `pms` (
   PRIMARY KEY (`id`),
   KEY `pms_created_by_foreign` (`created_by`),
   FULLTEXT KEY `search` (`title`,`content`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=24 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=30 ;
 
 --
 -- Dumpning av Data i tabell `pms`
