@@ -1,11 +1,11 @@
 @extends('master')
 
 @section('head-title')
-    Anteckning {{ $note->title }}
+    Ändra anteckning "{{ $note->title }}"
 @stop
 
 @section('body')
-<h1>Ändra anteckning</h1>
+<h1>Ändra "{{ $note->title }}"</h1>
 @include('includes.messages')
     {{ Form::model($note, array('action' => 'post-note-edit', 'method' => 'post')) }}
     	{{ Form::hidden('id') }}

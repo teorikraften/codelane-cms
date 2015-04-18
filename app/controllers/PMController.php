@@ -19,6 +19,9 @@ class PMController extends BaseController {
 			->with('error', 'PM:et som skulle visas hittades inte.');
 		}
 
+		// Get user note associated with this PM
+		$note = Auth::user()->notes()->where('pm_id', '=', $pm->id)->first();
+
 		$user = User::find(Auth::user()->id);
 		$fav = (!empty($user->favourites()->where('pm', '=', $pm->id)->first())) ? true : false;
 
@@ -45,7 +48,8 @@ class PMController extends BaseController {
 		->with('pm', $pm)
 		->with('persons', $persons)
 		->with('assignments', $pm->users)
-		->with('favourite' , $fav);
+		->with('favourite' , $fav)
+		->with('note', $note);
 	}
 
 	/**

@@ -20,6 +20,11 @@
         <div id="pmc" class="pm-content">
             <div class="pm-info">
                 {{ HTML::image('images/logo.png') }}
+                @if (isset($note))
+                 <a class="notes-notification" href="{{ URL::route('note-show', $note->id) }}" title="Du har en anteckning associerad med detta pm">
+                     {{ HTML::image('images/roleRel.png', 'Du har en anteckning associerad med detta pm')  }}
+                </a>
+                @endif
                 <table>
                     <tr>
                         <td colspan="4">

@@ -83,7 +83,7 @@ class NoteController extends BaseController {
 		$note->content = Input::get('content');
 		// TODO: Not rely on title to create pm connection..
 		try {
-			$pm_id = PM::where('title', '=', Input::get('pm'))->firstOrFail()[0]->id;
+			$pm_id = PM::where('title', '=', Input::get('pm'))->firstOrFail()->id;
 		} catch(ModelNotFoundException $e) {
 			return Redirect::back()
 			->withInput()

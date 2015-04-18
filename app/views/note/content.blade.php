@@ -1,7 +1,7 @@
 @extends('master')
 
 @section('head-title')
-    Anteckning {{ $note->title }}
+    Visa anteckning "{{ $note->title }}"
 @stop
 
 
