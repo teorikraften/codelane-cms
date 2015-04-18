@@ -1327,6 +1327,8 @@ ul.pagination li a:hover, ul.pagination li.active span {
 div.input-note-content{
 	height: 300px;
 	overflow: hidden;
+	border-right: 1px solid #ddd;
+	border-bottom: 1px solid #ddd;
 }
 
 .note-textarea {

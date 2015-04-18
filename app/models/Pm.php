@@ -104,6 +104,15 @@ class PM extends Eloquent {
 	}
 
 	/**
+	 * Defines relation to all the personal notes.
+	 *
+	 * @return Relation
+	 */
+	public function notes() {
+		return $this->hasMany('Note');
+	}
+
+	/**
 	 * Checks if actual user has favourited this PM.
 	 *
 	 * @return false if user if logged out or if user hasn't favourited this PM, true otherwise

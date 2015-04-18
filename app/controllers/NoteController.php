@@ -20,6 +20,7 @@ class NoteController extends BaseController {
 			->with('note', $note[0]);
 	}
 
+
 	public function getEdit($token) {
 
 		$note = Auth::user()->notes()->where('id', '=', $token)->get();

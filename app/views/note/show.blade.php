@@ -14,6 +14,7 @@
                 <th class="action"></th>
                 <th class="action"></th>
                 <th>Rubrik</th>
+                <th>PM</th>
             </tr>
     @foreach($notes as $note)
             <tr>
@@ -30,6 +31,9 @@
             	<td>
             		<a href="{{ URL::route('note-show', $note->id) }}">{{ $note->title }}</a>
             	</td>
+                <td>
+                    <a href="{{ URL::route('pm-show', $note->pm['title']) }}">{{ $note->pm['title'] }}</a>
+                </td>
        	    </tr>
     @endforeach
 </table>

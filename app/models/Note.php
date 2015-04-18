@@ -19,4 +19,13 @@ class Note extends Eloquent {
 	public function user() {
 		return $this->belongsTo('User');
 	}
+
+	/**
+	 * The pm connected to a specific note.
+	 * 
+	 * @return Relation
+	 */
+	public function pm() {
+		return $this->belongsTo('PM');
+	}
 }
