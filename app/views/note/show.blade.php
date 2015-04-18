@@ -6,9 +6,9 @@
 
 
 @section('body')
-@include('includes.messages')
     <a href="{{ URL::route('note-add') }}" class="btn-note">Ny anteckning</a>
-    <br>
+    <p>Detta är dina personliga anteckningar som kan associeras med PM för att komma ihåg vad du ska göra.</p>
+    @include('includes.messages')
     <table class="list">
             <tr>
                 <th class="action"></th>

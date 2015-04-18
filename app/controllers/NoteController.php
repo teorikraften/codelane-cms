@@ -47,6 +47,14 @@ class NoteController extends BaseController {
 
 		$note->title = Input::get('title');
 		$note->content = Input::get('content');
+		// TODO: Not rely on title to create pm connection..
+		try {
+			$pm_id = PM::where('title', '=', Input::get('pm'))->firstOrFail()[0]->id;
+		} catch(ModelNotFoundException $e) {
+			return Redirect::back()
+			->with('error', 'PM:et du angav hittades inte.');
+		}
+		$note->pm_id = $pm_id;
 
 		$note->save();
 
@@ -72,6 +80,14 @@ class NoteController extends BaseController {
 		$note->user_id = Auth::user()->id;
 		$note->title = Input::get('title');
 		$note->content = Input::get('content');
+		// TODO: Not rely on title to create pm connection..
+		try {
+			$pm_id = PM::where('title', '=', Input::get('pm'))->firstOrFail()[0]->id;
+		} catch(ModelNotFoundException $e) {
+			return Redirect::back()
+			->with('error', 'PM:et du angav hittades inte.');
+		}
+		$note->pm_id = $pm_id;
 
 		$note->save();
 
