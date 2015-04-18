@@ -694,7 +694,39 @@ class PMController extends BaseController {
 		->with('reminders', $reminders);
 	}
 
-	public function postEditAssignments() {		
+	public function postEditAssignments() {	
+
+		$data = Input::all();
+
+		// TODO: Move validation
+		$validator = Validator::make($data,
+		[
+			'creator' => 'required',
+			'authors' => 'required',
+			'settler' => 'required',
+			'reviewers' => 'required',
+			'end-reviewer' => 'required',
+			'reminder' => 'required'
+		],
+		[
+    		'creator.required' => 'Ange en upprättare.',
+    		'authors.required' => 'Ange en inläggare.',
+    		'settler.required' => 'Ange en fastställare.',
+    		'reviewers.required' => 'Ange en granskare.',
+    		'end-reviewer.required' => 'Ange en slutgranskare.',
+    		'reminder.required' => 'Ange en påminnare.',
+		]);
+
+		if ($validator->fails()) {
+			$messages = $validator->messages();
+
+			// If not successful, set error and ask user to change input
+			return Redirect::back()
+				->with('error', $messages->all())
+				// How to do withinput with javascript input?
+				->withInput();
+		} 
+
 		try {
 			$pm = PM::findOrFail(Input::get('id'));
 		} catch (ModelNotFoundException $e) {
@@ -703,12 +735,24 @@ class PMController extends BaseController {
 		}
 
 		// TODO Samma som i postAssign
-		$creators = $this->userify(Input::get('creator'));
-		$authors = $this->userify(Input::get('authors'));
-		$settlers = $this->userify(Input::get('settler'));
-		$reviewers = $this->userify(Input::get('reviewers'));	
-		$endReviewers = $this->userify(Input::get('end-reviewer'));
-		$reminders = $this->userify(Input::get('reminder'));	
+		$creator = Input::get('creator');
+		$author = Input::get('authors');
+		$settler = Input::get('settler');
+		$reviewer = Input::get('reviewers');	
+		$endReviewer = Input::get('end-reviewer');
+		$reminder = Input::get('reminder');
+
+		// TODO Validering & en eller flera personer på vad?
+		$creators = $this->userify($creator);
+		$authors = $this->userify($author);
+		$settlers = $this->userify($settler);
+		$reviewers = $this->userify($reviewer);	
+		$endReviewers = $this->userify($endReviewer);
+		$reminders = $this->userify($reminder);
+
+		if(!$this->userExists(array($creator, $author, $settler, $reviewer, $endReviewer, $reminder))) {
+			return Redirect::back()->withInput()->with('error', 'En eller flera av personerna angivna finns inte registrerade.');
+		}	
 
 		if (Input::get('validityType', 'time') == 'date') {
 			if (!$this->validateDate(Input::get('validityDate'))) {
@@ -728,23 +772,42 @@ class PMController extends BaseController {
 		$pm->users()->detach();
 		// TODO Fix! This is bad. Bättre att loopa igenom alla och ändra de som ska ändras istället. Då kan man köra soft deletes.
 
-		foreach ($creators as $creator) {
-			$creator->pms()->attach([$pm->id => ['assignment' => 'creator']]);
-		}
-		foreach ($authors as $author) {
-			$author->pms()->attach([$pm->id => ['assignment' => 'author']]);
-		}
-		foreach ($settlers as $settler) {
-			$settler->pms()->attach([$pm->id => ['assignment' => 'settler']]);
-		}
-		foreach ($reviewers as $reviewer) {
-			$reviewer->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
-		}
-		foreach ($endReviewers as $endReviewer) {
-			$endReviewer->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
-		}
-		foreach ($reminders as $reminder) {
-			$reminder->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
+		// If any of the lists above are empty we know that javascript is disabled.
+		if($creators == []) { 
+			// Create user objects
+			$creatorobj = User::where('email', '=', $creator)->first();
+			$authorobj = User::where('email', '=', $author)->first();
+			$settlerobj = User::where('email', '=', $settler)->first();
+			$reviewerobj = User::where('email', '=', $reviewer)->first();
+			$endReviewerobj = User::where('email', '=', $endReviewer)->first();
+			$reminderobj = User::where('email', '=', $reminder)->first();
+
+			// Attach assignments
+			$creatorobj->pms()->attach([$pm->id => ['assignment' => 'creator']]);
+			$authorobj->pms()->attach([$pm->id => ['assignment' => 'author']]);
+			$settlerobj->pms()->attach([$pm->id => ['assignment' => 'settler']]);
+			$reviewerobj->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
+			$endReviewerobj->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
+			$reminderobj->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
+		} else {
+			foreach ($creators as $creator) {
+				$creator->pms()->attach([$pm->id => ['assignment' => 'creator']]);
+			}
+			foreach ($authors as $author) {
+				$author->pms()->attach([$pm->id => ['assignment' => 'author']]);
+			}
+			foreach ($settlers as $settler) {
+				$settler->pms()->attach([$pm->id => ['assignment' => 'settler']]);
+			}
+			foreach ($reviewers as $reviewer) {
+				$reviewer->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
+			}
+			foreach ($endReviewers as $endReviewer) {
+				$endReviewer->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
+			}
+			foreach ($reminders as $reminder) {
+				$reminder->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
+			}
 		}
 
 		$pm->save();
@@ -918,18 +981,25 @@ class PMController extends BaseController {
 				->withInput();
 		} 
 
+		$creator = Input::get('creator');
+		$author = Input::get('authors');
+		$settler = Input::get('settler');
+		$reviewer = Input::get('reviewers');	
+		$endReviewer = Input::get('end-reviewer');
+		$reminder = Input::get('reminder');
+
 		// TODO Validering & en eller flera personer på vad?
-		$creators = $this->userify(Input::get('creator'));
-		$authors = $this->userify(Input::get('authors'));
-		$settlers = $this->userify(Input::get('settler'));
-		$reviewers = $this->userify(Input::get('reviewers'));	
-		$endReviewers = $this->userify(Input::get('end-reviewer'));
-		$reminders = $this->userify(Input::get('reminder'));
-/*
-		if(!$this->userExists(array(Input::get('creator'), Input::get('authors'), Input::get('settler'), Input::get('reviewers'), Input::get('end-reviewer'), Input::get('reminder')))) {
+		$creators = $this->userify($creator);
+		$authors = $this->userify($author);
+		$settlers = $this->userify($settler);
+		$reviewers = $this->userify($reviewer);	
+		$endReviewers = $this->userify($endReviewer);
+		$reminders = $this->userify($reminder);
+
+		if(!$this->userExists(array($creator, $author, $settler, $reviewer, $endReviewer, $reminder))) {
 			return Redirect::back()->withInput()->with('error', 'En eller flera av personerna angivna finns inte registrerade.');
 		}
-*/
+
 		$user = Auth::user();
 		$pm = new PM;
 		$pm->title = Input::get('title');
@@ -951,23 +1021,43 @@ class PMController extends BaseController {
 		}
 		$pm->save();
 
-		foreach ($creators as $creator) {
-			$creator->pms()->attach([$pm->id => ['assignment' => 'creator']]);
-		}
-		foreach ($authors as $author) {
-			$author->pms()->attach([$pm->id => ['assignment' => 'author']]);
-		}
-		foreach ($settlers as $settler) {
-			$settler->pms()->attach([$pm->id => ['assignment' => 'settler']]);
-		}
-		foreach ($reviewers as $reviewer) {
-			$reviewer->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
-		}
-		foreach ($endReviewers as $endReviewer) {
-			$endReviewer->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
-		}
-		foreach ($reminders as $reminder) {
-			$reminder->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
+		// If any of the lists above are empty we know that javascript is disabled.
+		if($creators == []) { 
+			// Create user objects
+			$creatorobj = User::where('email', '=', $creator)->first();
+			$authorobj = User::where('email', '=', $author)->first();
+			$settlerobj = User::where('email', '=', $settler)->first();
+			$reviewerobj = User::where('email', '=', $reviewer)->first();
+			$endReviewerobj = User::where('email', '=', $endReviewer)->first();
+			$reminderobj = User::where('email', '=', $reminder)->first();
+
+			// Attach assignments
+			$creatorobj->pms()->attach([$pm->id => ['assignment' => 'creator']]);
+			$authorobj->pms()->attach([$pm->id => ['assignment' => 'author']]);
+			$settlerobj->pms()->attach([$pm->id => ['assignment' => 'settler']]);
+			$reviewerobj->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
+			$endReviewerobj->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
+			$reminderobj->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
+		} else {
+
+			foreach ($creators as $creator) {
+				$creator->pms()->attach([$pm->id => ['assignment' => 'creator']]);
+			}
+			foreach ($authors as $author) {
+				$author->pms()->attach([$pm->id => ['assignment' => 'author']]);
+			}
+			foreach ($settlers as $settler) {
+				$settler->pms()->attach([$pm->id => ['assignment' => 'settler']]);
+			}
+			foreach ($reviewers as $reviewer) {
+				$reviewer->pms()->attach([$pm->id => ['assignment' => 'reviewer']]);
+			}
+			foreach ($endReviewers as $endReviewer) {
+				$endReviewer->pms()->attach([$pm->id => ['assignment' => 'end-reviewer']]);
+			}
+			foreach ($reminders as $reminder) {
+				$reminder->pms()->attach([$pm->id => ['assignment' => 'reminder']]);
+			}
 		}
 
 		return Redirect::route('admin-pm')->with('success', 'PM:et lades till och personerna sparades!');
