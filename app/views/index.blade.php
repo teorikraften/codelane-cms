@@ -40,4 +40,10 @@
 		@endif
 		
 	</div>
+	    <!--infoWindow-->   
+    <div id="infoWindow" style="display:none;"><h3>
+    <button onclick="hide('infoWindow')">X</button> Hjälp :: Hem</h3>
+        <p>Det här är Hem.</p>
+    </div>  
+<!-- end of infoWindow--> 
 @stop
