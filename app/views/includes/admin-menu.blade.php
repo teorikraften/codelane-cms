@@ -11,6 +11,7 @@
 			@endif
 			<li><a href="{{ URL::route('favourites-show') }}">Dina favoriter</a></li>
 	        <li><a href="{{ URL::route('note-show-all') }}">Dina anteckningar</a></li>
+	        <li><a href="{{ URL::route('notification-show-all') }}">Notifieringar</a></li>
 	        <!--<li><a href="{{ URL::route('pm-import') }}">Importera PM</a></li>-->
 	        <li><a href="{{ URL::route('admin-tags') }}">Taggar</a></li>
 	        <li><a href="{{ URL::route('admin-categories') }}">Kategorier</a></li>
@@ -32,6 +33,7 @@
 			@endif
 			<li><a href="{{ URL::route('favourites-show') }}">Dina favoriter</a></li>
 			<li><a href="{{ URL::route('note-show-all') }}">Dina anteckningar</a></li>
+			<li><a href="{{ URL::route('notification-show-all') }}">Notifieringar</a></li>
 	        <li><a href="{{ URL::route('admin-pm') }}">PM</a></li>
 			<li><a href="{{ URL::route('sign-out') }}">Logga ut</a></li>
 	    </ul>
@@ -49,6 +51,7 @@
 	        <li><a href="{{ URL::route('user') }}">Din sida</a></li>
 			<li><a href="{{ URL::route('favourites-show') }}">Dina favorit-PM</a></li>
 			<li><a href="{{ URL::route('note-show-all') }}">Dina anteckningar</a></li>
+			<li><a href="{{ URL::route('notification-show-all') }}">Notifieringar</a></li>
 			<li><a href="{{ URL::route('latest-show') }}">Senast uppdaterade-PM</a><li>
 	        <li><a href="{{ URL::route('admin-pm') }}">PM</a></li>
 			<li><a href="{{ URL::route('sign-out') }}">Logga ut</a></li>

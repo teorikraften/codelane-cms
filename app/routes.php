@@ -311,6 +311,25 @@ Route::post('/anteckningar/andra', ['as' => 'post-note-edit', 'uses' => 'NoteCon
 	->before('auth.verified');
 
 
+/*
+|--------------------------------------------------------------------------
+| Notifications functionality
+|--------------------------------------------------------------------------
+|
+| Functionality directly connected to notes.
+|
+*/
+Route::get('/meddelanden', ['as' => 'notification-show-all', 'uses' => 'NotificationController@getShowall'])
+	->before('auth.verified');
+Route::get('/meddelande/{token}', ['as' => 'notification-show', 'uses' => 'NotificationController@getShow'])
+	->before('auth.verified');
+
+
+Route::get('/meddelanden/nytt/{person?}', ['as' => 'notification-add', 'uses' => 'NotificationController@getAdd'])
+	->before('auth.verified');
+Route::post('/meddelanden/nytt', ['as' => 'post-notification-add', 'uses' => 'NotificationController@postAdd'])
+	->before('auth.verified');
+
 
 /*
 |--------------------------------------------------------------------------
