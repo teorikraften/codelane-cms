@@ -13,8 +13,6 @@
     @if ($notifications->count() > 0)
     <table class="list">
             <tr>
-                <th class="action"></th>
-                <th class="action"></th>
                 <th>Rubrik</th>
                 <th>Angående PM</th>
                 <th>Från</th>
@@ -22,17 +20,7 @@
     @foreach($notifications as $notification)
             <tr>
             	<td>
-                    <a href="{{ URL::route('note-edit', $notification->id) }}" title="Ändra">
-                        {{ HTML::image('images/edit.png', 'Ändra') }}
-                    </a>
-                </td>
-                <td>
-                    <a href="{{ URL::route('note-delete', $notification->id) }}" title="Ta bort">
-                        {{ HTML::image('images/delete.png', 'Ta bort')  }}
-                    </a>
-                </td>
-            	<td>
-            		<a class="clickable-title" href="{{ URL::route('notification-show', $notification->id) }}">{{ $notification->title }}</a>
+            		<a class="clickable-title" href="{{ URL::route('notification-show', $notification->id) }}">{{ ucfirst($notification->title) }}</a>
             	</td>
                 <td>
                     <a class="clickable-title" href="{{ URL::route('pm-show', $notification->pm['token']) }}">{{ $notification->pm['title'] }}</a>
@@ -44,7 +32,7 @@
     @endforeach
     </table>
     @else
-    <p>Du har för närvarande inga anteckningar.</p>
+    <p>Du har för närvarande inga notifieringar.</p>
     @endif
 
 @stop

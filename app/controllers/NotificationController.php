@@ -60,6 +60,6 @@ class NotificationController extends BaseController {
 		$notification->save();
 
 		return Redirect::route('notification-show-all')
-		->with('success', 'Anteckningen sparades.');
+		->with('success', 'Meddelandet har skickats.');
 	}
 }
