@@ -21,6 +21,8 @@ class PMController extends BaseController {
 
 		// Get user note associated with this PM
 		$note = Auth::user()->notes()->where('pm_id', '=', $pm->id)->first();
+		// Get user notifications associated with this PM
+		$unreadNotifications = Auth::user()->notifications()->unread()->where('pm_id', '=', $pm->id)->get();
 
 		$user = User::find(Auth::user()->id);
 		$fav = (!empty($user->favourites()->where('pm', '=', $pm->id)->first())) ? true : false;
@@ -49,7 +51,8 @@ class PMController extends BaseController {
 		->with('persons', $persons)
 		->with('assignments', $pm->users)
 		->with('favourite' , $fav)
-		->with('note', $note);
+		->with('note', $note)
+		->with('unreadNotifications', $unreadNotifications);
 	}
 
 	/**

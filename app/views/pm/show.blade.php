@@ -20,11 +20,18 @@
         <div id="pmc" class="pm-content">
             <div class="pm-info">
                 {{ HTML::image('images/logo.png') }}
-                @if (isset($note))
-                 <a class="notes-notification" href="{{ URL::route('note-show', $note->id) }}" title="Du har en anteckning associerad med detta pm">
-                     {{ HTML::image('images/roleRel.png', 'Du har en anteckning associerad med detta pm')  }}
-                </a>
-                @endif
+                <div class="pm-icons">
+                    @if (isset($unreadNotifications))
+                     <a class="notes-notification-info" href="{{ URL::route('notification-show-all') }}" title="Du har en eller flera olästa notifieringar associerade med detta pm">
+                         {{ HTML::image('images/informationbigger.png', 'Du har en eller flera olästa notifieringar associerade med detta pm')  }}
+                    </a>
+                    @endif
+                    @if (isset($note))
+                     <a class="notes-notification" href="{{ URL::route('note-show', $note->id) }}" title="Du har en anteckning associerad med detta pm">
+                         {{ HTML::image('images/roleRel.png', 'Du har en anteckning associerad med detta pm')  }}
+                    </a>
+                    @endif
+                 </div>
                 <table>
                     <tr>
                         <td colspan="4">

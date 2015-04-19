@@ -1374,6 +1374,14 @@ a.notes-notification img {
 	margin: 60px 0 0 20px;
 }
 
+a.notes-notification-info img {
+	margin: 62px 0 0 20px;
+}
+
+a.notes-notification, a.notes-notification-info {
+	text-decoration: none;
+}
+
 tr.unread {
 	background: #fcc !important;
 }
