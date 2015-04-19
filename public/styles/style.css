@@ -1386,5 +1386,9 @@ tr.unread {
 	background: #fcc !important;
 }
 
+table.list tr.unread:hover {
+	background: #f55f5f !important; /* #eb4d4d */
+}
+
 
 
