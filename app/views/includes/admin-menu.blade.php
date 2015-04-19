@@ -2,6 +2,7 @@
 
 @elseif(Auth::user()->privileges == 'admin')
 	<?php $countEvents = Auth::user()->countEvents(); ?>
+	<?php $countNotifications = Auth::user()->notifications()->unread()->count(); ?>
 	<div class="submenu">
 	    <ul>
 	    	@if ($countEvents > 1)
@@ -11,7 +12,7 @@
 			@endif
 			<li><a href="{{ URL::route('favourites-show') }}">Dina favoriter</a></li>
 	        <li><a href="{{ URL::route('note-show-all') }}">Dina anteckningar</a></li>
-	        <li><a href="{{ URL::route('notification-show-all') }}">{{ ($countNotifications = Auth::user()->notifications()->unread()->count()) ? $countNotifications : '' }} Notifieringar</a></li>
+	        <li><a class="{{  ($countNotifications) ? 'notifications-exists' : ''}}"href="{{ URL::route('notification-show-all') }}">{{ ($countNotifications) ? $countNotifications : '' }} Notifieringar</a></li>
 	        <!--<li><a href="{{ URL::route('pm-import') }}">Importera PM</a></li>-->
 	        <li><a href="{{ URL::route('admin-tags') }}">Taggar</a></li>
 	        <li><a href="{{ URL::route('admin-categories') }}">Kategorier</a></li>

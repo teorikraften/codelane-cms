@@ -1390,5 +1390,13 @@ table.list tr.unread:hover {
 	background: #f55f5f !important; /* #eb4d4d */
 }
 
+.notifications-exists {
+	background: #f55f5f;
+}
+
+.notifications-exists:hover {
+	background: #f5806c !important;
+}
+
 
 
