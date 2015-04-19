@@ -13,6 +13,7 @@
     @if ($notifications->count() > 0)
     <table class="list">
             <tr>
+                <th class="action"></th>
                 <th>Rubrik</th>
                 <th>Angående PM</th>
                 <th>Från</th>
@@ -20,6 +21,11 @@
             </tr>
     @foreach($notifications as $notification)
             <tr class="{{ ($notification->is_read == 0) ? 'unread' : '' }}">
+                <td>
+                    <a href="{{ URL::route('notification-delete', $notification->id) }}" title="Ta bort">
+                        {{ HTML::image('images/delete.png', 'Ta bort')  }}
+                    </a>
+                </td>
             	<td>
             		<a title="Visa meddelande" class="clickable-title" href="{{ URL::route('notification-show', $notification->id) }}">{{ ucfirst($notification->title) }}</a>
             	</td>

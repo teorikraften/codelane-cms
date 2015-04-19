@@ -66,4 +66,17 @@ class NotificationController extends BaseController {
 		return Redirect::route('notification-show-all')
 		->with('success', 'Meddelandet har skickats.');
 	}
+	public function getDelete($token) 
+	{
+		try {
+			$note = Notification::where('id', '=', $token)->firstOrFail(); 
+			$note->delete();
+		} catch(ModelNotFoundException $e) {
+			return Redirect::route('note-show-all')
+			->with('error', 'Meddelandet som skulle tas bort hittades inte.');
+		}
+
+		return Redirect::route('notification-show-all')
+		->with('success', 'Meddelandet togs bort.');
+	}
 }

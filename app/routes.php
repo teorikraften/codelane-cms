@@ -330,6 +330,9 @@ Route::get('/meddelanden/nytt/{person?}/{pm?}/{title?}', ['as' => 'notification-
 Route::post('/meddelanden/nytt', ['as' => 'post-notification-add', 'uses' => 'NotificationController@postAdd'])
 	->before('auth.verified');
 
+Route::get('/meddelanden/ta-bort/{token}', ['as' => 'notification-delete', 'uses' => 'NotificationController@getDelete'])
+	->before('auth.verified');
+
 
 /*
 |--------------------------------------------------------------------------
