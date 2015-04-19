@@ -27,7 +27,7 @@
                     <a title="Visa PM" class="clickable-title" href="{{ URL::route('pm-show', $notification->pm['token']) }}">{{ $notification->pm['title'] }}</a>
                 </td>
                 <td>
-                    <a title="Skicka meddelande" class="clickable-title" href="{{ URL::route('notification-add', array(User::where('id', '=', $notification->user_id)->first()->email, $notification->pm['title'])) }}">{{ User::where('id', '=', $notification->user_id)->first()->name }}</a>
+                    <a title="Skicka meddelande" class="clickable-title" href="{{ URL::route('notification-add', array(User::where('id', '=', $notification->user_id)->first()->email, $notification->pm['title'], $notification->title)) }}">{{ User::where('id', '=', $notification->user_id)->first()->name }}</a>
                 </td>
                 <td>
                     <h4>{{ $notification->created_at }}</h4>

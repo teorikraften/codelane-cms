@@ -20,10 +20,11 @@ class NotificationController extends BaseController {
 			->with('notification', $notification);
 	}
 
-	public function getAdd($person = '', $pm = '') {
+	public function getAdd($person = '', $pm = '', $title = '') {
 		return View::make('notification.add')
 		->with('person', $person)
-		->with('pm', $pm);
+		->with('pm', $pm)
+		->with('title', $title);
 	}
 
 	/*

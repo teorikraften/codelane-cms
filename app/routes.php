@@ -325,7 +325,7 @@ Route::get('/meddelande/{token}', ['as' => 'notification-show', 'uses' => 'Notif
 	->before('auth.verified');
 
 
-Route::get('/meddelanden/nytt/{person?}/{pm?}', ['as' => 'notification-add', 'uses' => 'NotificationController@getAdd'])
+Route::get('/meddelanden/nytt/{person?}/{pm?}/{title?}', ['as' => 'notification-add', 'uses' => 'NotificationController@getAdd'])
 	->before('auth.verified');
 Route::post('/meddelanden/nytt', ['as' => 'post-notification-add', 'uses' => 'NotificationController@postAdd'])
 	->before('auth.verified');

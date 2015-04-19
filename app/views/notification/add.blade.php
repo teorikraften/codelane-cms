@@ -11,7 +11,7 @@
     	<div class="form">
 			<div class="row">
 				<div class="description">{{ Form::label('title', 'Titel') }}</div>
-				<div class="input-note-title">{{ Form::text('title', NULL, array('class' => 'text')) }}</div>
+				<div class="input-note-title">{{ Form::text('title', ($title != '') ? "Svar: ".$title : NULL, array('class' => 'text')) }}</div>
 			</div>
 			 <div class="row">
                 <div class="description">{{ Form::label('pm', 'Associera med PM') }}</div>
