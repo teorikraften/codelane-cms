@@ -7,11 +7,9 @@ class NotificationController extends BaseController {
 	public function getShowall() {
 
 		$notifications = Auth::user()->notifications()->orderBy('created_at', 'desc')->get();
-		$unreadNotifications = Auth::user()->notifications()->unread()->get();
 
 		return View::make('notification.show')
-			->with('notifications', $notifications)
-			->with('unreadNotifications', $unreadNotifications);
+			->with('notifications', $notifications);
 	}
 
 	public function getShow($token) {
