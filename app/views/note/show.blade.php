@@ -10,6 +10,7 @@
     <a href="{{ URL::route('note-add') }}" class="btn-note">Ny anteckning</a>
     <p>Detta är dina personliga anteckningar som kan associeras med PM för att komma ihåg saker som ska göras.</p>
     @include('includes.messages')
+    @if ($notes->count() > 0)
     <table class="list">
             <tr>
                 <th class="action"></th>
@@ -37,5 +38,9 @@
                 </td>
        	    </tr>
     @endforeach
-</table>
+    </table>
+    @else
+    <p>Du har för närvarande inga anteckningar.</p>
+    @endif
+
 @stop

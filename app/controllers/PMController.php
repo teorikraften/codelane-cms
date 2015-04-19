@@ -754,10 +754,6 @@ class PMController extends BaseController {
 		$endReviewers = $this->userify($endReviewer);
 		$reminders = $this->userify($reminder);
 
-		if(!$this->userExists(array($creator, $author, $settler, $reviewer, $endReviewer, $reminder))) {
-			return Redirect::back()->withInput()->with('error', 'En eller flera av personerna angivna finns inte registrerade.');
-		}	
-
 		if (Input::get('validityType', 'time') == 'date') {
 			if (!$this->validateDate(Input::get('validityDate'))) {
 				return Redirect::back()
@@ -778,13 +774,17 @@ class PMController extends BaseController {
 
 		// If any of the lists above are empty we know that javascript is disabled.
 		if($creators == []) { 
-			// Create user objects
-			$creatorobj = User::where('email', '=', $creator)->first();
-			$authorobj = User::where('email', '=', $author)->first();
-			$settlerobj = User::where('email', '=', $settler)->first();
-			$reviewerobj = User::where('email', '=', $reviewer)->first();
-			$endReviewerobj = User::where('email', '=', $endReviewer)->first();
-			$reminderobj = User::where('email', '=', $reminder)->first();
+			try {
+				// Create user objects
+				$creatorobj = User::where('email', '=', $creator)->firstOrFail();
+				$authorobj = User::where('email', '=', $author)->firstOrFail();
+				$settlerobj = User::where('email', '=', $settler)->firstOrFail();
+				$reviewerobj = User::where('email', '=', $reviewer)->firstOrFail();
+				$endReviewerobj = User::where('email', '=', $endReviewer)->firstOrFail();
+				$reminderobj = User::where('email', '=', $reminder)->firstOrFail();
+			}catch(ModelNotFoundException $e) {
+				return Redirect::back()->withInput()->with('error', 'En eller flera av personerna angivna finns inte registrerade.');	
+			}
 
 			// Attach assignments
 			$creatorobj->pms()->attach([$pm->id => ['assignment' => 'creator']]);
@@ -1000,10 +1000,6 @@ class PMController extends BaseController {
 		$endReviewers = $this->userify($endReviewer);
 		$reminders = $this->userify($reminder);
 
-		if(!$this->userExists(array($creator, $author, $settler, $reviewer, $endReviewer, $reminder))) {
-			return Redirect::back()->withInput()->with('error', 'En eller flera av personerna angivna finns inte registrerade.');
-		}
-
 		$user = Auth::user();
 		$pm = new PM;
 		$pm->title = Input::get('title');
@@ -1027,13 +1023,17 @@ class PMController extends BaseController {
 
 		// If any of the lists above are empty we know that javascript is disabled.
 		if($creators == []) { 
-			// Create user objects
-			$creatorobj = User::where('email', '=', $creator)->first();
-			$authorobj = User::where('email', '=', $author)->first();
-			$settlerobj = User::where('email', '=', $settler)->first();
-			$reviewerobj = User::where('email', '=', $reviewer)->first();
-			$endReviewerobj = User::where('email', '=', $endReviewer)->first();
-			$reminderobj = User::where('email', '=', $reminder)->first();
+			try {
+				// Create user objects
+				$creatorobj = User::where('email', '=', $creator)->firstOrFail();
+				$authorobj = User::where('email', '=', $author)->firstOrFail();
+				$settlerobj = User::where('email', '=', $settler)->firstOrFail();
+				$reviewerobj = User::where('email', '=', $reviewer)->firstOrFail();
+				$endReviewerobj = User::where('email', '=', $endReviewer)->firstOrFail();
+				$reminderobj = User::where('email', '=', $reminder)->firstOrFail();
+			}catch(ModelNotFoundException $e) {
+				return Redirect::back()->withInput()->with('error', 'En eller flera av personerna angivna finns inte registrerade.');	
+			}
 
 			// Attach assignments
 			$creatorobj->pms()->attach([$pm->id => ['assignment' => 'creator']]);
@@ -1065,17 +1065,6 @@ class PMController extends BaseController {
 		}
 
 		return Redirect::route('admin-pm')->with('success', 'PM:et lades till och personerna sparades!');
-	}
-	/**
-	* Check if users exist in database.
-	*/
-	public function userExists($users) {
-		foreach($users as $user) {
-			if(!User::where('email', '=', $user)) {
-				return false;
-			}	
-		}
-		return true;
 	}
 
 	/**
