@@ -15,13 +15,14 @@
         <a class="action" href="javascript:window.print()">{{ HTML::image('images/print.png') }}Skriv ut</a>
         <a class="action" href="{{ URL::route('pm-download', $pm->token) }}">Ladda ner som .docx</a>
         <a class="action" href="{{ URL::route('get-favourite-edit', array('goto' => 'pm', 'token' => $pm->token)) }}">{{ $favourite ? '&#9733; Ta bort som favorit' : '&#9734; Favoritmarkera' }}</a>
+        <a class="action" href="{{ URL::route('note-add', $pm->title) }}">Ny anteckning</a>
         <div class="clear"></div>
 
         <div id="pmc" class="pm-content">
             <div class="pm-info">
                 {{ HTML::image('images/logo.png') }}
                 <div class="pm-icons">
-                    @if (isset($unreadNotifications))
+                    @if (!$unreadNotifications->isEmpty())
                      <a class="notes-notification-info" href="{{ URL::route('notification-show-all') }}" title="Du har en eller flera olästa notifieringar associerade med detta pm">
                          {{ HTML::image('images/informationbigger.png', 'Du har en eller flera olästa notifieringar associerade med detta pm')  }}
                     </a>

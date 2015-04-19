@@ -297,7 +297,7 @@ Route::get('/anteckningar', ['as' => 'note-show-all', 'uses' => 'NoteController@
 Route::get('/anteckningar/{token}', ['as' => 'note-show', 'uses' => 'NoteController@getShow'])
 	->before('auth.verified');
 
-Route::get('/anteckning/ny', ['as' => 'note-add', 'uses' => 'NoteController@getAdd'])
+Route::get('/anteckning/ny/{title?}', ['as' => 'note-add', 'uses' => 'NoteController@getAdd'])
 	->before('auth.verified');
 Route::post('/anteckning/ny', ['as' => 'post-note-add', 'uses' => 'NoteController@postAdd'])
 	->before('auth.verified');

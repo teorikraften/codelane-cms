@@ -63,8 +63,9 @@ class NoteController extends BaseController {
 			return Redirect::route('note-show-all')->with('success', 'Anteckningen sparades.');
 	}
 
-	public function getAdd() {
-		return View::make('note.add');
+	public function getAdd($title = '') {
+		return View::make('note.add')
+		->with('title', $title);
 	}
 
 	/*
