@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: 127.0.0.1
--- Tid vid skapande: 19 apr 2015 kl 14:44
+-- Tid vid skapande: 19 apr 2015 kl 16:46
 -- Serverversion: 5.6.17
 -- PHP-version: 5.5.12
 
@@ -367,20 +367,21 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   `target_id` int(11) NOT NULL,
   `created_at` timestamp NOT NULL,
   `updated_at` timestamp NOT NULL,
+  `is_read` int(1) NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=9 ;
 
 --
 -- Dumpning av Data i tabell `notifications`
 --
 
-INSERT INTO `notifications` (`id`, `title`, `content`, `user_id`, `pm_id`, `target_id`, `created_at`, `updated_at`) VALUES
-(1, 'Test', 'Första notifieringen', 10, 10, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(2, 'hej', 'k', 1, 15, 25, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(3, 'hej', 'k', 1, 15, 25, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(4, 'Testigen', 'vi testar en sista gång', 25, 15, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
-(5, 'Testa timestamps', 'Nothing to see here', 1, 10, 25, '2015-04-19 10:28:55', '2015-04-19 10:28:55'),
-(6, 'Testar timestamps med uppdaterad tidszon', '', 25, 11, 1, '2015-04-19 12:40:51', '2015-04-19 12:40:51');
+INSERT INTO `notifications` (`id`, `title`, `content`, `user_id`, `pm_id`, `target_id`, `created_at`, `updated_at`, `is_read`) VALUES
+(1, 'Test', 'Första notifieringen', 10, 10, 1, '0000-00-00 00:00:00', '2015-04-19 14:16:38', 1),
+(4, 'Testigen', 'vi testar en sista gång', 25, 15, 1, '0000-00-00 00:00:00', '2015-04-19 14:16:49', 1),
+(5, 'Testa timestamps', 'Nothing to see here', 1, 10, 25, '2015-04-19 10:28:55', '2015-04-19 10:28:55', 0),
+(6, 'Testar timestamps med uppdaterad tidszon', '', 25, 11, 1, '2015-04-19 12:40:51', '2015-04-19 14:16:54', 1),
+(7, 'Är jag oläst?', 'hej', 1, 15, 1, '2015-04-19 14:29:45', '2015-04-19 14:42:10', 1),
+(8, 'Ett sista test', '', 1, 10, 1, '2015-04-19 14:45:39', '2015-04-19 14:45:39', 0);
 
 -- --------------------------------------------------------
 

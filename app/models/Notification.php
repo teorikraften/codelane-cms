@@ -27,4 +27,12 @@ class Notification extends Eloquent {
 	public function pm() {
 		return $this->belongsTo('PM');
 	}
+
+	/**
+	* Check if notification has been read.
+	*/
+	public function scopeUnread($query)
+	{
+	    return $query->where('is_read', '=', 0);
+	}
 }

@@ -1374,5 +1374,9 @@ a.notes-notification img {
 	margin: 60px 0 0 20px;
 }
 
+tr.unread {
+	background: #fcc !important;
+}
+
 
 
