@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Värd: 127.0.0.1
--- Tid vid skapande: 19 apr 2015 kl 13:24
+-- Tid vid skapande: 19 apr 2015 kl 14:44
 -- Serverversion: 5.6.17
 -- PHP-version: 5.5.12
 
@@ -365,17 +365,22 @@ CREATE TABLE IF NOT EXISTS `notifications` (
   `user_id` int(11) NOT NULL,
   `pm_id` int(11) NOT NULL,
   `target_id` int(11) NOT NULL,
+  `created_at` timestamp NOT NULL,
+  `updated_at` timestamp NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=4 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci AUTO_INCREMENT=7 ;
 
 --
 -- Dumpning av Data i tabell `notifications`
 --
 
-INSERT INTO `notifications` (`id`, `title`, `content`, `user_id`, `pm_id`, `target_id`) VALUES
-(1, 'Test', 'Första notifieringen', 10, 10, 1),
-(2, 'hej', 'k', 1, 15, 25),
-(3, 'hej', 'k', 1, 15, 25);
+INSERT INTO `notifications` (`id`, `title`, `content`, `user_id`, `pm_id`, `target_id`, `created_at`, `updated_at`) VALUES
+(1, 'Test', 'Första notifieringen', 10, 10, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(2, 'hej', 'k', 1, 15, 25, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(3, 'hej', 'k', 1, 15, 25, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(4, 'Testigen', 'vi testar en sista gång', 25, 15, 1, '0000-00-00 00:00:00', '0000-00-00 00:00:00'),
+(5, 'Testa timestamps', 'Nothing to see here', 1, 10, 25, '2015-04-19 10:28:55', '2015-04-19 10:28:55'),
+(6, 'Testar timestamps med uppdaterad tidszon', '', 25, 11, 1, '2015-04-19 12:40:51', '2015-04-19 12:40:51');
 
 -- --------------------------------------------------------
 
@@ -730,7 +735,7 @@ CREATE TABLE IF NOT EXISTS `users` (
 --
 
 INSERT INTO `users` (`id`, `email`, `password`, `name`, `privileges`, `tooltips_on`, `created_at`, `updated_at`, `deleted_at`, `remember_token`) VALUES
-(1, 'admin@codelane.se', '$2y$10$P50MXsShlvmD9D3/d/Uyh.GDEFVbqR/RNHztupYIj9F/Hr/N4ai3.', 'Magnus Persson', 'admin', 0, '0000-00-00 00:00:00', '2015-04-19 09:09:49', NULL, 'QnEt2ElZtwBUGi0rA9J5h7KlWXJeD8r4BryXIGvLeaoo3CklJh0Ru52grlwF'),
+(1, 'admin@codelane.se', '$2y$10$P50MXsShlvmD9D3/d/Uyh.GDEFVbqR/RNHztupYIj9F/Hr/N4ai3.', 'Magnus Persson', 'admin', 0, '0000-00-00 00:00:00', '2015-04-19 10:28:59', NULL, 'cqNI7dRSYY3UzZfjek3cH37nozQYtZmc3m5bLSpd4bxoS111Jsl3K6RbaE60'),
 (2, 'asa@codelane.se', 'NULL', 'Åsa Svensson', 'pm-admin', 0, '2015-04-14 15:43:52', '2015-04-14 15:43:52', NULL, NULL),
 (3, 'lena@codelane.se', 'NULL', 'Lena Andersson', 'verified', 0, '2015-04-14 15:44:11', '2015-04-14 15:44:11', NULL, NULL),
 (4, 'malte@codelane.se', 'NULL', 'Malte Vesterholm', 'admin', 0, '2015-04-14 15:44:29', '2015-04-14 15:44:29', NULL, NULL),
@@ -754,7 +759,7 @@ INSERT INTO `users` (`id`, `email`, `password`, `name`, `privileges`, `tooltips_
 (22, 'patric@codelane.se', 'NULL', 'Patric Lantz', 'pm-admin', 0, '2015-04-14 15:58:01', '2015-04-14 15:58:01', NULL, NULL),
 (23, 'eric@codelane.se', 'NULL', 'Eric Norgren', 'pm-admin', 0, '2015-04-14 15:58:51', '2015-04-14 15:58:51', NULL, NULL),
 (24, 'jonadahl@kth.se', 'NULL', 'Jonas Dahl', 'admin', 0, '2015-04-14 15:59:03', '2015-04-14 15:59:03', NULL, NULL),
-(25, 'liam@codelane.se', '$2y$10$ZREowMqnEzzTiOVhJEIuOucXuD99ZW8qwZJ70fT6feoCklz8xOIDe', 'Liam Strömberg', 'admin', 0, '2015-04-14 18:50:24', '2015-04-19 08:08:20', NULL, 'LZa6Fw2NjpXOJifu1s2PAN4v5HU2y5qsM8A4SXJ8c3drPBcyVrGOvtufUgIp'),
+(25, 'liam@codelane.se', '$2y$10$ZREowMqnEzzTiOVhJEIuOucXuD99ZW8qwZJ70fT6feoCklz8xOIDe', 'Liam Strömberg', 'admin', 0, '2015-04-14 18:50:24', '2015-04-19 12:40:55', NULL, 'GcxWlDc7MmJESXsLQYADYPNACTgNkxSuEL0dOalFFqFC7vwGZFbb8Ku74jiT'),
 (26, 'mia.svensson@ds.se', 'NULL', 'Mia Svensson', 'unverified', 0, '2015-04-14 19:19:18', '2015-04-14 19:19:18', NULL, NULL);
 
 -- --------------------------------------------------------

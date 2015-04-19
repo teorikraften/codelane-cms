@@ -2,7 +2,6 @@
 
 class Notification extends Eloquent {
 
-	public $timestamps = false;
 
 	/**
 	 * The fillable fields in the database.

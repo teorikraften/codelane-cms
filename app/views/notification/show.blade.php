@@ -16,6 +16,7 @@
                 <th>Rubrik</th>
                 <th>Angående PM</th>
                 <th>Från</th>
+                <th>Mottaget</th>
             </tr>
     @foreach($notifications as $notification)
             <tr>
@@ -27,6 +28,9 @@
                 </td>
                 <td>
                     <a class="clickable-title" href="{{ URL::route('notification-add', User::where('id', '=', $notification->user_id)->first()->email) }}">{{ User::where('id', '=', $notification->user_id)->first()->name }}</a>
+                </td>
+                <td>
+                    <h4>{{ $notification->created_at }}</h4>
                 </td>
        	    </tr>
     @endforeach
