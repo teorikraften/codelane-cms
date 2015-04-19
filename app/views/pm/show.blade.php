@@ -43,7 +43,7 @@
                         <td><b>Författare: </b></td>
                         <td colspan="3">
                             @foreach ($persons['authors'] as $key => $author)
-                                <a href="{{ URL::route('notification-add', $author->email) }}">
+                                <a title="Skicka meddelande" href="{{ URL::route('notification-add', $author->email) }}">
                                     {{ $author->name . ($author === end($persons['authors']) ? ' ' : ', ') }}
                                 </a>
                             @endforeach

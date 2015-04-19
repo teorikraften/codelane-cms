@@ -31,10 +31,10 @@
                     </a>
                 </td>
             	<td>
-            		<a class="clickable-title" href="{{ URL::route('note-show', $note->id) }}">{{ $note->title }}</a>
+            		<a title="Visa anteckning" class="clickable-title" href="{{ URL::route('note-show', $note->id) }}">{{ $note->title }}</a>
             	</td>
                 <td>
-                    <a class="clickable-title" href="{{ URL::route('pm-show', $note->pm['token']) }}">{{ $note->pm['title'] }}</a>
+                    <a title="Visa PM" class="clickable-title" href="{{ URL::route('pm-show', $note->pm['token']) }}">{{ $note->pm['title'] }}</a>
                 </td>
        	    </tr>
     @endforeach
