@@ -90,7 +90,7 @@
 			<div class="row">
 				<div class="description">{{ Form::label('creator', 'Upprättare') }}</div>
 				<div class="input">
-					{{ Form::text('creator', Auth::user()->name, array('class' => 'text')) }}
+					{{ Form::text('creator', Auth::user()->email, array('class' => 'text')) }}
 				</div>
 			</div>
 			<div class="row">

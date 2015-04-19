@@ -118,32 +118,32 @@
 			<div class="row">
 				<div class="description">{{ Form::label('creator', 'Upprättare') }}</div>
 				<div class="input">
-					{{ Form::text('creator', Auth::user()->name, array('class' => 'text')) }}
+					{{ Form::text('creator', Auth::user()->email, array('class' => 'text')) }}
 				</div>
 			</div>
 			<div class="row">
 				<div class="description">{{ Form::label('authors', 'Inläggare') }}</div>
 				<div class="input">
-					{{ Form::text('authors', NULL, array('class' => 'text')) }}
+					{{ Form::text('authors', $authors[0]->email, array('class' => 'text')) }}
 				</div>
 			</div>
 			<div class="row">
 				<div class="description">{{ Form::label('settler', 'Fastställare') }}</div>
 				<div class="input">
-					{{ Form::text('settler', NULL, array('class' => 'text')) }}
+					{{ Form::text('settler', $settlers[0]->email, array('class' => 'text')) }}
 				</div>
 			</div>
 			<div class="row">
 				<div class="description">{{ Form::label('reviewers', 'Granskare') }}</div>
-				<div class="input">{{ Form::text('reviewers', NULL, array('class' => 'text')) }}</div>
+				<div class="input">{{ Form::text('reviewers', $reviewers[0]->email, array('class' => 'text')) }}</div>
 			</div>
 			<div class="row">
 				<div class="description">{{ Form::label('end-reviewer', 'Slutgranskare') }}</div>
-				<div class="input">{{ Form::text('end-reviewer', NULL, array('class' => 'text')) }}</div>
+				<div class="input">{{ Form::text('end-reviewer', $endReviewers[0]->email, array('class' => 'text')) }}</div>
 			</div>
 			<div class="row">
 				<div class="description">{{ Form::label('reminder', 'Påminnare') }}</div>
-				<div class="input">{{ Form::text('reminder', NULL, array('class' => 'text')) }}</div>
+				<div class="input">{{ Form::text('reminder', $reminders[0]->email, array('class' => 'text')) }}</div>
 			</div>
 			<div class="submit">
 				{{ Form::submit('Ändra tilldelning', array('class' => 'submit')) }}
