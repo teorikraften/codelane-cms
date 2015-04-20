@@ -1432,4 +1432,22 @@ div#notes-favourites-table {
 
 
 
+/*============================
+=            Help            =
+=============================*/
 
+div.sidehelp {
+	background-color: #dddddd;
+	width: 300px;
+	padding: 25px;
+	border: 25px solid #008472;
+	margin: 25px;
+}
+
+div.sidehelp#left {
+	float: left;
+}
+
+div.sidehelp#right {
+	float: left;
+}
