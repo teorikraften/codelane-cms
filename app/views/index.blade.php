@@ -1,5 +1,8 @@
 @extends('master')
 
+@section('head-title')
+	Hem
+@stop
 @section('head-extra')
   	{{ HTML::script('js/index-page.js'); }}
 @stop
