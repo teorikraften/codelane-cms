@@ -1401,18 +1401,31 @@ table.list tr.unread:hover {
 /*========================================
 =            Favourites index            =
 ========================================*/
-h3#favourites-index-header {
+h3.index-header {
 	margin: 20px 0 0 0;
 }
 
-table.favourites-index {
+div#favourites-table, div#notes-table {
 	width: 40%;
 }
+
+div#notes-favourites-table div {
+	float: left;
+	margin: 0 20px 0 0;
+}
+
+div#notes-favourites-table {
+	overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+
 @media (max-width: 767px){
-	table.favourites-index {
+	div#favourites-table, div#notes-table {
 		width: 100%;
 	}
 }
+
 
 
 

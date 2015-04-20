@@ -37,28 +37,56 @@
 			@if (Request::isMethod('Post'))
 			<div id="search-autocomplete-list"></div>
 			<div style="height: 150px;"></div>
+			<div class="clear"></div>
 			@else
+			<div id="notes-favourites-table">
 				@if (count($pms) > 0)
-					<div class="clear"></div>
-					<h3 id="favourites-index-header">Favorit-PM</h3>
-					<table class="list favourites-index">
-						<thead>
-							<tr>
-								<th>Rubrik</th>
-							</tr>
-						</thead>
-						<tbody>
-							<!-- TODO: Show top 5 most seen -->
-							@foreach(array_slice($pms->toArray(), 0, 5) as $key => $pm)
-									<tr>
-										<td>
-											<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a>
-										</td>
-									</tr>
-							@endforeach
-						</tbody>
-					</table>
+					<div id="favourites-table">
+						<h3 class="index-header">Favorit-PM</h3>
+						<table valign="top" class="list index-table">
+							<thead>
+								<tr>
+									<th>Rubrik</th>
+								</tr>
+							</thead>
+							<tbody>
+								<!-- TODO: Show top 5 most seen -->
+								@foreach(array_slice($pms->toArray(), 0, 5) as $key => $pm)
+										<tr>
+											<td>
+												<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a>
+											</td>
+										</tr>
+								@endforeach
+							</tbody>
+						</table>
+					</div>
 				@endif
+
+				@if ($notes->count() > 0)
+					<!-- TODO: Prioritize which notes are shown -->
+					<div id="notes-table">
+						<h3 class="index-header">Anteckningar</h3>
+					    <table valign="top" class="list index-table">
+					            <tr>
+					                <th>Rubrik</th>
+					                <th>PM</th>
+					            </tr>
+					    @foreach($notes as $note)
+					            <tr>
+					            	<td>
+					            		<a title="Visa anteckning" class="clickable-title" href="{{ URL::route('note-show', $note->id) }}">{{ $note->title }}</a>
+					            	</td>
+					                <td>
+					                    <a title="Visa PM" class="clickable-title" href="{{ URL::route('pm-show', $note->pm['token']) }}">{{ $note->pm['title'] }}</a>
+					                </td>
+					       	    </tr>
+					    @endforeach
+					    </table>
+					</div>
+				@endif
+				<div class="clear"></div>
+			</div>
 			@endif
 		@endif
 		

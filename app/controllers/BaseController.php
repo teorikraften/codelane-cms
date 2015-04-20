@@ -25,8 +25,11 @@ class BaseController extends Controller {
 			->where('expiration_date', '<' , 'CURDATE()')
 			->get();
 
+		$notes = Auth::user()->notes()->take(5)->get();
+
 		return View::make('index')
 			->withInput(Input::all())
-			->with('pms', $pms);
+			->with('pms', $pms)
+			->with('notes', $notes);
 	}
 }
