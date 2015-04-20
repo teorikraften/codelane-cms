@@ -34,9 +34,32 @@
 					{{ Form::submit('Sök', array('class' => 'submit')) }}
 				</div>
 			{{ Form::close() }}
+			@if (Request::isMethod('Post'))
 			<div id="search-autocomplete-list"></div>
 			<div style="height: 150px;"></div>
-
+			@else
+				@if (count($pms) > 0)
+					<div class="clear"></div>
+					<h3 id="favourites-index-header">Favorit-PM</h3>
+					<table class="list favourites-index">
+						<thead>
+							<tr>
+								<th>Rubrik</th>
+							</tr>
+						</thead>
+						<tbody>
+							<!-- TODO: Show top 5 most seen -->
+							@foreach(array_slice($pms->toArray(), 0, 5) as $key => $pm)
+									<tr>
+										<td>
+											<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a>
+										</td>
+									</tr>
+							@endforeach
+						</tbody>
+					</table>
+				@endif
+			@endif
 		@endif
 		
 	</div>

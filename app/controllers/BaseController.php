@@ -19,7 +19,14 @@ class BaseController extends Controller {
 	 * @return Response
 	 */
 	public function getIndex() {
+		$pms = Auth::user()->favourites()
+			->where('published', '=' , 1)
+			->whereNull('pms.deleted_at')
+			->where('expiration_date', '<' , 'CURDATE()')
+			->get();
+
 		return View::make('index')
-			->withInput(Input::all());
+			->withInput(Input::all())
+			->with('pms', $pms);
 	}
 }

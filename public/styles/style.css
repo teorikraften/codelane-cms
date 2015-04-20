@@ -1398,5 +1398,25 @@ table.list tr.unread:hover {
 	background: #f5806c !important;
 }
 
+/*========================================
+=            Favourites index            =
+========================================*/
+h3#favourites-index-header {
+	margin: 20px 0 0 0;
+}
+
+table.favourites-index {
+	width: 40%;
+}
+@media (max-width: 767px){
+	table.favourites-index {
+		width: 100%;
+	}
+}
+
+
+
+
+
 
 
