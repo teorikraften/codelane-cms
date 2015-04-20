@@ -46,6 +46,7 @@
 						<table valign="top" class="list index-table">
 							<thead>
 								<tr>
+									<th>Nummer</th>
 									<th>Rubrik</th>
 								</tr>
 							</thead>
@@ -53,6 +54,9 @@
 								<!-- TODO: Show top 5 most seen -->
 								@foreach(array_slice($pms->toArray(), 0, 5) as $key => $pm)
 										<tr>
+											<td>
+												<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['code'] }}</a>
+											</td>
 											<td>
 												<a href="{{ URL::route('pm-show', $pm['token']) }}">{{ $pm['title'] }}</a>
 											</td>
@@ -75,10 +79,10 @@
 					    @foreach($notes as $note)
 					            <tr>
 					            	<td>
-					            		<a title="Visa anteckning" class="clickable-title" href="{{ URL::route('note-show', $note->id) }}">{{ $note->title }}</a>
+					            		<a title="Visa anteckning" href="{{ URL::route('note-show', $note->id) }}">{{ $note->title }}</a>
 					            	</td>
 					                <td>
-					                    <a title="Visa PM" class="clickable-title" href="{{ URL::route('pm-show', $note->pm['token']) }}">{{ $note->pm['title'] }}</a>
+					                    <a title="Visa PM" href="{{ URL::route('pm-show', $note->pm['token']) }}">{{ $note->pm['title'] }}</a>
 					                </td>
 					       	    </tr>
 					    @endforeach
