@@ -1,6 +1,4 @@
 // Will comment code at a later stage, this is a alpha version
-
-// TODO: Make it fade, and decrease double code.
 function blanket_size(bg) {
 	blanket_height = document.body.parentNode.scrollHeight;
 	var blanket = document.getElementById('blanket');

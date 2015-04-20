@@ -5,7 +5,6 @@
 @stop
 
 @section('head-extra')
-{{ HTML::script('js/infoWindow.js'); }}
 @stop
 
 @section('submenu')
@@ -19,7 +18,6 @@
         <button onclick="show('infoWindow')">X</button> Hjälp :: Uppgifter</h3>
         <p>Här visas en lista med uppgifter där du har tilldelats att utföra.</p>
     </div>
-    <button onclick="show('infoWindow')">?</button>
     <!-- end of infoWindow-->  
     <table class="list">
         <tr>
